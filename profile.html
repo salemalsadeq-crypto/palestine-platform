@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>حساب المستخدم | فلسطين بلاتفورم</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+
+body{
+font-family:Arial,Tahoma,sans-serif;
+background:#f5f7fa;
+color:#172033;
+}
+
+/* الهيدر */
+
+header{
+background:white;
+padding:16px 20px;
+box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+.header{
+max-width:1100px;
+margin:auto;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:15px;
+}
+
+.logo{
+font-size:22px;
+font-weight:bold;
+color:#173b68;
+}
+
+.logo span{
+color:#b51f2a;
+}
+
+.back{
+text-decoration:none;
+background:#173b68;
+color:white;
+padding:9px 16px;
+border-radius:8px;
+}
+
+/* الصفحة */
+
+.container{
+max-width:1000px;
+margin:30px auto;
+padding:0 15px;
+}
+
+/* بطاقة الحساب */
+
+.profile-card{
+background:white;
+border-radius:18px;
+box-shadow:0 4px 20px rgba(0,0,0,.08);
+overflow:hidden;
+}
+
+/* رأس الحساب */
+
+.profile-header{
+background:#173b68;
+padding:35px 25px;
+color:white;
+display:flex;
+align-items:center;
+gap:20px;
+}
+
+.avatar{
+width:90px;
+height:90px;
+border-radius:50%;
+background:white;
+color:#173b68;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:38px;
+font-weight:bold;
+overflow:hidden;
+flex-shrink:0;
+}
+
+.avatar img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.profile-name{
+font-size:28px;
+font-weight:bold;
+margin-bottom:8px;
+}
+
+.profile-city{
+font-size:16px;
+opacity:.9;
+}
+
+/* معلومات الحساب */
+
+.profile-info{
+padding:25px;
+}
+
+.info-row{
+padding:14px 0;
+border-bottom:1px solid #e5e7eb;
+font-size:16px;
+}
+
+.info-row:last-child{
+border-bottom:0;
+}
+
+.info-label{
+font-weight:bold;
+color:#173b68;
+margin-left:8px;
+}
+
+/* الإعلانات */
+
+.ads-title{
+font-size:24px;
+color:#173b68;
+margin:25px 0 15px;
+}
+
+.ads-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:18px;
+}
+
+/* بطاقة الإعلان */
+
+.ad-card{
+background:white;
+border-radius:14px;
+overflow:hidden;
+box-shadow:0 3px 15px rgba(0,0,0,.08);
+cursor:pointer;
+transition:.2s;
+}
+
+.ad-card:hover{
+transform:translateY(-3px);
+}
+
+.ad-image{
+width:100%;
+height:210px;
+object-fit:cover;
+background:#eef2f7;
+display:block;
+}
+
+.no-image{
+height:210px;
+background:#eef2f7;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:65px;
+}
+
+.ad-content{
+padding:18px;
+}
+
+.ad-title{
+font-size:20px;
+font-weight:bold;
+color:#173b68;
+margin-bottom:10px;
+}
+
+.ad-category{
+display:inline-block;
+background:#eef2f7;
+color:#173b68;
+padding:5px 10px;
+border-radius:15px;
+font-size:13px;
+margin-bottom:10px;
+}
+
+.ad-price{
+font-size:19px;
+font-weight:bold;
+color:#b51f2a;
+margin-bottom:8px;
+}
+
+.ad-city{
+font-size:14px;
+color:#666;
+}
+
+/* تحميل */
+
+.loading{
+background:white;
+padding:50px 20px;
+border-radius:15px;
+text-align:center;
+font-size:18px;
+color:#777;
+}
+
+/* خطأ */
+
+.error{
+background:white;
+padding:50px 20px;
+border-radius:15px;
+text-align:center;
+color:#b51f2a;
+font-size:18px;
+}
+
+/* لا يوجد إعلانات */
+
+.no-ads{
+background:white;
+padding:40px 20px;
+border-radius:15px;
+text-align:center;
+color:#777;
+font-size:17px;
+}
+
+/* الهاتف */
+
+@media(max-width:700px){
+
+.header{
+flex-direction:column;
+align-items:stretch;
+}
+
+.logo{
+text-align:center;
+font-size:19px;
+}
+
+.back{
+text-align:center;
+}
+
+.container{
+margin:20px auto;
+padding:0 10px;
+}
+
+.profile-header{
+padding:25px 20px;
+}
+
+.avatar{
+width:75px;
+height:75px;
+font-size:30px;
+}
+
+.profile-name{
+font-size:22px;
+}
+
+.profile-city{
+font-size:14px;
+}
+
+.profile-info{
+padding:20px;
+}
+
+.ads-grid{
+grid-template-columns:1fr;
+}
+
+.ad-image,
+.no-image{
+height:220px;
+}
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     الهيدر
+========================= -->
+
+<header>
+
+<div class="header">
+
+<div class="logo">
+فلسطين <span>بلاتفورم</span>
+</div>
+
+<a href="ads.html" class="back">
+← العودة للإعلانات
+</a>
+
+</div>
+
+</header>
+
+
+<!-- =========================
+     المحتوى
+========================= -->
+
+<main class="container">
+
+<div id="pageContent">
+
+<div class="loading">
+⏳ جاري تحميل الحساب...
+</div>
+
+</div>
+
+</main>
+
+
+<!-- =========================
+     Supabase
+========================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+/* =========================
+   إعداد Supabase
+========================= */
+
+const SUPABASE_URL =
+"https://sesbumfedusbjevbsyzl.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
+
+
+const supabaseClient =
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY,
+{
+auth:{
+persistSession:true,
+autoRefreshToken:true,
+detectSessionInUrl:true
+}
+}
+);
+
+
+/* =========================
+   الحصول على ID المستخدم
+========================= */
+
+const params =
+new URLSearchParams(
+window.location.search
+);
+
+const userId =
+params.get("id");
+
+
+const pageContent =
+document.getElementById(
+"pageContent"
+);
+
+
+/* =========================
+   تحميل الحساب
+========================= */
+
+async function loadProfile(){
+
+if(!userId){
+
+showError(
+"لم يتم تحديد صاحب الحساب."
+);
+
+return;
+
+}
+
+
+/* =========================
+   جلب الملف الشخصي
+========================= */
+
+const {
+data: profile,
+error: profileError
+} =
+await supabaseClient
+.from("profiles")
+.select(
+"id,full_name,phone,city,avatar_url,created_at"
+)
+.eq("id",userId)
+.maybeSingle();
+
+
+if(profileError){
+
+console.error(
+"خطأ في جلب الحساب:",
+profileError
+);
+
+showError(
+"حدث خطأ أثناء تحميل الحساب."
+);
+
+return;
+
+}
+
+
+/* =========================
+   جلب المستخدم من Auth
+========================= */
+
+let authUser = null;
+
+
+/*
+   لا يمكن للواجهة العامة
+   قراءة بيانات auth.users
+   مباشرة.
+
+   لذلك نعتمد على profiles.
+*/
+
+
+/* =========================
+   جلب إعلانات المستخدم
+========================= */
+
+const {
+data: ads,
+error: adsError
+} =
+await supabaseClient
+.from("ads")
+.select(
+"id,title,category,description,price,city,phone,image_urls,created_at"
+)
+.eq("user_id",userId)
+.order(
+"created_at",
+{
+ascending:false
+}
+);
+
+
+if(adsError){
+
+console.error(
+"خطأ في جلب إعلانات المستخدم:",
+adsError
+);
+
+}
+
+
+/* =========================
+   عرض الحساب
+========================= */
+
+displayProfile(
+profile,
+ads || []
+);
+
+}
+
+
+/* =========================
+   عرض الحساب
+========================= */
+
+function displayProfile(
+profile,
+ads
+){
+
+pageContent.innerHTML="";
+
+
+const card =
+document.createElement("div");
+
+card.className=
+"profile-card";
+
+
+/* =========================
+   رأس الحساب
+========================= */
+
+const profileHeader =
+document.createElement("div");
+
+profileHeader.className=
+"profile-header";
+
+
+/* الصورة */
+
+const avatar =
+document.createElement("div");
+
+avatar.className=
+"avatar";
+
+
+let name =
+"مستخدم فلسطين بلاتفورم";
+
+
+if(
+profile &&
+profile.full_name &&
+profile.full_name.trim()
+){
+
+name =
+profile.full_name.trim();
+
+}
+
+
+/* صورة شخصية */
+
+if(
+profile &&
+profile.avatar_url
+){
+
+const image =
+document.createElement("img");
+
+image.src =
+profile.avatar_url;
+
+image.alt =
+name;
+
+image.onerror =
+function(){
+
+this.remove();
+
+avatar.textContent =
+name.charAt(0);
+
+};
+
+avatar.appendChild(
+image
+);
+
+}else{
+
+avatar.textContent =
+name.charAt(0);
+
+}
+
+
+profileHeader.appendChild(
+avatar
+);
+
+
+/* بيانات الرأس */
+
+const headerInfo =
+document.createElement("div");
+
+
+const profileName =
+document.createElement("div");
+
+profileName.className=
+"profile-name";
+
+profileName.textContent =
+name;
+
+headerInfo.appendChild(
+profileName
+);
+
+
+/* المدينة */
+
+if(
+profile &&
+profile.city
+){
+
+const city =
+document.createElement("div");
+
+city.className=
+"profile-city";
+
+city.textContent =
+"📍 " +
+profile.city;
+
+headerInfo.appendChild(
+city
+);
+
+}
+
+
+profileHeader.appendChild(
+headerInfo
+);
+
+
+card.appendChild(
+profileHeader
+);
+
+
+/* =========================
+   معلومات الحساب
+========================= */
+
+const profileInfo =
+document.createElement("div");
+
+profileInfo.className=
+"profile-info";
+
+
+if(
+profile &&
+profile.phone
+){
+
+const phoneRow =
+document.createElement("div");
+
+phoneRow.className=
+"info-row";
+
+phoneRow.innerHTML =
+'<span class="info-label">📞 الهاتف:</span> ' +
+escapeHTML(profile.phone);
+
+profileInfo.appendChild(
+phoneRow
+);
+
+}
+
+
+if(
+profile &&
+profile.city
+){
+
+const cityRow =
+document.createElement("div");
+
+cityRow.className=
+"info-row";
+
+cityRow.innerHTML =
+'<span class="info-label">📍 المدينة:</span> ' +
+escapeHTML(profile.city);
+
+profileInfo.appendChild(
+cityRow
+);
+
+}
+
+
+/* عدد الإعلانات */
+
+const adsCountRow =
+document.createElement("div");
+
+adsCountRow.className=
+"info-row";
+
+adsCountRow.innerHTML =
+'<span class="info-label">📢 عدد الإعلانات:</span> ' +
+ads.length;
+
+profileInfo.appendChild(
+adsCountRow
+);
+
+
+card.appendChild(
+profileInfo
+);
+
+
+/* =========================
+   إعلانات صاحب الحساب
+========================= */
+
+const adsTitle =
+document.createElement("h2");
+
+adsTitle.className=
+"ads-title";
+
+adsTitle.textContent =
+"📢 إعلانات صاحب الحساب";
+
+pageContent.appendChild(
+card
+);
+
+pageContent.appendChild(
+adsTitle
+);
+
+
+/* =========================
+   لا يوجد إعلانات
+========================= */
+
+if(ads.length === 0){
+
+const noAds =
+document.createElement("div");
+
+noAds.className=
+"no-ads";
+
+noAds.textContent =
+"لا توجد إعلانات لهذا المستخدم حاليًا.";
+
+pageContent.appendChild(
+noAds
+);
+
+return;
+
+}
+
+
+/* =========================
+   شبكة الإعلانات
+========================= */
+
+const adsGrid =
+document.createElement("div");
+
+adsGrid.className=
+"ads-grid";
+
+
+ads.forEach(
+function(ad){
+
+const adCard =
+document.createElement("div");
+
+adCard.className=
+"ad-card";
+
+
+/* الضغط على الإعلان */
+
+adCard.onclick =
+function(){
+
+window.location.href =
+"ad-details.html?id=" +
+encodeURIComponent(ad.id);
+
+};
+
+
+/* الصورة */
+
+if(
+ad.image_urls &&
+Array.isArray(ad.image_urls) &&
+ad.image_urls.length > 0
+){
+
+const image =
+document.createElement("img");
+
+image.className=
+"ad-image";
+
+image.src =
+ad.image_urls[0];
+
+image.alt =
+ad.title || "صورة الإعلان";
+
+image.onerror =
+function(){
+
+this.style.display="none";
+
+};
+
+adCard.appendChild(
+image
+);
+
+}else{
+
+const noImage =
+document.createElement("div");
+
+noImage.className=
+"no-image";
+
+noImage.textContent =
+"📷";
+
+adCard.appendChild(
+noImage
+);
+
+}
+
+
+/* محتوى الإعلان */
+
+const adContent =
+document.createElement("div");
+
+adContent.className=
+"ad-content";
+
+
+/* العنوان */
+
+const title =
+document.createElement("div");
+
+title.className=
+"ad-title";
+
+title.textContent =
+ad.title ||
+"بدون عنوان";
+
+adContent.appendChild(
+title
+);
+
+
+/* التصنيف */
+
+if(ad.category){
+
+const category =
+document.createElement("div");
+
+category.className=
+"ad-category";
+
+category.textContent =
+ad.category;
+
+adContent.appendChild(
+category
+);
+
+}
+
+
+/* السعر */
+
+if(
+ad.price !== null &&
+ad.price !== undefined &&
+ad.price !== ""
+){
+
+const price =
+document.createElement("div");
+
+price.className=
+"ad-price";
+
+price.textContent =
+"💰 " +
+Number(ad.price)
+.toLocaleString("ar-PS") +
+" شيكل";
+
+adContent.appendChild(
+price
+);
+
+}
+
+
+/* المدينة */
+
+if(ad.city){
+
+const city =
+document.createElement("div");
+
+city.className=
+"ad-city";
+
+city.textContent =
+"📍 " +
+ad.city;
+
+adContent.appendChild(
+city
+);
+
+}
+
+
+adCard.appendChild(
+adContent
+);
+
+adsGrid.appendChild(
+adCard
+);
+
+});
+
+
+pageContent.appendChild(
+adsGrid
+);
+
+}
+
+
+/* =========================
+   رسالة الخطأ
+========================= */
+
+function showError(message){
+
+pageContent.innerHTML =
+'<div class="error">' +
+
+escapeHTML(message) +
+
+'<br><br>' +
+
+'<a href="ads.html" class="back-button action-button">' +
+
+'← العودة للإعلانات' +
+
+'</a>' +
+
+'</div>';
+
+}
+
+
+/* =========================
+   حماية النصوص
+========================= */
+
+function escapeHTML(text){
+
+return String(text)
+
+.replace(/&/g,"&amp;")
+
+.replace(/</g,"&lt;")
+
+.replace(/>/g,"&gt;")
+
+.replace(/"/g,"&quot;")
+
+.replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================
+   تشغيل الصفحة
+========================= */
+
+loadProfile();
+
+</script>
+
+</body>
+
+  </html>
