@@ -20,10 +20,10 @@ body{
     color:#222;
 }
 
-/* الهيدر */
+/* ================= الهيدر ================= */
 
 header{
-    background:#ffffff;
+    background:#fff;
     border-bottom:1px solid #e5e5e5;
     position:sticky;
     top:0;
@@ -33,7 +33,7 @@ header{
 .header-container{
     max-width:1150px;
     margin:auto;
-    padding:15px 20px;
+    padding:12px 20px;
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -51,8 +51,28 @@ header{
 .account-area{
     display:flex;
     align-items:center;
-    gap:10px;
+    gap:9px;
     flex-wrap:wrap;
+}
+
+/* صورة المستخدم */
+
+.header-avatar{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid #087443;
+    display:none;
+    background:#e9f5ef;
+}
+
+.header-avatar.initial{
+    align-items:center;
+    justify-content:center;
+    color:#087443;
+    font-weight:bold;
+    font-size:18px;
 }
 
 #userName{
@@ -99,7 +119,7 @@ header{
     opacity:.9;
 }
 
-/* القسم الرئيسي */
+/* ================= القسم الرئيسي ================= */
 
 .hero{
     background:linear-gradient(135deg,#087443,#0b9254);
@@ -122,7 +142,7 @@ header{
 
 .main-btn{
     display:inline-block;
-    background:#ffffff;
+    background:#fff;
     color:#087443;
     text-decoration:none;
     padding:14px 25px;
@@ -136,7 +156,7 @@ header{
     color:white;
 }
 
-/* البحث */
+/* ================= البحث ================= */
 
 .search-section{
     max-width:900px;
@@ -173,7 +193,7 @@ header{
     font-weight:bold;
 }
 
-/* الأقسام */
+/* ================= الأقسام ================= */
 
 .container{
     max-width:1150px;
@@ -233,7 +253,7 @@ header{
     margin:0;
 }
 
-/* إضافة إعلان */
+/* ================= إضافة إعلان ================= */
 
 .add-section{
     margin:40px 0;
@@ -263,7 +283,7 @@ header{
     opacity:.9;
 }
 
-/* تذييل */
+/* ================= التذييل ================= */
 
 footer{
     background:#222;
@@ -278,7 +298,7 @@ footer p{
     color:#ddd;
 }
 
-/* موبايل */
+/* ================= موبايل ================= */
 
 @media(max-width:800px){
 
@@ -323,6 +343,11 @@ footer p{
         grid-template-columns:1fr;
     }
 
+    .header-avatar{
+        width:45px;
+        height:45px;
+    }
+
 }
 
 </style>
@@ -341,45 +366,58 @@ footer p{
 فلسطين بلاتفورم
 </a>
 
-
 <div class="account-area">
+
+<!-- صورة المستخدم -->
+<img
+    id="headerAvatar"
+    class="header-avatar"
+    alt="صورة المستخدم"
+>
+
+<!-- الحرف الأول في حال عدم وجود صورة -->
+<div
+    id="headerInitial"
+    class="header-avatar initial"
+>
+</div>
 
 <span id="userName"></span>
 
 
 <a
-href="account.html"
-id="accountLink"
-class="account-btn"
-style="display:none;"
+    href="account.html"
+    id="accountLink"
+    class="account-btn"
+    style="display:none;"
 >
 👤 حسابي
 </a>
 
 
 <a
-href="my-ads.html"
-id="myAdsLink"
-class="account-btn"
-style="display:none;"
+    href="my-ads.html"
+    id="myAdsLink"
+    class="account-btn"
+    style="display:none;"
 >
 📢 إعلاناتي
 </a>
 
 
 <a
-href="login.html"
-id="loginLink"
-class="login-btn"
+    href="login.html"
+    id="loginLink"
+    class="login-btn"
 >
 تسجيل الدخول
 </a>
 
 
 <button
-id="logoutBtn"
-class="logout-btn"
-style="display:none;"
+    id="logoutBtn"
+    class="logout-btn"
+    style="display:none;"
 >
 تسجيل الخروج
 </button>
@@ -405,16 +443,16 @@ style="display:none;"
 
 
 <a
-href="ads.html"
-class="main-btn"
+    href="ads.html"
+    class="main-btn"
 >
 📢 تصفح الإعلانات
 </a>
 
 
 <a
-href="ads.html"
-class="main-btn green"
+    href="ads.html"
+    class="main-btn green"
 >
 ➕ أضف إعلانك
 </a>
@@ -429,9 +467,9 @@ class="main-btn green"
 <div class="search-box">
 
 <input
-type="text"
-id="searchInput"
-placeholder="ابحث عن إعلان، سيارة، عقار، وظيفة..."
+    type="text"
+    id="searchInput"
+    placeholder="ابحث عن إعلان، سيارة، عقار، وظيفة..."
 >
 
 <button id="searchBtn">
@@ -464,8 +502,8 @@ placeholder="ابحث عن إعلان، سيارة، عقار، وظيفة..."
 
 
 <a
-href="ads.html"
-class="category-card"
+    href="ads.html"
+    class="category-card"
 >
 
 <div class="category-icon">
@@ -484,8 +522,8 @@ class="category-card"
 
 
 <a
-href="shops.html"
-class="category-card"
+    href="shops.html"
+    class="category-card"
 >
 
 <div class="category-icon">
@@ -504,8 +542,8 @@ class="category-card"
 
 
 <a
-href="realestate.html"
-class="category-card"
+    href="realestate.html"
+    class="category-card"
 >
 
 <div class="category-icon">
@@ -524,8 +562,8 @@ class="category-card"
 
 
 <a
-href="cars.html"
-class="category-card"
+    href="cars.html"
+    class="category-card"
 >
 
 <div class="category-icon">
@@ -544,8 +582,8 @@ class="category-card"
 
 
 <a
-href="jobs.html"
-class="category-card"
+    href="jobs.html"
+    class="category-card"
 >
 
 <div class="category-icon">
@@ -564,8 +602,8 @@ class="category-card"
 
 
 <a
-href="services.html"
-class="category-card"
+    href="services.html"
+    class="category-card"
 >
 
 <div class="category-icon">
@@ -599,8 +637,8 @@ class="category-card"
 
 
 <a
-href="ads.html"
-class="add-ad-btn"
+    href="ads.html"
+    class="add-ad-btn"
 >
 ➕ أضف إعلانك الآن
 </a>
@@ -625,7 +663,7 @@ class="add-ad-btn"
 </footer>
 
 
-<!-- Supabase -->
+<!-- ================= Supabase ================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -642,7 +680,14 @@ const SUPABASE_KEY =
 const supabaseClient =
 window.supabase.createClient(
     SUPABASE_URL,
-    SUPABASE_KEY
+    SUPABASE_KEY,
+    {
+        auth:{
+            persistSession:true,
+            autoRefreshToken:true,
+            detectSessionInUrl:true
+        }
+    }
 );
 
 
@@ -665,6 +710,81 @@ document.getElementById("loginLink");
 const logoutBtn =
 document.getElementById("logoutBtn");
 
+const headerAvatar =
+document.getElementById("headerAvatar");
+
+const headerInitial =
+document.getElementById("headerInitial");
+
+
+/* ==========================
+   إظهار صورة الحساب
+========================== */
+
+function showAvatar(profile){
+
+    headerAvatar.style.display = "none";
+    headerInitial.style.display = "none";
+
+    if(
+        profile &&
+        profile.avatar_url
+    ){
+
+        headerAvatar.src =
+            profile.avatar_url;
+
+        headerAvatar.style.display =
+            "block";
+
+        headerAvatar.onerror =
+            function(){
+
+                headerAvatar.style.display =
+                    "none";
+
+                showInitial(
+                    profile.full_name
+                );
+
+            };
+
+    }else{
+
+        showInitial(
+            profile
+            ? profile.full_name
+            : ""
+        );
+
+    }
+
+}
+
+
+/* ==========================
+   إظهار الحرف الأول
+========================== */
+
+function showInitial(name){
+
+    let initial = "👤";
+
+    if(name && name.trim()){
+
+        initial =
+            name.trim().charAt(0);
+
+    }
+
+    headerInitial.textContent =
+        initial;
+
+    headerInitial.style.display =
+        "flex";
+
+}
+
 
 /* ==========================
    فحص المستخدم
@@ -675,7 +795,8 @@ async function checkUser(){
     const {
         data,
         error
-    } = await supabaseClient.auth.getUser();
+    } =
+    await supabaseClient.auth.getUser();
 
 
     if(error){
@@ -691,12 +812,13 @@ async function checkUser(){
     }
 
 
-    const user = data.user;
+    const user =
+        data.user;
 
 
     if(user){
 
-        showLoggedIn(user);
+        await showLoggedIn(user);
 
     }else{
 
@@ -726,15 +848,21 @@ async function showLoggedIn(user){
         "inline-block";
 
 
-    /* جلب اسم المستخدم */
+    /* جلب بيانات الملف الشخصي */
 
     const {
         data: profile,
         error
-    } = await supabaseClient
+    } =
+    await supabaseClient
         .from("profiles")
-        .select("full_name")
-        .eq("id",user.id)
+        .select(
+            "full_name,avatar_url"
+        )
+        .eq(
+            "id",
+            user.id
+        )
         .maybeSingle();
 
 
@@ -745,10 +873,22 @@ async function showLoggedIn(user){
             error
         );
 
+        userName.textContent =
+            "مرحباً، مستخدم";
+
+        showAvatar(null);
+
+        return;
+
     }
 
 
-    if(profile && profile.full_name){
+    /* اسم المستخدم */
+
+    if(
+        profile &&
+        profile.full_name
+    ){
 
         userName.textContent =
             "مرحباً، " +
@@ -760,6 +900,11 @@ async function showLoggedIn(user){
             "مرحباً، مستخدم";
 
     }
+
+
+    /* صورة المستخدم */
+
+    showAvatar(profile);
 
 }
 
@@ -783,6 +928,12 @@ function showLoggedOut(){
         "inline-block";
 
     logoutBtn.style.display =
+        "none";
+
+    headerAvatar.style.display =
+        "none";
+
+    headerInitial.style.display =
         "none";
 
 }
@@ -841,7 +992,10 @@ logoutBtn.addEventListener(
 supabaseClient.auth.onAuthStateChange(
     function(event, session){
 
-        if(session && session.user){
+        if(
+            session &&
+            session.user
+        ){
 
             showLoggedIn(
                 session.user
@@ -908,11 +1062,13 @@ document.getElementById("searchInput")
 );
 
 
-/* تشغيل فحص الحساب */
+/* ==========================
+   تشغيل فحص الحساب
+========================== */
 
 checkUser();
 
 </script>
 
 </body>
-      </html>
+</html>
