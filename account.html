@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>حسابي - فلسطين بلاتفورم</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Tahoma,Arial,sans-serif;
+    background:#f5f7fa;
+    color:#222;
+}
+
+header{
+    background:#ffffff;
+    border-bottom:1px solid #ddd;
+    padding:15px 20px;
+}
+
+.header-container{
+    max-width:1100px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+}
+
+.logo{
+    font-size:23px;
+    font-weight:bold;
+    color:#087443;
+    text-decoration:none;
+}
+
+.back{
+    color:#087443;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.container{
+    max-width:900px;
+    margin:30px auto;
+    padding:0 15px;
+}
+
+.page-title{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.page-title h1{
+    margin-bottom:8px;
+}
+
+.page-title p{
+    color:#777;
+}
+
+.card{
+    background:#fff;
+    border-radius:15px;
+    padding:25px;
+    margin-bottom:20px;
+    box-shadow:0 3px 12px rgba(0,0,0,.07);
+}
+
+.profile-top{
+    text-align:center;
+}
+
+.avatar{
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    background:#087443;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 15px;
+    font-size:40px;
+    font-weight:bold;
+    overflow:hidden;
+}
+
+.avatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.email{
+    color:#777;
+    font-size:14px;
+}
+
+.form-group{
+    margin-bottom:18px;
+}
+
+label{
+    display:block;
+    margin-bottom:7px;
+    font-weight:bold;
+}
+
+input{
+    width:100%;
+    padding:13px;
+    border:1px solid #ddd;
+    border-radius:9px;
+    font-size:15px;
+    outline:none;
+}
+
+input:focus{
+    border-color:#087443;
+}
+
+button{
+    border:0;
+    border-radius:9px;
+    padding:12px 20px;
+    font-size:15px;
+    cursor:pointer;
+}
+
+.save-btn{
+    background:#087443;
+    color:#fff;
+    width:100%;
+}
+
+.save-btn:hover{
+    opacity:.9;
+}
+
+.ads-button{
+    display:block;
+    text-align:center;
+    background:#eee;
+    color:#222;
+    text-decoration:none;
+    padding:14px;
+    border-radius:9px;
+    margin-top:10px;
+}
+
+.logout{
+    background:#c62828;
+    color:#fff;
+    width:100%;
+    margin-top:10px;
+}
+
+.message{
+    text-align:center;
+    padding:12px;
+    margin-top:15px;
+    border-radius:8px;
+    display:none;
+}
+
+.success{
+    background:#e8f5e9;
+    color:#2e7d32;
+}
+
+.error{
+    background:#ffebee;
+    color:#c62828;
+}
+
+.loading{
+    text-align:center;
+    padding:40px;
+}
+
+@media(max-width:600px){
+
+    .header-container{
+        flex-direction:column;
+    }
+
+    .card{
+        padding:18px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="header-container">
+
+<a href="index.html" class="logo">
+فلسطين بلاتفورم
+</a>
+
+<a href="index.html" class="back">
+← الرئيسية
+</a>
+
+</div>
+
+</header>
+
+
+<div class="container">
+
+<div id="loading" class="loading">
+جاري تحميل الحساب...
+</div>
+
+
+<div id="accountContent" style="display:none;">
+
+<div class="page-title">
+
+<h1>👤 حسابي</h1>
+
+<p>
+إدارة معلومات حسابك وإعلاناتك
+</p>
+
+</div>
+
+
+<!-- معلومات الحساب -->
+
+<div class="card profile-top">
+
+<div class="avatar" id="avatar">
+?
+</div>
+
+<h2 id="displayName">
+المستخدم
+</h2>
+
+<div class="email" id="email">
+</div>
+
+</div>
+
+
+<!-- تعديل البيانات -->
+
+<div class="card">
+
+<h2>معلوماتي</h2>
+
+<br>
+
+<div class="form-group">
+
+<label for="fullName">
+الاسم
+</label>
+
+<input
+type="text"
+id="fullName"
+placeholder="اكتب اسمك"
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label for="phone">
+رقم الهاتف
+</label>
+
+<input
+type="text"
+id="phone"
+placeholder="مثال: 0599123456"
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label for="city">
+المدينة
+</label>
+
+<input
+type="text"
+id="city"
+placeholder="مثال: نابلس"
+>
+
+</div>
+
+
+<button
+class="save-btn"
+id="saveBtn"
+>
+حفظ المعلومات
+</button>
+
+<div
+id="message"
+class="message"
+></div>
+
+</div>
+
+
+<!-- الإعلانات -->
+
+<div class="card">
+
+<h2>📢 إعلاناتي</h2>
+
+<p>
+إدارة الإعلانات التي قمت بنشرها
+</p>
+
+<a
+href="my-ads.html"
+class="ads-button"
+>
+إدارة إعلاناتي
+</a>
+
+</div>
+
+
+<!-- تسجيل الخروج -->
+
+<div class="card">
+
+<h2>تسجيل الخروج</h2>
+
+<p>
+الخروج من حسابك على فلسطين بلاتفورم
+</p>
+
+<button
+class="logout"
+id="logoutBtn"
+>
+تسجيل الخروج
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const SUPABASE_URL =
+"https://sesbumfedusbjevbsyzl.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
+
+const supabaseClient =
+window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+
+let currentUser = null;
+
+
+// تحميل الحساب
+
+async function loadAccount(){
+
+    const {
+        data: {
+            user
+        },
+        error
+    } = await supabaseClient.auth.getUser();
+
+
+    if(error || !user){
+
+        window.location.href =
+            "login.html";
+
+        return;
+    }
+
+
+    currentUser = user;
+
+
+    document.getElementById("email").textContent =
+        user.email || "";
+
+
+    // البحث عن الملف الشخصي
+
+    const {
+        data: profile,
+        error: profileError
+    } = await supabaseClient
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .maybeSingle();
+
+
+    if(profileError){
+
+        console.error(profileError);
+
+    }
+
+
+    if(profile){
+
+        document.getElementById("fullName").value =
+            profile.full_name || "";
+
+        document.getElementById("phone").value =
+            profile.phone || "";
+
+        document.getElementById("city").value =
+            profile.city || "";
+
+
+        updateProfileDisplay(
+            profile.full_name
+        );
+
+    }else{
+
+        // إنشاء ملف شخصي للمستخدم لأول مرة
+
+        const {
+            error: insertError
+        } = await supabaseClient
+            .from("profiles")
+            .insert({
+                id:user.id,
+                full_name:"",
+                phone:"",
+                city:""
+            });
+
+
+        if(insertError){
+
+            console.error(insertError);
+
+        }
+
+    }
+
+
+    document.getElementById("loading")
+        .style.display = "none";
+
+    document.getElementById("accountContent")
+        .style.display = "block";
+}
+
+
+// تحديث الاسم والصورة الرمزية
+
+function updateProfileDisplay(name){
+
+    const displayName =
+        name && name.trim()
+        ? name.trim()
+        : "المستخدم";
+
+
+    document.getElementById("displayName")
+        .textContent = displayName;
+
+
+    const avatar =
+        document.getElementById("avatar");
+
+
+    if(name && name.trim()){
+
+        avatar.textContent =
+            name.trim().charAt(0);
+
+    }else{
+
+        avatar.textContent = "?";
+
+    }
+
+}
+
+
+// حفظ المعلومات
+
+document.getElementById("saveBtn")
+.addEventListener("click", async function(){
+
+    if(!currentUser) return;
+
+
+    const fullName =
+        document.getElementById("fullName")
+        .value.trim();
+
+    const phone =
+        document.getElementById("phone")
+        .value.trim();
+
+    const city =
+        document.getElementById("city")
+        .value.trim();
+
+
+    const saveBtn =
+        document.getElementById("saveBtn");
+
+
+    saveBtn.disabled = true;
+
+    saveBtn.textContent =
+        "جاري الحفظ...";
+
+
+    const {
+        error
+    } = await supabaseClient
+        .from("profiles")
+        .upsert({
+
+            id:currentUser.id,
+
+            full_name:fullName,
+
+            phone:phone,
+
+            city:city,
+
+            updated_at:new Date().toISOString()
+
+        });
+
+
+    saveBtn.disabled = false;
+
+    saveBtn.textContent =
+        "حفظ المعلومات";
+
+
+    const message =
+        document.getElementById("message");
+
+
+    if(error){
+
+        console.error(error);
+
+        message.className =
+            "message error";
+
+        message.textContent =
+            "حدث خطأ أثناء حفظ المعلومات";
+
+        message.style.display =
+            "block";
+
+        return;
+    }
+
+
+    updateProfileDisplay(fullName);
+
+
+    message.className =
+        "message success";
+
+    message.textContent =
+        "تم حفظ معلوماتك بنجاح ✓";
+
+    message.style.display =
+        "block";
+
+
+    setTimeout(function(){
+
+        message.style.display =
+            "none";
+
+    },3000);
+
+});
+
+
+// تسجيل الخروج
+
+document.getElementById("logoutBtn")
+.addEventListener("click", async function(){
+
+    const {
+        error
+    } = await supabaseClient.auth.signOut();
+
+
+    if(error){
+
+        alert(
+            "حدث خطأ أثناء تسجيل الخروج"
+        );
+
+        return;
+    }
+
+
+    window.location.href =
+        "index.html";
+
+});
+
+
+// تشغيل الصفحة
+
+loadAccount();
+
+</script>
+
+</body>
+  </html>
