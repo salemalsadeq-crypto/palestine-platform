@@ -2,8 +2,11 @@
 <html lang="ar" dir="rtl">
 
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>حسابي - فلسطين بلاتفورم</title>
 
@@ -21,7 +24,7 @@ body{
 }
 
 header{
-    background:#ffffff;
+    background:#fff;
     border-bottom:1px solid #ddd;
     padding:15px 20px;
 }
@@ -75,23 +78,33 @@ header{
     box-shadow:0 3px 12px rgba(0,0,0,.07);
 }
 
+/* الصورة */
+
 .profile-top{
     text-align:center;
 }
 
 .avatar{
-    width:100px;
-    height:100px;
+    width:120px;
+    height:120px;
     border-radius:50%;
     background:#087443;
     color:#fff;
+
     display:flex;
     align-items:center;
     justify-content:center;
+
     margin:0 auto 15px;
-    font-size:40px;
+
+    font-size:45px;
     font-weight:bold;
+
     overflow:hidden;
+
+    border:4px solid #fff;
+
+    box-shadow:0 3px 12px rgba(0,0,0,.15);
 }
 
 .avatar img{
@@ -103,6 +116,39 @@ header{
 .email{
     color:#777;
     font-size:14px;
+}
+
+/* أزرار الصورة */
+
+.image-buttons{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:15px;
+}
+
+.image-btn{
+    background:#087443;
+    color:#fff;
+    border:0;
+    border-radius:9px;
+    padding:10px 16px;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.image-btn.delete{
+    background:#c62828;
+}
+
+.image-btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+#avatarInput{
+    display:none;
 }
 
 .form-group{
@@ -146,11 +192,27 @@ button{
     opacity:.9;
 }
 
+.save-btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
 .ads-button{
     display:block;
     text-align:center;
     background:#eee;
     color:#222;
+    text-decoration:none;
+    padding:14px;
+    border-radius:9px;
+    margin-top:10px;
+}
+
+.add-ad-button{
+    display:block;
+    text-align:center;
+    background:#087443;
+    color:#fff;
     text-decoration:none;
     padding:14px;
     border-radius:9px;
@@ -187,6 +249,12 @@ button{
     padding:40px;
 }
 
+.help{
+    font-size:13px;
+    color:#777;
+    margin-top:10px;
+}
+
 @media(max-width:600px){
 
     .header-container{
@@ -200,20 +268,28 @@ button{
 }
 
 </style>
+
 </head>
 
 <body>
+
 
 <header>
 
 <div class="header-container">
 
-<a href="index.html" class="logo">
+<a href="index.html"
+class="logo">
+
 فلسطين بلاتفورم
+
 </a>
 
-<a href="index.html" class="back">
+<a href="index.html"
+class="back">
+
 ← الرئيسية
+
 </a>
 
 </div>
@@ -223,12 +299,18 @@ button{
 
 <div class="container">
 
-<div id="loading" class="loading">
+
+<div id="loading"
+class="loading">
+
 جاري تحميل الحساب...
+
 </div>
 
 
-<div id="accountContent" style="display:none;">
+<div id="accountContent"
+style="display:none;">
+
 
 <div class="page-title">
 
@@ -241,31 +323,82 @@ button{
 </div>
 
 
-<!-- معلومات الحساب -->
+<!-- الحساب والصورة -->
 
 <div class="card profile-top">
 
-<div class="avatar" id="avatar">
+
+<div class="avatar"
+id="avatar">
+
 ?
+
 </div>
+
 
 <h2 id="displayName">
+
 المستخدم
+
 </h2>
 
-<div class="email" id="email">
+
+<div class="email"
+id="email">
 </div>
 
+
+<div class="image-buttons">
+
+<button
+class="image-btn"
+id="changeAvatarBtn">
+
+📷 تغيير الصورة
+
+</button>
+
+
+<button
+class="image-btn delete"
+id="deleteAvatarBtn"
+style="display:none;">
+
+🗑️ حذف الصورة
+
+</button>
+
 </div>
 
 
-<!-- تعديل البيانات -->
+<input
+type="file"
+id="avatarInput"
+accept="image/jpeg,image/png,image/webp">
+
+
+<div class="help">
+
+الصيغ المسموحة: JPG / PNG / WEBP
+<br>
+الحد الأقصى للصورة: 5MB
+
+</div>
+
+
+</div>
+
+
+<!-- المعلومات -->
 
 <div class="card">
 
-<h2>معلوماتي</h2>
+<h2>
+معلوماتي
+</h2>
 
 <br>
+
 
 <div class="form-group">
 
@@ -277,7 +410,7 @@ button{
 type="text"
 id="fullName"
 placeholder="اكتب اسمك"
->
+maxlength="100">
 
 </div>
 
@@ -292,7 +425,7 @@ placeholder="اكتب اسمك"
 type="text"
 id="phone"
 placeholder="مثال: 0599123456"
->
+maxlength="30">
 
 </div>
 
@@ -307,22 +440,25 @@ placeholder="مثال: 0599123456"
 type="text"
 id="city"
 placeholder="مثال: نابلس"
->
+maxlength="100">
 
 </div>
 
 
 <button
 class="save-btn"
-id="saveBtn"
->
+id="saveBtn">
+
 حفظ المعلومات
+
 </button>
+
 
 <div
 id="message"
-class="message"
-></div>
+class="message">
+</div>
+
 
 </div>
 
@@ -331,17 +467,30 @@ class="message"
 
 <div class="card">
 
-<h2>📢 إعلاناتي</h2>
+<h2>
+📢 إعلاناتي
+</h2>
 
 <p>
 إدارة الإعلانات التي قمت بنشرها
 </p>
 
+
 <a
 href="my-ads.html"
-class="ads-button"
->
+class="ads-button">
+
 إدارة إعلاناتي
+
+</a>
+
+
+<a
+href="ads.html"
+class="add-ad-button">
+
+➕ إضافة إعلان جديد
+
 </a>
 
 </div>
@@ -351,27 +500,35 @@ class="ads-button"
 
 <div class="card">
 
-<h2>تسجيل الخروج</h2>
+<h2>
+تسجيل الخروج
+</h2>
 
 <p>
 الخروج من حسابك على فلسطين بلاتفورم
 </p>
 
+
 <button
 class="logout"
-id="logoutBtn"
->
+id="logoutBtn">
+
 تسجيل الخروج
+
 </button>
 
 </div>
 
-</div>
 
 </div>
 
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script
+src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+</script>
+
 
 <script>
 
@@ -381,22 +538,34 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
 
+
 const supabaseClient =
 window.supabase.createClient(
     SUPABASE_URL,
-    SUPABASE_KEY
+    SUPABASE_KEY,
+    {
+        auth:{
+            persistSession:true,
+            autoRefreshToken:true,
+            detectSessionInUrl:true
+        }
+    }
 );
 
 
 let currentUser = null;
 
+let currentAvatarUrl = null;
 
-// تحميل الحساب
+
+/* =========================
+   تحميل الحساب
+========================= */
 
 async function loadAccount(){
 
     const {
-        data: {
+        data:{
             user
         },
         error
@@ -415,64 +584,84 @@ async function loadAccount(){
     currentUser = user;
 
 
-    document.getElementById("email").textContent =
+    document.getElementById("email")
+        .textContent =
         user.email || "";
 
 
-    // البحث عن الملف الشخصي
-
     const {
-        data: profile,
-        error: profileError
+        data:profile,
+        error:profileError
     } = await supabaseClient
         .from("profiles")
         .select("*")
-        .eq("id", user.id)
+        .eq("id",user.id)
         .maybeSingle();
 
 
     if(profileError){
 
-        console.error(profileError);
+        console.error(
+            "Profile error:",
+            profileError
+        );
 
     }
 
 
     if(profile){
 
-        document.getElementById("fullName").value =
+        document.getElementById("fullName")
+            .value =
             profile.full_name || "";
 
-        document.getElementById("phone").value =
+
+        document.getElementById("phone")
+            .value =
             profile.phone || "";
 
-        document.getElementById("city").value =
+
+        document.getElementById("city")
+            .value =
             profile.city || "";
 
 
+        currentAvatarUrl =
+            profile.avatar_url || null;
+
+
         updateProfileDisplay(
-            profile.full_name
+            profile.full_name,
+            profile.avatar_url
         );
 
     }else{
 
-        // إنشاء ملف شخصي للمستخدم لأول مرة
-
         const {
-            error: insertError
+            error:insertError
         } = await supabaseClient
             .from("profiles")
             .insert({
+
                 id:user.id,
+
                 full_name:"",
+
                 phone:"",
-                city:""
+
+                city:"",
+
+                avatar_url:null
+
             });
 
 
         if(insertError){
 
-            console.error(insertError);
+            console.error(
+                "Insert profile error:",
+                insertError
+            );
 
         }
 
@@ -480,16 +669,24 @@ async function loadAccount(){
 
 
     document.getElementById("loading")
-        .style.display = "none";
+        .style.display =
+        "none";
+
 
     document.getElementById("accountContent")
-        .style.display = "block";
+        .style.display =
+        "block";
 }
 
 
-// تحديث الاسم والصورة الرمزية
+/* =========================
+   عرض الحساب
+========================= */
 
-function updateProfileDisplay(name){
+function updateProfileDisplay(
+    name,
+    avatarUrl
+){
 
     const displayName =
         name && name.trim()
@@ -498,158 +695,596 @@ function updateProfileDisplay(name){
 
 
     document.getElementById("displayName")
-        .textContent = displayName;
+        .textContent =
+        displayName;
 
 
     const avatar =
         document.getElementById("avatar");
 
 
-    if(name && name.trim()){
+    avatar.innerHTML = "";
 
-        avatar.textContent =
-            name.trim().charAt(0);
+
+    if(avatarUrl){
+
+        const img =
+            document.createElement("img");
+
+        img.src =
+            avatarUrl;
+
+        img.alt =
+            "الصورة الشخصية";
+
+
+        avatar.appendChild(img);
+
+
+        document.getElementById(
+            "deleteAvatarBtn"
+        ).style.display =
+            "inline-block";
 
     }else{
 
-        avatar.textContent = "?";
+        avatar.textContent =
+            name && name.trim()
+            ? name.trim().charAt(0)
+            : "?";
 
+
+        document.getElementById(
+            "deleteAvatarBtn"
+        ).style.display =
+            "none";
     }
 
 }
 
 
-// حفظ المعلومات
+/* =========================
+   تغيير الصورة
+========================= */
 
-document.getElementById("saveBtn")
-.addEventListener("click", async function(){
+document.getElementById(
+    "changeAvatarBtn"
+)
+.addEventListener(
+    "click",
+    function(){
 
-    if(!currentUser) return;
+        document.getElementById(
+            "avatarInput"
+        ).click();
 
-
-    const fullName =
-        document.getElementById("fullName")
-        .value.trim();
-
-    const phone =
-        document.getElementById("phone")
-        .value.trim();
-
-    const city =
-        document.getElementById("city")
-        .value.trim();
+    }
+);
 
 
-    const saveBtn =
-        document.getElementById("saveBtn");
+document.getElementById(
+    "avatarInput"
+)
+.addEventListener(
+    "change",
+    async function(){
+
+        const file =
+            this.files[0];
 
 
-    saveBtn.disabled = true;
+        if(!file){
 
-    saveBtn.textContent =
-        "جاري الحفظ...";
-
-
-    const {
-        error
-    } = await supabaseClient
-        .from("profiles")
-        .upsert({
-
-            id:currentUser.id,
-
-            full_name:fullName,
-
-            phone:phone,
-
-            city:city,
-
-            updated_at:new Date().toISOString()
-
-        });
+            return;
+        }
 
 
-    saveBtn.disabled = false;
+        if(file.size > 5 * 1024 * 1024){
 
-    saveBtn.textContent =
-        "حفظ المعلومات";
+            alert(
+                "حجم الصورة يجب ألا يتجاوز 5MB"
+            );
 
+            this.value = "";
+
+            return;
+        }
+
+
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/webp"
+        ];
+
+
+        if(!allowedTypes.includes(
+            file.type
+        )){
+
+            alert(
+                "يسمح فقط بصور JPG أو PNG أو WEBP"
+            );
+
+            this.value = "";
+
+            return;
+        }
+
+
+        if(!currentUser){
+
+            return;
+        }
+
+
+        const changeButton =
+            document.getElementById(
+                "changeAvatarBtn"
+            );
+
+
+        changeButton.disabled = true;
+
+        changeButton.textContent =
+            "جاري رفع الصورة...";
+
+
+        try{
+
+            const extension =
+                file.name
+                .split(".")
+                .pop()
+                .toLowerCase();
+
+
+            const filePath =
+                currentUser.id +
+                "/avatar_" +
+                Date.now() +
+                "." +
+                extension;
+
+
+            const {
+                error:uploadError
+            } = await supabaseClient
+                .storage
+                .from("avatars")
+                .upload(
+                    filePath,
+                    file,
+                    {
+                        cacheControl:"3600",
+                        upsert:true,
+                        contentType:file.type
+                    }
+                );
+
+
+            if(uploadError){
+
+                console.error(
+                    uploadError
+                );
+
+                throw uploadError;
+            }
+
+
+            const {
+                data:publicData
+            } = supabaseClient
+                .storage
+                .from("avatars")
+                .getPublicUrl(
+                    filePath
+                );
+
+
+            const publicUrl =
+                publicData.publicUrl;
+
+
+            const {
+                error:updateError
+            } = await supabaseClient
+                .from("profiles")
+                .update({
+
+                    avatar_url:publicUrl,
+
+                    updated_at:
+                        new Date()
+                        .toISOString()
+
+                })
+                .eq(
+                    "id",
+                    currentUser.id
+                );
+
+
+            if(updateError){
+
+                console.error(
+                    updateError
+                );
+
+                throw updateError;
+            }
+
+
+            currentAvatarUrl =
+                publicUrl;
+
+
+            const name =
+                document.getElementById(
+                    "fullName"
+                ).value.trim();
+
+
+            updateProfileDisplay(
+                name,
+                publicUrl
+            );
+
+
+            showMessage(
+                "تم تحديث الصورة الشخصية بنجاح ✓",
+                true
+            );
+
+        }catch(error){
+
+            console.error(error);
+
+            showMessage(
+                "حدث خطأ أثناء رفع الصورة",
+                false
+            );
+
+        }
+
+
+        changeButton.disabled = false;
+
+        changeButton.textContent =
+            "📷 تغيير الصورة";
+
+        this.value = "";
+
+    }
+);
+
+
+/* =========================
+   حذف الصورة
+========================= */
+
+document.getElementById(
+    "deleteAvatarBtn"
+)
+.addEventListener(
+    "click",
+    async function(){
+
+        if(!currentUser ||
+           !currentAvatarUrl){
+
+            return;
+        }
+
+
+        const confirmDelete =
+            confirm(
+                "هل تريد حذف الصورة الشخصية؟"
+            );
+
+
+        if(!confirmDelete){
+
+            return;
+        }
+
+
+        const button = this;
+
+        button.disabled = true;
+
+        button.textContent =
+            "جاري الحذف...";
+
+
+        try{
+
+            const marker =
+                "/storage/v1/object/public/avatars/";
+
+            const index =
+                currentAvatarUrl.indexOf(
+                    marker
+                );
+
+
+            if(index !== -1){
+
+                const path =
+                    decodeURIComponent(
+                        currentAvatarUrl
+                        .substring(
+                            index + marker.length
+                        )
+                    );
+
+
+                await supabaseClient
+                    .storage
+                    .from("avatars")
+                    .remove([
+                        path
+                    ]);
+
+            }
+
+
+            const {
+                error:updateError
+            } = await supabaseClient
+                .from("profiles")
+                .update({
+
+                    avatar_url:null,
+
+                    updated_at:
+                        new Date()
+                        .toISOString()
+
+                })
+                .eq(
+                    "id",
+                    currentUser.id
+                );
+
+
+            if(updateError){
+
+                throw updateError;
+            }
+
+
+            currentAvatarUrl = null;
+
+
+            const name =
+                document.getElementById(
+                    "fullName"
+                ).value.trim();
+
+
+            updateProfileDisplay(
+                name,
+                null
+            );
+
+
+            showMessage(
+                "تم حذف الصورة الشخصية ✓",
+                true
+            );
+
+        }catch(error){
+
+            console.error(error);
+
+            showMessage(
+                "حدث خطأ أثناء حذف الصورة",
+                false
+            );
+
+        }
+
+
+        button.disabled = false;
+
+        button.textContent =
+            "🗑️ حذف الصورة";
+
+    }
+);
+
+
+/* =========================
+   حفظ المعلومات
+========================= */
+
+document.getElementById(
+    "saveBtn"
+)
+.addEventListener(
+    "click",
+    async function(){
+
+        if(!currentUser){
+
+            return;
+        }
+
+
+        const fullName =
+            document.getElementById(
+                "fullName"
+            ).value.trim();
+
+
+        const phone =
+            document.getElementById(
+                "phone"
+            ).value.trim();
+
+
+        const city =
+            document.getElementById(
+                "city"
+            ).value.trim();
+
+
+        const saveBtn =
+            document.getElementById(
+                "saveBtn"
+            );
+
+
+        saveBtn.disabled = true;
+
+        saveBtn.textContent =
+            "جاري الحفظ...";
+
+
+        const {
+            error
+        } = await supabaseClient
+            .from("profiles")
+            .upsert({
+
+                id:currentUser.id,
+
+                full_name:fullName,
+
+                phone:phone,
+
+                city:city,
+
+                avatar_url:
+                    currentAvatarUrl,
+
+                updated_at:
+                    new Date()
+                    .toISOString()
+
+            });
+
+
+        saveBtn.disabled = false;
+
+        saveBtn.textContent =
+            "حفظ المعلومات";
+
+
+        if(error){
+
+            console.error(error);
+
+            showMessage(
+                "حدث خطأ أثناء حفظ المعلومات",
+                false
+            );
+
+            return;
+        }
+
+
+        updateProfileDisplay(
+            fullName,
+            currentAvatarUrl
+        );
+
+
+        showMessage(
+            "تم حفظ معلوماتك بنجاح ✓",
+            true
+        );
+
+    }
+);
+
+
+/* =========================
+   الرسائل
+========================= */
+
+function showMessage(
+    text,
+    success
+){
 
     const message =
-        document.getElementById("message");
-
-
-    if(error){
-
-        console.error(error);
-
-        message.className =
-            "message error";
-
-        message.textContent =
-            "حدث خطأ أثناء حفظ المعلومات";
-
-        message.style.display =
-            "block";
-
-        return;
-    }
-
-
-    updateProfileDisplay(fullName);
+        document.getElementById(
+            "message"
+        );
 
 
     message.className =
-        "message success";
+        success
+        ? "message success"
+        : "message error";
+
 
     message.textContent =
-        "تم حفظ معلوماتك بنجاح ✓";
+        text;
+
 
     message.style.display =
         "block";
 
 
-    setTimeout(function(){
+    setTimeout(
+        function(){
 
-        message.style.display =
-            "none";
+            message.style.display =
+                "none";
 
-    },3000);
+        },
+        3500
+    );
 
-});
-
-
-// تسجيل الخروج
-
-document.getElementById("logoutBtn")
-.addEventListener("click", async function(){
-
-    const {
-        error
-    } = await supabaseClient.auth.signOut();
+}
 
 
-    if(error){
+/* =========================
+   تسجيل الخروج
+========================= */
 
-        alert(
-            "حدث خطأ أثناء تسجيل الخروج"
-        );
+document.getElementById(
+    "logoutBtn"
+)
+.addEventListener(
+    "click",
+    async function(){
 
-        return;
+        const {
+            error
+        } =
+        await supabaseClient
+            .auth
+            .signOut();
+
+
+        if(error){
+
+            alert(
+                "حدث خطأ أثناء تسجيل الخروج"
+            );
+
+            return;
+        }
+
+
+        window.location.href =
+            "index.html";
+
     }
+);
 
 
-    window.location.href =
-        "index.html";
-
-});
-
-
-// تشغيل الصفحة
+/* تشغيل الصفحة */
 
 loadAccount();
 
 </script>
 
 </body>
-  </html>
+
+    </html>
