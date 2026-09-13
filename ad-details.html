@@ -2,9 +2,7 @@
 <html lang="ar" dir="rtl">
 
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>تفاصيل الإعلان | فلسطين بلاتفورم</title>
@@ -23,7 +21,9 @@ background:#f5f7fa;
 color:#172033;
 }
 
-/* الهيدر */
+/* =========================
+   الهيدر
+========================= */
 
 header{
 background:white;
@@ -37,6 +37,7 @@ margin:auto;
 display:flex;
 justify-content:space-between;
 align-items:center;
+gap:10px;
 }
 
 .logo{
@@ -57,7 +58,9 @@ padding:9px 16px;
 border-radius:8px;
 }
 
-/* الصفحة */
+/* =========================
+   الصفحة
+========================= */
 
 .container{
 max-width:1000px;
@@ -65,7 +68,9 @@ margin:35px auto;
 padding:0 20px;
 }
 
-/* بطاقة الإعلان */
+/* =========================
+   بطاقة الإعلان
+========================= */
 
 .ad-details{
 background:white;
@@ -74,7 +79,9 @@ box-shadow:0 4px 20px rgba(0,0,0,.08);
 overflow:hidden;
 }
 
-/* معرض الصور */
+/* =========================
+   معرض الصور
+========================= */
 
 .gallery{
 background:#eef2f7;
@@ -113,7 +120,9 @@ flex-shrink:0;
 border-color:#b51f2a;
 }
 
-/* المحتوى */
+/* =========================
+   المحتوى
+========================= */
 
 .content{
 padding:30px;
@@ -156,7 +165,9 @@ white-space:pre-wrap;
 margin-bottom:25px;
 }
 
-/* المعلومات */
+/* =========================
+   معلومات الإعلان
+========================= */
 
 .info-box{
 background:#f7f8fa;
@@ -175,7 +186,94 @@ border-bottom:1px solid #e5e5e5;
 border-bottom:0;
 }
 
-/* الأزرار */
+/* =========================
+   صاحب الإعلان
+========================= */
+
+.owner-box{
+background:#f0f5f9;
+border:1px solid #dce5ed;
+border-radius:14px;
+padding:20px;
+margin-bottom:25px;
+}
+
+.owner-title{
+font-size:19px;
+font-weight:bold;
+color:#173b68;
+margin-bottom:15px;
+}
+
+.owner-content{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.owner-avatar{
+width:65px;
+height:65px;
+border-radius:50%;
+background:#173b68;
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:27px;
+font-weight:bold;
+overflow:hidden;
+flex-shrink:0;
+}
+
+.owner-avatar img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.owner-info{
+flex:1;
+}
+
+.owner-name{
+font-size:18px;
+font-weight:bold;
+color:#172033;
+margin-bottom:6px;
+}
+
+.owner-city{
+color:#666;
+font-size:14px;
+}
+
+.owner-phone{
+color:#666;
+font-size:14px;
+margin-top:4px;
+}
+
+/* زر الملف الشخصي */
+
+.owner-button{
+display:block;
+width:100%;
+margin-top:15px;
+padding:12px;
+background:white;
+color:#173b68;
+border:1px solid #173b68;
+border-radius:9px;
+text-align:center;
+text-decoration:none;
+font-weight:bold;
+cursor:pointer;
+}
+
+/* =========================
+   الأزرار
+========================= */
 
 .buttons{
 display:flex;
@@ -211,7 +309,9 @@ background:#eee;
 color:#222;
 }
 
-/* التحميل */
+/* =========================
+   التحميل
+========================= */
 
 .loading{
 background:white;
@@ -222,7 +322,9 @@ font-size:18px;
 color:#777;
 }
 
-/* الخطأ */
+/* =========================
+   الخطأ
+========================= */
 
 .error{
 background:white;
@@ -233,7 +335,9 @@ color:#b51f2a;
 font-size:18px;
 }
 
-/* بدون صورة */
+/* =========================
+   بدون صورة
+========================= */
 
 .no-image{
 height:400px;
@@ -245,7 +349,9 @@ justify-content:center;
 font-size:80px;
 }
 
-/* الهاتف */
+/* =========================
+   الهاتف
+========================= */
 
 @media(max-width:700px){
 
@@ -295,6 +401,10 @@ flex-direction:column;
 width:100%;
 }
 
+.owner-content{
+align-items:flex-start;
+}
+
 }
 
 </style>
@@ -303,6 +413,9 @@ width:100%;
 
 <body>
 
+<!-- =========================
+     الهيدر
+========================= -->
 
 <header>
 
@@ -321,6 +434,10 @@ width:100%;
 </header>
 
 
+<!-- =========================
+     المحتوى
+========================= -->
+
 <main class="container">
 
 <div id="pageContent">
@@ -333,6 +450,10 @@ width:100%;
 
 </main>
 
+
+<!-- =========================
+     Supabase
+========================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -348,9 +469,8 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
 
-
 const supabaseClient =
-supabase.createClient(
+window.supabase.createClient(
 SUPABASE_URL,
 SUPABASE_KEY,
 {
@@ -377,7 +497,7 @@ params.get("id");
 
 
 /* =========================
-   عناصر الصفحة
+   عنصر الصفحة
 ========================= */
 
 const pageContent =
@@ -403,9 +523,11 @@ return;
 }
 
 
+/* جلب الإعلان */
+
 const {
-data,
-error
+data: ad,
+error: adError
 } =
 await supabaseClient
 .from("ads")
@@ -414,9 +536,12 @@ await supabaseClient
 .single();
 
 
-if(error){
+if(adError){
 
-console.error(error);
+console.error(
+"خطأ في جلب الإعلان:",
+adError
+);
 
 showError(
 "لم يتم العثور على الإعلان."
@@ -427,7 +552,49 @@ return;
 }
 
 
-displayAd(data);
+/* =========================
+   جلب صاحب الإعلان
+========================= */
+
+let profile = null;
+
+if(ad.user_id){
+
+const {
+data: profileData,
+error: profileError
+} =
+await supabaseClient
+.from("profiles")
+.select(
+"id,full_name,phone,city,avatar_url"
+)
+.eq("id",ad.user_id)
+.maybeSingle();
+
+
+if(profileError){
+
+console.error(
+"خطأ في جلب بيانات صاحب الإعلان:",
+profileError
+);
+
+}else{
+
+profile = profileData;
+
+}
+
+}
+
+
+/* عرض الإعلان */
+
+displayAd(
+ad,
+profile
+);
 
 }
 
@@ -436,7 +603,10 @@ displayAd(data);
    عرض الإعلان
 ========================= */
 
-function displayAd(ad){
+function displayAd(
+ad,
+profile
+){
 
 pageContent.innerHTML="";
 
@@ -467,7 +637,7 @@ ad.image_urls &&
 Array.isArray(ad.image_urls)
 ){
 
-images=
+images =
 ad.image_urls.filter(
 url =>
 typeof url === "string" &&
@@ -477,6 +647,8 @@ url.trim() !== ""
 }
 
 
+/* توجد صور */
+
 if(images.length > 0){
 
 const mainImage =
@@ -485,11 +657,20 @@ document.createElement("img");
 mainImage.className=
 "main-image";
 
-mainImage.src=
+mainImage.src =
 images[0];
 
-mainImage.alt=
+mainImage.alt =
 ad.title || "صورة الإعلان";
+
+
+mainImage.onerror =
+function(){
+
+this.style.display="none";
+
+};
+
 
 gallery.appendChild(
 mainImage
@@ -516,7 +697,8 @@ document.createElement("img");
 thumb.className=
 "thumbnail";
 
-if(index===0){
+
+if(index === 0){
 
 thumb.classList.add(
 "active"
@@ -524,17 +706,24 @@ thumb.classList.add(
 
 }
 
-thumb.src=url;
 
-thumb.alt=
+thumb.src =
+url;
+
+thumb.alt =
 "صورة " +
-(index+1);
+(index + 1);
 
 
-thumb.onclick=
+thumb.onclick =
 function(){
 
-mainImage.src=url;
+mainImage.style.display =
+"block";
+
+mainImage.src =
+url;
+
 
 document
 .querySelectorAll(
@@ -547,6 +736,7 @@ item.classList.remove(
 )
 );
 
+
 thumb.classList.add(
 "active"
 );
@@ -558,8 +748,7 @@ thumbnails.appendChild(
 thumb
 );
 
-}
-);
+});
 
 
 gallery.appendChild(
@@ -611,8 +800,9 @@ document.createElement("h1");
 title.className=
 "title";
 
-title.textContent=
-ad.title || "بدون عنوان";
+title.textContent =
+ad.title ||
+"بدون عنوان";
 
 content.appendChild(
 title
@@ -629,7 +819,7 @@ document.createElement("div");
 category.className=
 "category";
 
-category.textContent=
+category.textContent =
 ad.category;
 
 content.appendChild(
@@ -643,7 +833,8 @@ category
 
 if(
 ad.price !== null &&
-ad.price !== undefined
+ad.price !== undefined &&
+ad.price !== ""
 ){
 
 const price =
@@ -652,10 +843,10 @@ document.createElement("div");
 price.className=
 "price";
 
-price.textContent=
+price.textContent =
 "💰 " +
 Number(ad.price)
-.toLocaleString("ar") +
+.toLocaleString("ar-PS") +
 " شيكل";
 
 content.appendChild(
@@ -665,7 +856,9 @@ price
 }
 
 
-/* الوصف */
+/* =========================
+   الوصف
+========================= */
 
 const descriptionTitle =
 document.createElement("h2");
@@ -673,7 +866,7 @@ document.createElement("h2");
 descriptionTitle.className=
 "description-title";
 
-descriptionTitle.textContent=
+descriptionTitle.textContent =
 "📝 وصف الإعلان";
 
 content.appendChild(
@@ -687,7 +880,7 @@ document.createElement("div");
 description.className=
 "description";
 
-description.textContent=
+description.textContent =
 ad.description ||
 "لا يوجد وصف لهذا الإعلان.";
 
@@ -715,7 +908,7 @@ document.createElement("div");
 city.className=
 "info-row";
 
-city.textContent=
+city.textContent =
 "📍 المحافظة / المدينة: " +
 ad.city;
 
@@ -726,29 +919,35 @@ city
 }
 
 
-if(ad.phone){
+/* رقم الإعلان */
 
-const phone =
+if(ad.id){
+
+const adNumber =
 document.createElement("div");
 
-phone.className=
+adNumber.className=
 "info-row";
 
-phone.textContent=
-"📞 رقم الهاتف: " +
-ad.phone;
+adNumber.textContent =
+"🔢 رقم الإعلان: " +
+ad.id;
 
 infoBox.appendChild(
-phone
+adNumber
 );
 
 }
 
 
+/* تاريخ النشر */
+
 if(ad.created_at){
 
 const date =
-new Date(ad.created_at);
+new Date(
+ad.created_at
+);
 
 const dateText =
 date.toLocaleDateString(
@@ -766,7 +965,7 @@ document.createElement("div");
 dateRow.className=
 "info-row";
 
-dateRow.textContent=
+dateRow.textContent =
 "📅 تاريخ النشر: " +
 dateText;
 
@@ -783,6 +982,243 @@ infoBox
 
 
 /* =========================
+   صاحب الإعلان
+========================= */
+
+const ownerBox =
+document.createElement("div");
+
+ownerBox.className=
+"owner-box";
+
+
+const ownerTitle =
+document.createElement("div");
+
+ownerTitle.className=
+"owner-title";
+
+ownerTitle.textContent =
+"👤 صاحب الإعلان";
+
+ownerBox.appendChild(
+ownerTitle
+);
+
+
+const ownerContent =
+document.createElement("div");
+
+ownerContent.className=
+"owner-content";
+
+
+/* اسم صاحب الإعلان */
+
+let ownerName =
+"مستخدم فلسطين بلاتفورم";
+
+
+if(
+profile &&
+profile.full_name &&
+profile.full_name.trim()
+){
+
+ownerName =
+profile.full_name.trim();
+
+}
+
+
+/* الصورة أو الحرف */
+
+const ownerAvatar =
+document.createElement("div");
+
+ownerAvatar.className=
+"owner-avatar";
+
+
+if(
+profile &&
+profile.avatar_url
+){
+
+const avatarImage =
+document.createElement("img");
+
+avatarImage.src =
+profile.avatar_url;
+
+avatarImage.alt =
+ownerName;
+
+
+avatarImage.onerror =
+function(){
+
+this.remove();
+
+ownerAvatar.textContent =
+ownerName.charAt(0);
+
+};
+
+
+ownerAvatar.appendChild(
+avatarImage
+);
+
+}else{
+
+ownerAvatar.textContent =
+ownerName.charAt(0);
+
+}
+
+
+ownerContent.appendChild(
+ownerAvatar
+);
+
+
+/* معلومات صاحب الإعلان */
+
+const ownerInfo =
+document.createElement("div");
+
+ownerInfo.className=
+"owner-info";
+
+
+const ownerNameElement =
+document.createElement("div");
+
+ownerNameElement.className=
+"owner-name";
+
+ownerNameElement.textContent =
+ownerName;
+
+ownerInfo.appendChild(
+ownerNameElement
+);
+
+
+/* المدينة */
+
+if(
+profile &&
+profile.city
+){
+
+const ownerCity =
+document.createElement("div");
+
+ownerCity.className=
+"owner-city";
+
+ownerCity.textContent =
+"📍 " +
+profile.city;
+
+ownerInfo.appendChild(
+ownerCity
+);
+
+}
+
+
+/* الهاتف */
+
+let ownerPhone =
+"";
+
+
+if(
+ad.phone &&
+String(ad.phone).trim()
+){
+
+ownerPhone =
+String(ad.phone).trim();
+
+}
+else if(
+profile &&
+profile.phone &&
+String(profile.phone).trim()
+){
+
+ownerPhone =
+String(profile.phone).trim();
+
+}
+
+
+if(ownerPhone){
+
+const ownerPhoneElement =
+document.createElement("div");
+
+ownerPhoneElement.className=
+"owner-phone";
+
+ownerPhoneElement.textContent =
+"📞 " +
+ownerPhone;
+
+ownerInfo.appendChild(
+ownerPhoneElement
+);
+
+}
+
+
+ownerContent.appendChild(
+ownerInfo
+);
+
+ownerBox.appendChild(
+ownerContent
+);
+
+
+/* =========================
+   عرض حساب صاحب الإعلان
+========================= */
+
+if(ad.user_id){
+
+const ownerButton =
+document.createElement("a");
+
+ownerButton.className=
+"owner-button";
+
+ownerButton.href =
+"profile.html?id=" +
+encodeURIComponent(
+ad.user_id
+);
+
+ownerButton.textContent =
+"👤 عرض حساب صاحب الإعلان";
+
+ownerBox.appendChild(
+ownerButton
+);
+
+}
+
+
+content.appendChild(
+ownerBox
+);
+
+
+/* =========================
    الأزرار
 ========================= */
 
@@ -793,26 +1229,58 @@ buttons.className=
 "buttons";
 
 
-if(ad.phone){
-
-/* إزالة المسافات والرموز */
+/* رقم الهاتف */
 
 let phone =
-String(ad.phone)
+"";
+
+
+if(
+ad.phone &&
+String(ad.phone).trim()
+){
+
+phone =
+String(ad.phone).trim();
+
+}
+else if(
+profile &&
+profile.phone &&
+String(profile.phone).trim()
+){
+
+phone =
+String(profile.phone).trim();
+
+}
+
+
+/* الاتصال وواتساب */
+
+if(phone){
+
+let cleanPhone =
+phone
 .replace(/\s+/g,"")
-.replace(/-/g,"");
+.replace(/-/g,"")
+.replace(/\(/g,"")
+.replace(/\)/g,"");
 
-
-/* إذا كان الرقم يبدأ بـ 0 */
 
 let internationalPhone =
-phone;
+cleanPhone;
 
-if(phone.startsWith("0")){
+
+/* تحويل رقم فلسطيني */
+
+if(
+cleanPhone.startsWith("0")
+){
 
 internationalPhone =
 "970" +
-phone.substring(1);
+cleanPhone.substring(1);
 
 }
 
@@ -822,13 +1290,14 @@ phone.substring(1);
 const call =
 document.createElement("a");
 
-call.className=
+call.className =
 "action-button call";
 
-call.href=
-"tel:" + phone;
+call.href =
+"tel:" +
+cleanPhone;
 
-call.textContent=
+call.textContent =
 "📞 اتصال";
 
 buttons.appendChild(
@@ -841,19 +1310,20 @@ call
 const whatsapp =
 document.createElement("a");
 
-whatsapp.className=
+whatsapp.className =
 "action-button whatsapp";
 
-whatsapp.href=
+whatsapp.href =
 "https://wa.me/" +
 internationalPhone;
 
-whatsapp.target="_blank";
+whatsapp.target =
+"_blank";
 
-whatsapp.rel=
+whatsapp.rel =
 "noopener noreferrer";
 
-whatsapp.textContent=
+whatsapp.textContent =
 "💬 واتساب";
 
 buttons.appendChild(
@@ -868,13 +1338,13 @@ whatsapp
 const back =
 document.createElement("a");
 
-back.className=
+back.className =
 "action-button back-button";
 
-back.href=
+back.href =
 "ads.html";
 
-back.textContent=
+back.textContent =
 "← العودة للإعلانات";
 
 buttons.appendChild(
@@ -906,25 +1376,38 @@ function showError(message){
 
 pageContent.innerHTML =
 '<div class="error">' +
+
 escapeHTML(message) +
+
 '<br><br>' +
-'<a href="ads.html" class="back-button action-button">← العودة للإعلانات</a>' +
+
+'<a href="ads.html" class="back-button action-button">' +
+
+'← العودة للإعلانات' +
+
+'</a>' +
+
 '</div>';
 
 }
 
 
 /* =========================
-   حماية النص
+   حماية النصوص
 ========================= */
 
 function escapeHTML(text){
 
 return String(text)
+
 .replace(/&/g,"&amp;")
+
 .replace(/</g,"&lt;")
+
 .replace(/>/g,"&gt;")
+
 .replace(/"/g,"&quot;")
+
 .replace(/'/g,"&#039;");
 
 }
@@ -940,4 +1423,4 @@ loadAd();
 
 </body>
 
-  </html>
+   </html>
