@@ -2,701 +2,635 @@
 <html lang="ar" dir="rtl">
 
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>فلسطين بلاتفورم</title>
 
 <style>
 
-/* =========================
-   الإعدادات العامة
-========================= */
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+*{
+    box-sizing:border-box;
 }
 
-body {
-    font-family: Arial, sans-serif;
-    background: #f5f7fa;
-    color: #222;
+body{
+    margin:0;
+    font-family:Tahoma,Arial,sans-serif;
+    background:#f5f7fa;
+    color:#222;
 }
 
+/* الهيدر */
 
-/* =========================
-   الهيدر
-========================= */
-
-header {
-    background: #fff;
-    padding: 15px 6%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 10px #0001;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+header{
+    background:#ffffff;
+    border-bottom:1px solid #e5e5e5;
+    position:sticky;
+    top:0;
+    z-index:1000;
 }
 
-.logo {
-    font-size: 22px;
-    font-weight: bold;
+.header-container{
+    max-width:1150px;
+    margin:auto;
+    padding:15px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
 }
 
-
-/* =========================
-   منطقة الحساب
-========================= */
-
-.account-area {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
+.logo{
+    text-decoration:none;
+    color:#087443;
+    font-size:25px;
+    font-weight:bold;
+    white-space:nowrap;
 }
 
-
-/* اسم المستخدم */
-
-.user-name {
-    background: #f5f5f5;
-    padding: 9px 13px;
-    border-radius: 20px;
-    font-size: 14px;
-    display: none;
-    white-space: nowrap;
+.account-area{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
 }
 
-
-/* =========================
-   زر إعلاناتي
-========================= */
-
-.my-ads-link {
-    background: #eee;
-    color: #111;
-    padding: 10px 15px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-size: 14px;
-    display: none;
-    white-space: nowrap;
-    transition: 0.2s;
+#userName{
+    font-weight:bold;
+    color:#333;
 }
 
-.my-ads-link:hover {
-    background: #ddd;
+.account-btn{
+    text-decoration:none;
+    padding:9px 14px;
+    border-radius:8px;
+    background:#087443;
+    color:white;
+    font-size:14px;
+    font-weight:bold;
 }
 
-
-/* =========================
-   تسجيل الدخول / الخروج
-========================= */
-
-.login {
-    background: #111;
-    color: white;
-    padding: 10px 18px;
-    border-radius: 8px;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    font-size: 15px;
-    white-space: nowrap;
+.account-btn:hover{
+    opacity:.9;
 }
 
-.login:hover {
-    opacity: 0.9;
+.login-btn{
+    text-decoration:none;
+    padding:9px 14px;
+    border-radius:8px;
+    background:#eee;
+    color:#333;
+    font-size:14px;
+    font-weight:bold;
 }
 
-
-/* =========================
-   الصفحة الرئيسية
-========================= */
-
-.hero {
-    text-align: center;
-    padding: 60px 20px;
-    background: white;
+.logout-btn{
+    border:0;
+    padding:9px 14px;
+    border-radius:8px;
+    background:#c62828;
+    color:white;
+    font-size:14px;
+    cursor:pointer;
+    font-weight:bold;
 }
 
-.hero h1 {
-    font-size: 34px;
-    margin-bottom: 15px;
+.logout-btn:hover{
+    opacity:.9;
 }
 
-.hero p {
-    font-size: 18px;
-    color: #666;
-    margin-bottom: 25px;
+/* القسم الرئيسي */
+
+.hero{
+    background:linear-gradient(135deg,#087443,#0b9254);
+    color:white;
+    text-align:center;
+    padding:65px 20px;
 }
 
-
-/* =========================
-   البحث
-========================= */
-
-.search {
-    display: flex;
-    max-width: 650px;
-    margin: auto;
+.hero h1{
+    font-size:40px;
+    margin:0 0 15px;
 }
 
-.search input {
-    flex: 1;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 0 8px 8px 0;
-    font-size: 16px;
-    outline: none;
+.hero p{
+    font-size:18px;
+    margin:0 auto 25px;
+    max-width:700px;
+    line-height:1.8;
 }
 
-.search input:focus {
-    border-color: #111;
+.main-btn{
+    display:inline-block;
+    background:#ffffff;
+    color:#087443;
+    text-decoration:none;
+    padding:14px 25px;
+    border-radius:10px;
+    font-weight:bold;
+    margin:5px;
 }
 
-.search button {
-    padding: 15px 25px;
-    border: none;
-    background: #111;
-    color: white;
-    border-radius: 8px 0 0 8px;
-    cursor: pointer;
-    font-size: 15px;
+.main-btn.green{
+    background:#063e27;
+    color:white;
 }
 
-.search button:hover {
-    opacity: 0.9;
+/* البحث */
+
+.search-section{
+    max-width:900px;
+    margin:-25px auto 30px;
+    position:relative;
+    padding:0 15px;
 }
 
-
-/* =========================
-   الأقسام
-========================= */
-
-section {
-    padding: 45px 6%;
+.search-box{
+    background:white;
+    padding:15px;
+    border-radius:14px;
+    box-shadow:0 5px 20px rgba(0,0,0,.12);
+    display:flex;
+    gap:10px;
 }
 
-.section-title {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 27px;
+.search-box input{
+    flex:1;
+    border:1px solid #ddd;
+    border-radius:9px;
+    padding:13px;
+    font-size:15px;
+    outline:none;
 }
 
-
-/* =========================
-   التصنيفات
-========================= */
-
-.categories {
-    display: grid;
-    grid-template-columns:
-        repeat(auto-fit, minmax(180px, 1fr));
-    gap: 20px;
+.search-box button{
+    border:0;
+    background:#087443;
+    color:white;
+    border-radius:9px;
+    padding:0 22px;
+    cursor:pointer;
+    font-weight:bold;
 }
 
-.card {
-    background: white;
-    padding: 30px 15px;
-    text-align: center;
-    border-radius: 15px;
-    box-shadow: 0 3px 12px #0001;
-    cursor: pointer;
-    transition: 0.2s;
+/* الأقسام */
+
+.container{
+    max-width:1150px;
+    margin:auto;
+    padding:0 20px 40px;
 }
 
-.card:hover {
-    transform: translateY(-5px);
+.section-title{
+    text-align:center;
+    margin:35px 0 25px;
 }
 
-.card .icon {
-    font-size: 42px;
-    margin-bottom: 15px;
+.section-title h2{
+    margin-bottom:8px;
 }
 
-.card h3 {
-    margin-bottom: 8px;
+.section-title p{
+    color:#777;
 }
 
-.card p {
-    color: #777;
-    line-height: 1.6;
+/* بطاقات الأقسام */
+
+.categories{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
 }
 
-
-/* =========================
-   عن المنصة
-========================= */
-
-.about {
-    background: white;
-    text-align: center;
+.category-card{
+    background:white;
+    text-decoration:none;
+    color:#222;
+    padding:28px 20px;
+    border-radius:14px;
+    text-align:center;
+    box-shadow:0 3px 12px rgba(0,0,0,.07);
+    transition:.2s;
 }
 
-.about p {
-    max-width: 750px;
-    margin: auto;
-    line-height: 1.9;
-    color: #555;
+.category-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 6px 18px rgba(0,0,0,.12);
 }
 
-
-/* =========================
-   الأزرار
-========================= */
-
-.buttons {
-    margin-top: 25px;
+.category-icon{
+    font-size:40px;
+    margin-bottom:12px;
 }
 
-.btn {
-    display: inline-block;
-    padding: 13px 22px;
-    margin: 5px;
-    border-radius: 8px;
-    text-decoration: none;
-    background: #111;
-    color: white;
+.category-card h3{
+    margin:8px 0;
 }
 
-.btn.secondary {
-    background: #eee;
-    color: #111;
+.category-card p{
+    color:#777;
+    font-size:14px;
+    margin:0;
 }
 
-.btn:hover {
-    opacity: 0.9;
+/* إضافة إعلان */
+
+.add-section{
+    margin:40px 0;
+    background:white;
+    border-radius:15px;
+    padding:35px 20px;
+    text-align:center;
+    box-shadow:0 3px 12px rgba(0,0,0,.07);
 }
 
-
-/* =========================
-   الفوتر
-========================= */
-
-footer {
-    background: #111;
-    color: white;
-    text-align: center;
-    padding: 25px;
-    margin-top: 30px;
+.add-section h2{
+    margin-top:0;
 }
 
+.add-ad-btn{
+    display:inline-block;
+    text-decoration:none;
+    background:#c62828;
+    color:white;
+    padding:14px 25px;
+    border-radius:10px;
+    font-weight:bold;
+    margin-top:10px;
+}
 
-/* =========================
-   الهاتف
-========================= */
+.add-ad-btn:hover{
+    opacity:.9;
+}
 
-@media (max-width: 600px) {
+/* تذييل */
 
-    header {
-        padding: 13px 4%;
-        gap: 10px;
-    }
+footer{
+    background:#222;
+    color:white;
+    text-align:center;
+    padding:30px 20px;
+    margin-top:40px;
+}
 
-    .logo {
-        font-size: 18px;
-    }
+footer p{
+    margin:5px;
+    color:#ddd;
+}
 
-    .account-area {
-        gap: 5px;
-    }
+/* موبايل */
 
-    .user-name {
-        font-size: 12px;
-        padding: 7px 9px;
-    }
+@media(max-width:800px){
 
-    .my-ads-link {
-        padding: 8px 10px;
-        font-size: 12px;
-    }
-
-    .login {
-        padding: 9px 12px;
-        font-size: 13px;
-    }
-
-    .hero {
-        padding: 45px 15px;
-    }
-
-    .hero h1 {
-        font-size: 27px;
-    }
-
-    .hero p {
-        font-size: 16px;
-    }
-
-    .search {
-        flex-direction: column;
-    }
-
-    .search input,
-    .search button {
-        border-radius: 8px;
-        width: 100%;
-        margin: 3px 0;
-    }
-
-    section {
-        padding: 35px 4%;
-    }
-
-    .section-title {
-        font-size: 24px;
+    .categories{
+        grid-template-columns:repeat(2,1fr);
     }
 
 }
 
+@media(max-width:600px){
 
-/* =========================
-   هاتف صغير جدًا
-========================= */
-
-@media (max-width: 400px) {
-
-    header {
-        align-items: flex-start;
+    .header-container{
+        flex-direction:column;
+        text-align:center;
     }
 
-    .account-area {
-        flex-direction: column;
-        align-items: flex-end;
+    .account-area{
+        justify-content:center;
     }
 
-    .user-name {
-        font-size: 11px;
+    .hero{
+        padding:45px 15px;
     }
 
-    .my-ads-link {
-        font-size: 11px;
-        padding: 7px 9px;
+    .hero h1{
+        font-size:30px;
     }
 
-    .login {
-        font-size: 12px;
-        padding: 8px 10px;
+    .hero p{
+        font-size:16px;
+    }
+
+    .search-box{
+        flex-direction:column;
+    }
+
+    .search-box button{
+        padding:13px;
+    }
+
+    .categories{
+        grid-template-columns:1fr;
     }
 
 }
 
 </style>
-
 </head>
 
 
 <body>
 
-
-<!-- =========================
-     الهيدر
-========================= -->
+<!-- ================= الهيدر ================= -->
 
 <header>
 
-    <div class="logo">
-        🇵🇸 فلسطين بلاتفورم
-    </div>
+<div class="header-container">
+
+<a href="index.html" class="logo">
+فلسطين بلاتفورم
+</a>
 
 
-    <div class="account-area">
+<div class="account-area">
 
-        <!-- اسم المستخدم -->
-
-        <div id="userName"
-             class="user-name">
-        </div>
+<span id="userName"></span>
 
 
-        <!-- إعلاناتي -->
+<a
+href="account.html"
+id="accountLink"
+class="account-btn"
+style="display:none;"
+>
+👤 حسابي
+</a>
 
-        <a href="my-ads.html"
-           class="my-ads-link"
-           id="myAdsLink">
 
-            📋 إعلاناتي
+<a
+href="my-ads.html"
+id="myAdsLink"
+class="account-btn"
+style="display:none;"
+>
+📢 إعلاناتي
+</a>
 
-        </a>
+
+<a
+href="login.html"
+id="loginLink"
+class="login-btn"
+>
+تسجيل الدخول
+</a>
 
 
-        <!-- تسجيل الدخول / الخروج -->
+<button
+id="logoutBtn"
+class="logout-btn"
+style="display:none;"
+>
+تسجيل الخروج
+</button>
 
-        <a href="login.html"
-           class="login"
-           id="loginLink">
+</div>
 
-            تسجيل الدخول
-
-        </a>
-
-    </div>
+</div>
 
 </header>
 
 
-
-<!-- =========================
-     الصفحة الرئيسية
-========================= -->
+<!-- ================= الرئيسية ================= -->
 
 <section class="hero">
 
-    <h1>
-        🇵🇸 كل فلسطين في مكان واحد
-    </h1>
+<h1>
+أهلاً بك في فلسطين بلاتفورم 🇵🇸
+</h1>
 
-    <p>
-        محلات، عقارات، سيارات، وظائف، خدمات وإعلانات
-    </p>
+<p>
+منصتك الفلسطينية للإعلانات والخدمات والعقارات والسيارات والوظائف
+</p>
 
 
-    <!-- البحث -->
+<a
+href="ads.html"
+class="main-btn"
+>
+📢 تصفح الإعلانات
+</a>
 
-    <div class="search">
 
-        <input
-            type="text"
-            id="searchInput"
-            placeholder="ماذا تبحث في فلسطين؟"
-        >
-
-        <button onclick="search()">
-            بحث
-        </button>
-
-    </div>
+<a
+href="ads.html"
+class="main-btn green"
+>
+➕ أضف إعلانك
+</a>
 
 </section>
 
 
+<!-- ================= البحث ================= -->
 
-<!-- =========================
-     التصنيفات
-========================= -->
+<section class="search-section">
 
-<section>
+<div class="search-box">
 
-    <h2 class="section-title">
-        استكشف المنصة
-    </h2>
+<input
+type="text"
+id="searchInput"
+placeholder="ابحث عن إعلان، سيارة، عقار، وظيفة..."
+>
 
+<button id="searchBtn">
+🔍 بحث
+</button>
 
-    <div class="categories">
-
-
-        <!-- المحلات -->
-
-        <div class="card"
-             onclick="location.href='shops.html'">
-
-            <div class="icon">
-                🛍️
-            </div>
-
-            <h3>
-                المحلات والمتاجر
-            </h3>
-
-            <p>
-                اكتشف المحلات والمتاجر
-            </p>
-
-        </div>
-
-
-
-        <!-- العقارات -->
-
-        <div class="card"
-             onclick="location.href='realestate.html'">
-
-            <div class="icon">
-                🏠
-            </div>
-
-            <h3>
-                العقارات
-            </h3>
-
-            <p>
-                بيع وشراء وإيجار العقارات
-            </p>
-
-        </div>
-
-
-
-        <!-- السيارات -->
-
-        <div class="card"
-             onclick="location.href='cars.html'">
-
-            <div class="icon">
-                🚗
-            </div>
-
-            <h3>
-                السيارات
-            </h3>
-
-            <p>
-                سيارات للبيع والشراء
-            </p>
-
-        </div>
-
-
-
-        <!-- الوظائف -->
-
-        <div class="card"
-             onclick="location.href='jobs.html'">
-
-            <div class="icon">
-                💼
-            </div>
-
-            <h3>
-                الوظائف
-            </h3>
-
-            <p>
-                وظائف وفرص عمل
-            </p>
-
-        </div>
-
-
-
-        <!-- الخدمات -->
-
-        <div class="card"
-             onclick="location.href='services.html'">
-
-            <div class="icon">
-                🔧
-            </div>
-
-            <h3>
-                الخدمات والحرفيين
-            </h3>
-
-            <p>
-                اعثر على مقدم الخدمة المناسب
-            </p>
-
-        </div>
-
-
-
-        <!-- الإعلانات -->
-
-        <div class="card"
-             onclick="location.href='ads.html'">
-
-            <div class="icon">
-                📢
-            </div>
-
-            <h3>
-                الإعلانات
-            </h3>
-
-            <p>
-                إعلانات متنوعة من جميع أنحاء فلسطين
-            </p>
-
-        </div>
-
-
-    </div>
+</div>
 
 </section>
 
 
+<!-- ================= الأقسام ================= -->
 
-<!-- =========================
-     عن المنصة
-========================= -->
+<div class="container">
 
-<section class="about">
+<div class="section-title">
 
-    <h2 class="section-title">
-        عن فلسطين بلاتفورم
-    </h2>
+<h2>
+استكشف فلسطين بلاتفورم
+</h2>
 
+<p>
+اختر القسم الذي تبحث عنه
+</p>
 
-    <p>
-
-        منصة فلسطينية شاملة تهدف إلى جمع المحلات والمتاجر
-        والعقارات والسيارات والوظائف والخدمات والإعلانات
-        في مكان واحد، لتسهيل الوصول إلى الخدمات والفرص
-        داخل جميع محافظات فلسطين.
-
-    </p>
+</div>
 
 
-    <div class="buttons">
-
-        <!-- إضافة إعلان -->
-
-        <a href="ads.html"
-           class="btn">
-
-            📢 أضف إعلانك
-
-        </a>
+<div class="categories">
 
 
-        <!-- إنشاء حساب -->
+<a
+href="ads.html"
+class="category-card"
+>
 
-        <a href="register.html"
-           class="btn secondary">
+<div class="category-icon">
+📢
+</div>
 
-            إنشاء حساب
+<h3>
+الإعلانات
+</h3>
 
-        </a>
+<p>
+بيع وشراء مختلف المنتجات
+</p>
 
-    </div>
-
-</section>
+</a>
 
 
+<a
+href="shops.html"
+class="category-card"
+>
 
-<!-- =========================
-     الفوتر
-========================= -->
+<div class="category-icon">
+🛒
+</div>
+
+<h3>
+المتاجر
+</h3>
+
+<p>
+متاجر ومحلات فلسطينية
+</p>
+
+</a>
+
+
+<a
+href="realestate.html"
+class="category-card"
+>
+
+<div class="category-icon">
+🏠
+</div>
+
+<h3>
+العقارات
+</h3>
+
+<p>
+شقق وأراضي وعقارات
+</p>
+
+</a>
+
+
+<a
+href="cars.html"
+class="category-card"
+>
+
+<div class="category-icon">
+🚗
+</div>
+
+<h3>
+السيارات
+</h3>
+
+<p>
+سيارات للبيع والشراء
+</p>
+
+</a>
+
+
+<a
+href="jobs.html"
+class="category-card"
+>
+
+<div class="category-icon">
+💼
+</div>
+
+<h3>
+الوظائف
+</h3>
+
+<p>
+فرص عمل ووظائف
+</p>
+
+</a>
+
+
+<a
+href="services.html"
+class="category-card"
+>
+
+<div class="category-icon">
+🛠️
+</div>
+
+<h3>
+الخدمات
+</h3>
+
+<p>
+خدمات يقدمها أصحاب الأعمال
+</p>
+
+</a>
+
+</div>
+
+
+<!-- ================= إضافة إعلان ================= -->
+
+<div class="add-section">
+
+<h2>
+📢 لديك شيء للبيع؟
+</h2>
+
+<p>
+أضف إعلانك ووصل إلى المستخدمين في فلسطين
+</p>
+
+
+<a
+href="ads.html"
+class="add-ad-btn"
+>
+➕ أضف إعلانك الآن
+</a>
+
+</div>
+
+</div>
+
+
+<!-- ================= التذييل ================= -->
 
 <footer>
 
-    © 2026 فلسطين بلاتفورم - جميع الحقوق محفوظة
+<p>
+🇵🇸 فلسطين بلاتفورم
+</p>
+
+<p>
+منصة فلسطينية للإعلانات والخدمات
+</p>
 
 </footer>
 
 
-
-<!-- =========================
-     SUPABASE
-========================= -->
+<!-- Supabase -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
 <script>
-
-/* =========================
-   بيانات Supabase
-========================= */
 
 const SUPABASE_URL =
 "https://sesbumfedusbjevbsyzl.supabase.co";
@@ -705,281 +639,217 @@ const SUPABASE_KEY =
 "sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
 
 
-/* =========================
-   إنشاء اتصال Supabase
-========================= */
-
 const supabaseClient =
-    supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY,
-        {
-            auth: {
-                persistSession: true,
-                autoRefreshToken: true,
-                detectSessionInUrl: true
-            }
-        }
-    );
+window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
 
 
-/* =========================
+/* ==========================
    عناصر الصفحة
-========================= */
+========================== */
 
 const userName =
-    document.getElementById("userName");
+document.getElementById("userName");
 
-const loginLink =
-    document.getElementById("loginLink");
+const accountLink =
+document.getElementById("accountLink");
 
 const myAdsLink =
-    document.getElementById("myAdsLink");
+document.getElementById("myAdsLink");
+
+const loginLink =
+document.getElementById("loginLink");
+
+const logoutBtn =
+document.getElementById("logoutBtn");
 
 
-/* =========================
-   تحديث واجهة الحساب
-========================= */
+/* ==========================
+   فحص المستخدم
+========================== */
 
-function updateAccountUI(user) {
+async function checkUser(){
 
-    /* =========================
-       المستخدم مسجل الدخول
-    ========================= */
+    const {
+        data,
+        error
+    } = await supabaseClient.auth.getUser();
 
-    if (user) {
 
-        console.log(
-            "المستخدم مسجل الدخول:",
-            user.email
+    if(error){
+
+        console.error(
+            "خطأ في جلب المستخدم:",
+            error
         );
 
+        showLoggedOut();
 
-        /* الحصول على اسم المستخدم */
-
-        const name =
-            user.user_metadata?.name ||
-            user.user_metadata?.full_name ||
-            user.email ||
-            "المستخدم";
-
-
-        /* عرض اسم المستخدم */
-
-        userName.textContent =
-            "مرحباً، " + name;
-
-        userName.style.display =
-            "block";
-
-
-        /* إظهار إعلاناتي */
-
-        myAdsLink.style.display =
-            "inline-block";
-
-
-        /* تحويل زر تسجيل الدخول
-           إلى تسجيل الخروج */
-
-        loginLink.textContent =
-            "تسجيل الخروج";
-
-        loginLink.href =
-            "#";
-
-
-        /* حذف أي حدث سابق */
-
-        loginLink.onclick = null;
-
-
-        /* حدث تسجيل الخروج */
-
-        loginLink.onclick =
-            async function(event) {
-
-                event.preventDefault();
-
-
-                loginLink.textContent =
-                    "جاري تسجيل الخروج...";
-
-
-                loginLink.style.pointerEvents =
-                    "none";
-
-
-                const {
-                    error
-                } =
-                await supabaseClient.auth.signOut();
-
-
-                if (error) {
-
-                    console.error(
-                        "خطأ تسجيل الخروج:",
-                        error
-                    );
-
-
-                    loginLink.textContent =
-                        "تسجيل الخروج";
-
-
-                    loginLink.style.pointerEvents =
-                        "auto";
-
-
-                    return;
-                }
-
-
-                /* إعادة واجهة الحساب */
-
-                updateAccountUI(null);
-
-
-                /* الانتقال لتسجيل الدخول */
-
-                window.location.href =
-                    "login.html";
-
-            };
-
-
+        return;
     }
 
-    /* =========================
-       لا يوجد مستخدم
-    ========================= */
 
-    else {
-
-        console.log(
-            "لا يوجد مستخدم مسجل"
-        );
+    const user = data.user;
 
 
-        /* إخفاء اسم المستخدم */
+    if(user){
 
-        userName.textContent =
-            "";
+        showLoggedIn(user);
 
-        userName.style.display =
-            "none";
+    }else{
 
-
-        /* إخفاء إعلاناتي */
-
-        myAdsLink.style.display =
-            "none";
-
-
-        /* إعادة زر تسجيل الدخول */
-
-        loginLink.textContent =
-            "تسجيل الدخول";
-
-        loginLink.href =
-            "login.html";
-
-        loginLink.onclick =
-            null;
-
-        loginLink.style.pointerEvents =
-            "auto";
+        showLoggedOut();
 
     }
 
 }
 
 
-/* =========================
-   فحص المستخدم الحالي
-========================= */
+/* ==========================
+   المستخدم مسجل الدخول
+========================== */
 
-async function checkUser() {
+async function showLoggedIn(user){
 
-    try {
+    accountLink.style.display =
+        "inline-block";
+
+    myAdsLink.style.display =
+        "inline-block";
+
+    loginLink.style.display =
+        "none";
+
+    logoutBtn.style.display =
+        "inline-block";
+
+
+    /* جلب اسم المستخدم */
+
+    const {
+        data: profile,
+        error
+    } = await supabaseClient
+        .from("profiles")
+        .select("full_name")
+        .eq("id",user.id)
+        .maybeSingle();
+
+
+    if(error){
+
+        console.error(
+            "خطأ في جلب الملف الشخصي:",
+            error
+        );
+
+    }
+
+
+    if(profile && profile.full_name){
+
+        userName.textContent =
+            "مرحباً، " +
+            profile.full_name;
+
+    }else{
+
+        userName.textContent =
+            "مرحباً، مستخدم";
+
+    }
+
+}
+
+
+/* ==========================
+   المستخدم غير مسجل
+========================== */
+
+function showLoggedOut(){
+
+    userName.textContent =
+        "";
+
+    accountLink.style.display =
+        "none";
+
+    myAdsLink.style.display =
+        "none";
+
+    loginLink.style.display =
+        "inline-block";
+
+    logoutBtn.style.display =
+        "none";
+
+}
+
+
+/* ==========================
+   تسجيل الخروج
+========================== */
+
+logoutBtn.addEventListener(
+    "click",
+    async function(){
+
+        logoutBtn.disabled =
+            true;
+
+        logoutBtn.textContent =
+            "جاري الخروج...";
+
 
         const {
-            data,
             error
         } =
-        await supabaseClient.auth.getUser();
+        await supabaseClient.auth.signOut();
 
 
-        /* يوجد خطأ */
+        if(error){
 
-        if (error) {
+            console.error(error);
 
-            console.error(
-                "Supabase error:",
-                error
+            alert(
+                "حدث خطأ أثناء تسجيل الخروج"
             );
 
+            logoutBtn.disabled =
+                false;
 
-            updateAccountUI(null);
+            logoutBtn.textContent =
+                "تسجيل الخروج";
 
             return;
         }
 
 
-        /* تحديث الواجهة */
-
-        updateAccountUI(
-            data.user
-        );
-
+        window.location.href =
+            "index.html";
 
     }
-
-    catch (error) {
-
-        console.error(
-            "خطأ:",
-            error
-        );
+);
 
 
-        updateAccountUI(null);
-
-    }
-
-}
-
-
-/* =========================
-   مراقبة حالة تسجيل الدخول
-========================= */
+/* ==========================
+   مراقبة تسجيل الدخول والخروج
+========================== */
 
 supabaseClient.auth.onAuthStateChange(
-    function(event, session) {
+    function(event, session){
 
-        console.log(
-            "AUTH EVENT:",
-            event
-        );
+        if(session && session.user){
 
-
-        if (
-            session &&
-            session.user
-        ) {
-
-            updateAccountUI(
+            showLoggedIn(
                 session.user
             );
 
-        }
+        }else{
 
-        else {
-
-            updateAccountUI(
-                null
-            );
+            showLoggedOut();
 
         }
 
@@ -987,49 +857,62 @@ supabaseClient.auth.onAuthStateChange(
 );
 
 
-/* =========================
-   تشغيل فحص المستخدم
-========================= */
+/* ==========================
+   البحث
+========================== */
+
+document.getElementById("searchBtn")
+.addEventListener(
+    "click",
+    function(){
+
+        const value =
+            document.getElementById(
+                "searchInput"
+            ).value.trim();
+
+
+        if(!value){
+
+            window.location.href =
+                "ads.html";
+
+            return;
+        }
+
+
+        window.location.href =
+            "ads.html?search=" +
+            encodeURIComponent(value);
+
+    }
+);
+
+
+/* البحث عند الضغط Enter */
+
+document.getElementById("searchInput")
+.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Enter"){
+
+            document.getElementById(
+                "searchBtn"
+            ).click();
+
+        }
+
+    }
+);
+
+
+/* تشغيل فحص الحساب */
 
 checkUser();
 
-
-/* =========================
-   البحث
-========================= */
-
-function search() {
-
-    const value =
-        document
-        .getElementById("searchInput")
-        .value
-        .trim();
-
-
-    /* إذا كان البحث فارغًا */
-
-    if (value === "") {
-
-        alert(
-            "اكتب ما الذي تبحث عنه أولاً"
-        );
-
-        return;
-    }
-
-
-    /* البحث الشامل سيتم تطويره لاحقًا */
-
-    alert(
-        "سيتم تفعيل البحث الشامل قريباً 🔎"
-    );
-
-}
-
 </script>
 
-
 </body>
-
-</html>
+      </html>
