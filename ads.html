@@ -1,1399 +1,361 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>الإعلانات | فلسطين بلاتفورم</title>
-
 <style>
-
-/* =========================
-   عام
-========================= */
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    font-family: Arial, Tahoma, sans-serif;
-    background: #f5f7fa;
-    color: #172033;
-}
-
-button,
-input,
-select,
-textarea {
-    font-family: inherit;
-}
-
-
-/* =========================
-   الهيدر
-========================= */
-
-header {
-    background: white;
-    padding: 16px 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,.08);
-}
-
-.header {
-    max-width: 1100px;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-}
-
-.logo {
-    font-size: 22px;
-    font-weight: bold;
-    color: #173b68;
-}
-
-.logo span {
-    color: #b51f2a;
-}
-
-.back {
-    text-decoration: none;
-    background: #173b68;
-    color: white;
-    padding: 9px 16px;
-    border-radius: 8px;
-}
-
-
-/* =========================
-   العنوان
-========================= */
-
-.hero {
-    background: #173b68;
-    color: white;
-    text-align: center;
-    padding: 45px 20px;
-}
-
-.hero h1 {
-    font-size: 34px;
-    margin-bottom: 10px;
-}
-
-.hero p {
-    font-size: 17px;
-}
-
-
-/* =========================
-   المحتوى
-========================= */
-
-.container {
-    max-width: 1100px;
-    margin: auto;
-    padding: 35px 20px;
-}
-
-
-/* =========================
-   زر إضافة إعلان
-========================= */
-
-.add {
-    display: block;
-    width: 100%;
-    text-align: center;
-    background: #b51f2a;
-    color: white;
-    padding: 14px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    border: none;
-    font-size: 16px;
-}
-
-
-/* =========================
-   البحث والفلاتر
-========================= */
-
-.filters {
-    background: white;
-    padding: 18px;
-    border-radius: 14px;
-    margin-bottom: 25px;
-    box-shadow: 0 3px 15px rgba(0,0,0,.06);
-}
-
-.search {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 15px;
-}
-
-.search input {
-    flex: 1;
-    border: 1px solid #ddd;
-    outline: none;
-    padding: 13px;
-    font-size: 16px;
-    border-radius: 8px;
-}
-
-.search button {
-    border: none;
-    background: #b51f2a;
-    color: white;
-    padding: 0 22px;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.filter-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-}
-
-.filter-grid input,
-.filter-grid select {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 14px;
-    background: white;
-    outline: none;
-}
-
-.filter-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 12px;
-}
-
-.filter-buttons button {
-    flex: 1;
-    border: none;
-    padding: 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 15px;
-}
-
-.apply {
-    background: #173b68;
-    color: white;
-}
-
-.clear {
-    background: #eee;
-    color: #222;
-}
-
-
-/* =========================
-   النتائج والترتيب
-========================= */
-
-.results-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    gap: 10px;
-}
-
-.results-count {
-    color: #555;
-}
-
-.sort-select {
-    padding: 9px 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: white;
-}
-
-
-/* =========================
-   بطاقات الإعلانات
-========================= */
-
-.ads-list {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-}
-
-.ad-card {
-    background: white;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 3px 15px rgba(0,0,0,.07);
-    cursor: pointer;
-    transition: .2s;
-}
-
-.ad-card:hover {
-    transform: translateY(-3px);
-}
-
-.ad-image {
-    width: 100%;
-    height: 210px;
-    object-fit: cover;
-    display: block;
-    background: #eee;
-}
-
-.ad-no-image {
-    height: 210px;
-    background: #eef2f7;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 55px;
-}
-
-.ad-content {
-    padding: 18px;
-}
-
-.ad-card h3 {
-    color: #173b68;
-    margin-bottom: 10px;
-    font-size: 20px;
-}
-
-.ad-category {
-    display: inline-block;
-    background: #eef2f7;
-    color: #173b68;
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-size: 13px;
-    margin-bottom: 10px;
-}
-
-.ad-description {
-    color: #555;
-    line-height: 1.7;
-    margin-bottom: 10px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.ad-price {
-    font-size: 19px;
-    font-weight: bold;
-    color: #b51f2a;
-    margin: 10px 0;
-}
-
-.ad-info {
-    color: #666;
-    font-size: 14px;
-    line-height: 1.8;
-}
-
-.ad-date {
-    color: #888;
-    font-size: 12px;
-    margin-top: 5px;
-}
-
-.empty {
-    background: white;
-    padding: 50px 20px;
-    border-radius: 15px;
-    text-align: center;
-    color: #777;
-    grid-column: 1 / -1;
-}
-
-
-/* =========================
-   النافذة
-========================= */
-
-.modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.55);
-    z-index: 9999;
-    padding: 20px;
-    overflow: auto;
-}
-
-.modal-content {
-    background: white;
-    max-width: 600px;
-    margin: 30px auto;
-    border-radius: 15px;
-    padding: 25px;
-}
-
-.modal h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #173b68;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 7px;
-    font-weight: bold;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 15px;
-}
-
-.form-group textarea {
-    min-height: 120px;
-    resize: vertical;
-}
-
-
-/* =========================
-   الصور
-========================= */
-
-.image-help {
-    font-size: 13px;
-    color: #777;
-    margin-top: 6px;
-}
-
-.image-preview {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
-    margin-top: 12px;
-}
-
-.preview-box {
-    position: relative;
-    height: 90px;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #eee;
-}
-
-.preview-box img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.remove-image {
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 25px;
-    height: 25px;
-    border: 0;
-    border-radius: 50%;
-    background: #b51f2a;
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-
-/* =========================
-   أزرار النموذج
-========================= */
-
-.form-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.form-buttons button {
-    flex: 1;
-    padding: 13px;
-    border: 0;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.save {
-    background: #b51f2a;
-    color: white;
-}
-
-.cancel {
-    background: #eee;
-    color: #222;
-}
-
-.message {
-    text-align: center;
-    margin-top: 15px;
-    font-weight: bold;
-    line-height: 1.6;
-}
-
-
-/* =========================
-   الهاتف
-========================= */
-
-@media (max-width: 800px) {
-
-    .ads-list {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .filter-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-}
-
-@media (max-width: 600px) {
-
-    header {
-        padding: 13px 12px;
-    }
-
-    .logo {
-        font-size: 18px;
-    }
-
-    .back {
-        font-size: 13px;
-        padding: 8px 11px;
-    }
-
-    .hero {
-        padding: 35px 15px;
-    }
-
-    .hero h1 {
-        font-size: 28px;
-    }
-
-    .hero p {
-        font-size: 15px;
-    }
-
-    .container {
-        padding: 25px 12px;
-    }
-
-    .search {
-        flex-direction: column;
-    }
-
-    .search input,
-    .search button {
-        width: 100%;
-        min-height: 46px;
-    }
-
-    .filter-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .filter-buttons {
-        flex-direction: column;
-    }
-
-    .results-info {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .sort-select {
-        width: 100%;
-    }
-
-    .ads-list {
-        grid-template-columns: 1fr;
-    }
-
-    .image-preview {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-}
-
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Tahoma,sans-serif;background:#f5f7fa;color:#172033}
+button,input,select,textarea{font-family:inherit}
+header{background:white;padding:16px 20px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.header{max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:15px}
+.logo{font-size:22px;font-weight:bold;color:#173b68}.logo span{color:#b51f2a}
+.back{text-decoration:none;background:#173b68;color:white;padding:9px 16px;border-radius:8px}
+.hero{background:#173b68;color:white;text-align:center;padding:45px 20px}
+.hero h1{font-size:34px;margin-bottom:10px}.hero p{font-size:17px}
+.container{max-width:1100px;margin:auto;padding:35px 20px}
+.add{display:block;width:100%;text-align:center;background:#b51f2a;color:white;padding:14px;border-radius:10px;margin-bottom:20px;font-weight:bold;cursor:pointer;border:none;font-size:16px}
+.filters{background:white;padding:18px;border-radius:14px;margin-bottom:25px;box-shadow:0 3px 15px rgba(0,0,0,.06)}
+.search{display:flex;gap:8px;margin-bottom:15px}.search input{flex:1;border:1px solid #ddd;outline:none;padding:13px;font-size:16px;border-radius:8px}
+.search button{border:none;background:#b51f2a;color:white;padding:0 22px;border-radius:8px;font-size:16px;cursor:pointer}
+.filter-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.filter-grid input,.filter-grid select{width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:14px;background:white;outline:none}
+.filter-buttons{display:flex;gap:10px;margin-top:12px}.filter-buttons button{flex:1;border:none;padding:12px;border-radius:8px;cursor:pointer;font-size:15px}
+.apply{background:#173b68;color:white}.clear{background:#eee;color:#222}
+.results-info{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;gap:10px}.results-count{color:#555}
+.sort-select{padding:9px 12px;border:1px solid #ddd;border-radius:8px;background:white}
+.ads-list{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.ad-card{background:white;border-radius:15px;overflow:hidden;box-shadow:0 3px 15px rgba(0,0,0,.07);cursor:pointer;transition:.2s}
+.ad-card:hover{transform:translateY(-3px)}.ad-image{width:100%;height:210px;object-fit:cover;display:block;background:#eee}
+.ad-no-image{height:210px;background:#eef2f7;display:flex;align-items:center;justify-content:center;font-size:55px}
+.ad-content{padding:18px}.ad-card h3{color:#173b68;margin-bottom:10px;font-size:20px}
+.ad-category{display:inline-block;background:#eef2f7;color:#173b68;padding:5px 10px;border-radius:15px;font-size:13px;margin-bottom:10px}
+.ad-description{color:#555;line-height:1.7;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ad-price{font-size:19px;font-weight:bold;color:#b51f2a;margin:10px 0}.ad-info{color:#666;font-size:14px;line-height:1.8}.ad-date{color:#888;font-size:12px;margin-top:5px}
+.empty,.loading{background:white;padding:50px 20px;border-radius:15px;text-align:center;color:#777;grid-column:1/-1}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;padding:20px;overflow:auto}
+.modal-content{background:white;max-width:600px;margin:30px auto;border-radius:15px;padding:25px}.modal h2{text-align:center;margin-bottom:20px;color:#173b68}
+.form-group{margin-bottom:15px}.form-group label{display:block;margin-bottom:7px;font-weight:bold}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:15px}
+.form-group textarea{min-height:120px;resize:vertical}.image-help{font-size:13px;color:#777;margin-top:6px}
+.image-preview{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}
+.preview-box{position:relative;height:90px;border-radius:8px;overflow:hidden;background:#eee}.preview-box img{width:100%;height:100%;object-fit:cover}
+.remove-image{position:absolute;top:3px;left:3px;width:25px;height:25px;border:0;border-radius:50%;background:#b51f2a;color:white;cursor:pointer;font-weight:bold}
+.form-buttons{display:flex;gap:10px;margin-top:20px}.form-buttons button{flex:1;padding:13px;border:0;border-radius:8px;font-size:16px;cursor:pointer}
+.save{background:#b51f2a;color:white}.cancel{background:#eee;color:#222}.message{text-align:center;margin-top:15px;font-weight:bold;line-height:1.6}
+@media(max-width:800px){.ads-list{grid-template-columns:repeat(2,1fr)}.filter-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){header{padding:13px 12px}.logo{font-size:18px}.back{font-size:13px;padding:8px 11px}.hero{padding:35px 15px}.hero h1{font-size:28px}.hero p{font-size:15px}.container{padding:25px 12px}.search{flex-direction:column}.search input,.search button{width:100%;min-height:46px}.filter-grid{grid-template-columns:1fr}.filter-buttons{flex-direction:column}.results-info{flex-direction:column;align-items:stretch}.sort-select{width:100%}.ads-list{grid-template-columns:1fr}.image-preview{grid-template-columns:repeat(3,1fr)}}
 </style>
-
 </head>
-
-
 <body>
+<header><div class="header"><div class="logo">فلسطين <span>بلاتفورم</span></div><a href="index.html" class="back">← الرئيسية</a></div></header>
 
-
-<!-- =========================
-     الهيدر
-========================= -->
-
-<header>
-
-<div class="header">
-
-<div class="logo">
-فلسطين <span>بلاتفورم</span>
-</div>
-
-<a href="index.html" class="back">
-← الرئيسية
-</a>
-
-</div>
-
-</header>
-
-
-<!-- =========================
-     العنوان
-========================= -->
-
-<section class="hero">
-
-<h1>
-📢 الإعلانات
-</h1>
-
-<p>
-إعلانات متنوعة من جميع أنحاء فلسطين
-</p>
-
-</section>
-
+<section class="hero"><h1>📢 الإعلانات</h1><p>إعلانات متنوعة من جميع أنحاء فلسطين</p></section>
 
 <main class="container">
-
-
-<!-- =========================
-     إضافة إعلان
-========================= -->
-
-<button
-type="button"
-class="add"
-id="addButton">
-
-➕ أضف إعلانك الآن
-
-</button>
-
-
-<!-- =========================
-     البحث والفلاتر
-========================= -->
+<button type="button" class="add" id="addButton">➕ أضف إعلانك الآن</button>
 
 <div class="filters">
-
-
 <div class="search">
-
-<input
-type="text"
-id="searchInput"
-placeholder="ابحث عن هاتف، سيارة، أثاث، خدمة..."
->
-
-<button
-type="button"
-id="searchButton">
-
-🔎 بحث
-
-</button>
-
+<input type="text" id="searchInput" placeholder="ابحث عن هاتف، سيارة، أثاث، خدمة...">
+<button type="button" id="searchButton">🔎 بحث</button>
 </div>
-
-
 <div class="filter-grid">
-
-
 <select id="categoryFilter">
-
-<option value="">
-🗂️ كل التصنيفات
-</option>
-
-<option value="أجهزة وإلكترونيات">
-📱 أجهزة وإلكترونيات
-</option>
-
-<option value="أثاث ومستلزمات">
-🛋️ أثاث ومستلزمات
-</option>
-
-<option value="مواشي وحيوانات">
-🐄 مواشي وحيوانات
-</option>
-
-<option value="ملابس وأغراض شخصية">
-👕 ملابس وأغراض شخصية
-</option>
-
-<option value="بيع وشراء">
-📦 بيع وشراء
-</option>
-
-<option value="إعلانات أخرى">
-📋 إعلانات أخرى
-</option>
-
+<option value="">🗂️ كل التصنيفات</option>
+<option value="أجهزة وإلكترونيات">📱 أجهزة وإلكترونيات</option>
+<option value="أثاث ومستلزمات">🛋️ أثاث ومستلزمات</option>
+<option value="مواشي وحيوانات">🐄 مواشي وحيوانات</option>
+<option value="ملابس وأغراض شخصية">👕 ملابس وأغراض شخصية</option>
+<option value="بيع وشراء">📦 بيع وشراء</option>
+<option value="إعلانات أخرى">📋 إعلانات أخرى</option>
 </select>
-
-
-<input
-type="text"
-id="cityFilter"
-placeholder="📍 المدينة / المحافظة"
->
-
-
-<input
-type="number"
-id="minPrice"
-placeholder="💰 أقل سعر"
-min="0"
->
-
-
-<input
-type="number"
-id="maxPrice"
-placeholder="💰 أعلى سعر"
-min="0"
->
-
+<input type="text" id="cityFilter" placeholder="📍 المدينة / المحافظة">
+<input type="number" id="minPrice" placeholder="💰 أقل سعر" min="0">
+<input type="number" id="maxPrice" placeholder="💰 أعلى سعر" min="0">
 </div>
-
-
 <div class="filter-buttons">
-
-<button
-type="button"
-class="apply"
-id="applyButton">
-
-تطبيق الفلاتر
-
-</button>
-
-
-<button
-type="button"
-class="clear"
-id="clearButton">
-
-مسح الفلاتر
-
-</button>
-
+<button type="button" class="apply" id="applyButton">تطبيق الفلاتر</button>
+<button type="button" class="clear" id="clearButton">مسح الفلاتر</button>
 </div>
-
 </div>
-
-
-<!-- =========================
-     عدد النتائج والترتيب
-========================= -->
 
 <div class="results-info">
-
-<div
-class="results-count"
-id="resultsCount">
-
-جاري تحميل الإعلانات...
-
-</div>
-
-
-<select
-class="sort-select"
-id="sortSelect">
-
-<option value="newest">
-الأحدث أولاً
-</option>
-
-<option value="oldest">
-الأقدم أولاً
-</option>
-
-<option value="low">
-السعر: من الأقل للأعلى
-</option>
-
-<option value="high">
-السعر: من الأعلى للأقل
-</option>
-
+<div class="results-count" id="resultsCount">جاري تحميل الإعلانات...</div>
+<select class="sort-select" id="sortSelect">
+<option value="newest">الأحدث أولاً</option>
+<option value="oldest">الأقدم أولاً</option>
+<option value="low">السعر: من الأقل للأعلى</option>
+<option value="high">السعر: من الأعلى للأقل</option>
 </select>
-
 </div>
 
-
-<!-- =========================
-     الإعلانات
-========================= -->
-
-<div
-class="ads-list"
-id="adsList">
-
-<div class="empty">
-جاري تحميل الإعلانات...
-</div>
-
-</div>
-
-
+<div class="ads-list" id="adsList"><div class="loading">جاري تحميل الإعلانات...</div></div>
 </main>
 
-
-<!-- =========================
-     نافذة إضافة الإعلان
-========================= -->
-
-<div
-class="modal"
-id="addModal">
-
-
+<div class="modal" id="addModal">
 <div class="modal-content">
-
-
-<h2>
-➕ إضافة إعلان جديد
-</h2>
-
-
+<h2>➕ إضافة إعلان جديد</h2>
 <form id="adForm">
-
-
+<div class="form-group"><label>عنوان الإعلان</label><input type="text" id="title" placeholder="مثال: هاتف سامسونج للبيع" required></div>
+<div class="form-group"><label>التصنيف</label>
+<select id="category" required>
+<option value="">اختر التصنيف</option>
+<option value="أجهزة وإلكترونيات">📱 أجهزة وإلكترونيات</option>
+<option value="أثاث ومستلزمات">🛋️ أثاث ومستلزمات</option>
+<option value="مواشي وحيوانات">🐄 مواشي وحيوانات</option>
+<option value="ملابس وأغراض شخصية">👕 ملابس وأغراض شخصية</option>
+<option value="بيع وشراء">📦 بيع وشراء</option>
+<option value="إعلانات أخرى">📋 إعلانات أخرى</option>
+</select></div>
+<div class="form-group"><label>الوصف</label><textarea id="description" placeholder="اكتب تفاصيل الإعلان..." required></textarea></div>
+<div class="form-group"><label>السعر</label><input type="number" id="price" placeholder="مثال: 1500" min="0"></div>
+<div class="form-group"><label>المحافظة / المدينة</label><input type="text" id="city" placeholder="مثال: نابلس"></div>
+<div class="form-group"><label>رقم الهاتف</label><input type="tel" id="phone" placeholder="مثال: 059xxxxxxx"></div>
 <div class="form-group">
-
-<label>
-عنوان الإعلان
-</label>
-
-<input
-type="text"
-id="title"
-placeholder="مثال: هاتف سامسونج للبيع"
-required
->
-
+<label>📷 صور الإعلان</label>
+<input type="file" id="images" accept="image/jpeg,image/png,image/webp" multiple>
+<div class="image-help">يمكنك اختيار حتى 5 صور — الحد الأقصى 5MB للصورة الواحدة.</div>
+<div id="imagePreview" class="image-preview"></div>
 </div>
-
-
-<div class="form-group">
-
-<label>
-التصنيف
-</label>
-
-<select
-id="category"
-required>
-
-<option value="">
-اختر التصنيف
-</option>
-
-<option value="أجهزة وإلكترونيات">
-📱 أجهزة وإلكترونيات
-</option>
-
-<option value="أثاث ومستلزمات">
-🛋️ أثاث ومستلزمات
-</option>
-
-<option value="مواشي وحيوانات">
-🐄 مواشي وحيوانات
-</option>
-
-<option value="ملابس وأغراض شخصية">
-👕 ملابس وأغراض شخصية
-</option>
-
-<option value="بيع وشراء">
-📦 بيع وشراء
-</option>
-
-<option value="إعلانات أخرى">
-📋 إعلانات أخرى
-</option>
-
-</select>
-
-</div>
-
-
-<div class="form-group">
-
-<label>
-الوصف
-</label>
-
-<textarea
-id="description"
-placeholder="اكتب تفاصيل الإعلان..."
-required
-></textarea>
-
-</div>
-
-
-<div class="form-group">
-
-<label>
-السعر
-</label>
-
-<input
-type="number"
-id="price"
-placeholder="مثال: 1500"
-min="0"
->
-
-</div>
-
-
-<div class="form-group">
-
-<label>
-المحافظة / المدينة
-</label>
-
-<input
-type="text"
-id="city"
-placeholder="مثال: نابلس"
->
-
-</div>
-
-
-<div class="form-group">
-
-<label>
-رقم الهاتف
-</label>
-
-<input
-type="tel"
-id="phone"
-placeholder="مثال: 059xxxxxxx"
->
-
-</div>
-
-
-<div class="form-group">
-
-<label>
-📷 صور الإعلان
-</label>
-
-<input
-type="file"
-id="images"
-accept="image/jpeg,image/png,image/webp"
-multiple
->
-
-<div class="image-help">
-يمكنك اختيار حتى 5 صور — الحد الأقصى 5MB للصورة الواحدة.
-</div>
-
-<div
-id="imagePreview"
-class="image-preview">
-</div>
-
-</div>
-
-
 <div class="form-buttons">
-
-<button
-type="submit"
-class="save"
-id="saveButton">
-
-نشر الإعلان
-
-</button>
-
-
-<button
-type="button"
-class="cancel"
-id="cancelButton">
-
-إلغاء
-
-</button>
-
+<button type="submit" class="save" id="saveButton">نشر الإعلان</button>
+<button type="button" class="cancel" id="cancelButton">إلغاء</button>
 </div>
-
-
-<div
-class="message"
-id="message">
-</div>
-
-
+<div class="message" id="message"></div>
 </form>
-
 </div>
-
 </div>
-
-
-<!-- =========================
-     Supabase
-========================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
 <script>
-
-/* =====================================================
-   إعداد Supabase
-===================================================== */
-
-const SUPABASE_URL =
-"https://sesbumfedusbjevbsyzl.supabase.co";
-
-const SUPABASE_KEY =
-"sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
-
-
-const supabaseClient =
-supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY,
-    {
-        auth: {
-            persistSession: true,
-            autoRefreshToken: true,
-            detectSessionInUrl: true
-        }
-    }
-);
-
-
-/* =====================================================
-   المتغيرات
-===================================================== */
-
-let selectedFiles = [];
-
-let allAds = [];
-
-
-/* =====================================================
-   عناصر الصفحة
-===================================================== */
-
-const addButton =
-document.getElementById("addButton");
-
-const addModal =
-document.getElementById("addModal");
-
-const cancelButton =
-document.getElementById("cancelButton");
-
-const adForm =
-document.getElementById("adForm");
-
-const imagesInput =
-document.getElementById("images");
-
-const imagePreview =
-document.getElementById("imagePreview");
-
-const message =
-document.getElementById("message");
-
-const saveButton =
-document.getElementById("saveButton");
-
-const adsList =
-document.getElementById("adsList");
-
-const resultsCount =
-document.getElementById("resultsCount");
-
-const searchInput =
-document.getElementById("searchInput");
-
-const searchButton =
-document.getElementById("searchButton");
-
-const categoryFilter =
-document.getElementById("categoryFilter");
-
-const cityFilter =
-document.getElementById("cityFilter");
-
-const minPrice =
-document.getElementById("minPrice");
-
-const maxPrice =
-document.getElementById("maxPrice");
-
-const applyButton =
-document.getElementById("applyButton");
-
-const clearButton =
-document.getElementById("clearButton");
-
-const sortSelect =
-document.getElementById("sortSelect");
-
-
-/* =====================================================
-   فتح نافذة إضافة إعلان
-===================================================== */
-
-addButton.addEventListener(
-    "click",
-    async function(){
-
-        try {
-
-            const {
-                data,
-                error
-            } =
-            await supabaseClient
-            .auth
-            .getUser();
-
-
-            if(error || !data.user){
-
-                alert(
-                    "يجب تسجيل الدخول أولاً لإضافة إعلان."
-                );
-
-                window.location.href =
-                    "login.html";
-
-                return;
-            }
-
-
-            addModal.style.display =
-                "block";
-
-        }
-
-        catch(error){
-
-            console.error(error);
-
-            alert(
-                "حدث خطأ. يرجى تسجيل الدخول مرة أخرى."
-            );
-
-        }
-
-    }
-);
-
-
-/* =====================================================
-   إغلاق النافذة
-===================================================== */
-
-cancelButton.addEventListener(
-    "click",
-    function(){
-
-        addModal.style.display =
-            "none";
-
-    }
-);
-
-
-/* إغلاق عند الضغط خارج النافذة */
-
-addModal.addEventListener(
-    "click",
-    function(event){
-
-        if(event.target === addModal){
-
-            addModal.style.display =
-                "none";
-
-        }
-
-    }
-);
-
-
-/* =====================================================
-   اختيار الصور
-===================================================== */
-
-imagesInput.addEventListener(
-    "change",
-    function(){
-
-        const files =
-            Array.from(
-                imagesInput.files
-            );
-
-
-        if(files.length > 5){
-
-            alert(
-                "يمكنك اختيار 5 صور كحد أقصى."
-            );
-
-            imagesInput.value =
-                "";
-
-            selectedFiles =
-                [];
-
-            renderPreview();
-
-            return;
-        }
-
-
-        for(
-            const file of files
-        ){
-
-            if(
-                !file.type.startsWith(
-                    "image/"
-                )
-            ){
-
-                alert(
-                    "يرجى اختيار صور فقط."
-                );
-
-                imagesInput.value =
-                    "";
-
-                selectedFiles =
-                    [];
-
-                renderPreview();
-
-                return;
-            }
-
-
-            if(
-                file.size >
-                5 * 1024 * 1024
-            ){
-
-                alert(
-                    "حجم الصورة يجب ألا يتجاوز 5MB."
-                );
-
-                imagesInput.value =
-                    "";
-
-                selectedFiles =
-                    [];
-
-                renderPreview();
-
-                return;
-            }
-
-        }
-
-
-        selectedFiles =
-            files;
-
-        renderPreview();
-
-    }
-);
-
-
-/* =====================================================
-   عرض معاينة الصور
-===================================================== */
+const SUPABASE_URL="https://sesbumfedusbjevbsyzl.supabase.co";
+const SUPABASE_KEY="sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
+const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+
+let selectedFiles=[];
+let allAds=[];
+
+const addButton=document.getElementById("addButton");
+const addModal=document.getElementById("addModal");
+const cancelButton=document.getElementById("cancelButton");
+const adForm=document.getElementById("adForm");
+const imagesInput=document.getElementById("images");
+const imagePreview=document.getElementById("imagePreview");
+const message=document.getElementById("message");
+const saveButton=document.getElementById("saveButton");
+const adsList=document.getElementById("adsList");
+const resultsCount=document.getElementById("resultsCount");
+const searchInput=document.getElementById("searchInput");
+const searchButton=document.getElementById("searchButton");
+const categoryFilter=document.getElementById("categoryFilter");
+const cityFilter=document.getElementById("cityFilter");
+const minPrice=document.getElementById("minPrice");
+const maxPrice=document.getElementById("maxPrice");
+const applyButton=document.getElementById("applyButton");
+const clearButton=document.getElementById("clearButton");
+const sortSelect=document.getElementById("sortSelect");
+
+addButton.addEventListener("click",async function(){
+try{
+const result=await supabaseClient.auth.getUser();
+if(result.error){console.error(result.error);alert("حدث خطأ أثناء التحقق من تسجيل الدخول.");return;}
+if(!result.data.user){alert("يجب تسجيل الدخول أولاً لإضافة إعلان.");window.location.href="login.html";return;}
+adForm.reset();selectedFiles=[];imagePreview.innerHTML="";message.textContent="";message.style.color="";
+addModal.style.display="block";
+}catch(error){console.error(error);alert("حدث خطأ. يرجى المحاولة مرة أخرى.");}
+});
+
+cancelButton.addEventListener("click",()=>addModal.style.display="none");
+addModal.addEventListener("click",e=>{if(e.target===addModal)addModal.style.display="none";});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")addModal.style.display="none";});
+
+imagesInput.addEventListener("change",function(){
+const files=Array.from(imagesInput.files);
+if(files.length>5){alert("يمكنك اختيار 5 صور كحد أقصى.");imagesInput.value="";selectedFiles=[];renderPreview();return;}
+for(const file of files){
+if(!file.type.startsWith("image/")){alert("يرجى اختيار صور فقط.");imagesInput.value="";selectedFiles=[];renderPreview();return;}
+if(file.size>5*1024*1024){alert("حجم الصورة يجب ألا يتجاوز 5MB.");imagesInput.value="";selectedFiles=[];renderPreview();return;}
+}
+selectedFiles=files;renderPreview();
+});
 
 function renderPreview(){
-
-    imagePreview.innerHTML =
-        "";
-
-
-    selectedFiles.forEach(
-        function(file, index){
-
-            const box =
-                document.createElement(
-                    "div"
-                );
-
-            box.className =
-                "preview-box";
-
-
-            const img =
-                document.createElement(
-                    "img"
-                );
-
-            img.src =
-                URL.createObjectURL(
-                    file
-                );
-
-
-            const remove =
-                document.createElement(
-                    "button"
-                );
-
-            remove.type =
-                "button";
-
-            remove.className =
-                "remove-image";
-
-            remove.textContent =
-                "×";
-
-
-            remove.addEventListener(
-                "click",
-                function(){
-
-                    selectedFiles.splice(
-                        index,
-                        1
-                    );
-
-                    renderPreview();
-
-                }
-            );
-
-
-            box.appendChild(img);
-
-            box.appendChild(remove);
-
-            imagePreview.appendChild(box);
-
-        }
-    );
-
+imagePreview.innerHTML="";
+selectedFiles.forEach((file,index)=>{
+const box=document.createElement("div");box.className="preview-box";
+const img=document.createElement("img");img.src=URL.createObjectURL(file);
+const remove=document.createElement("button");remove.type="button";remove.className="remove-image";remove.textContent="×";
+remove.addEventListener("click",()=>{selectedFiles.splice(index,1);renderPreview();});
+box.appendChild(img);box.appendChild(remove);imagePreview.appendChild(box);
+});
 }
 
+async function uploadImages(files,userId){
+const imageUrls=[];
+for(let i=0;i<files.length;i++){
+const file=files[i];
+const extension=file.name.split(".").pop().toLowerCase();
+const fileName=userId+"/"+Date.now()+"_"+Math.random().toString(36).substring(2)+"."+extension;
 
-/* =====================================================
-   رفع الصور
-===================================================== */
+const uploadResult=await supabaseClient.storage.from("ad-images").upload(fileName,file,{cacheControl:"3600",upsert:false,contentType:file.type});
 
-async function uploadImages(
-    files,
-    userId
-){
+if(uploadResult.error){
+console.error("خطأ رفع الصورة:",uploadResult.error);
+throw new Error("فشل رفع إحدى الصور: "+uploadResult.error.message);
+}
 
-    const imageUrls = [];
+const publicResult=supabaseClient.storage.from("ad-images").getPublicUrl(fileName);
 
+if(!publicResult.data||!publicResult.data.publicUrl)throw new Error("تعذر الحصول على رابط الصورة.");
+imageUrls.push(publicResult.data.publicUrl);
+}
+return imageUrls;
+}
 
-    for(
-        let i = 0;
-        i < files.length;
-        i++
-    ){
+adForm.addEventListener("submit",async function(event){
+event.preventDefault();
+saveButton.disabled=true;saveButton.textContent="جاري النشر...";message.textContent="يرجى الانتظار...";message.style.color="";
 
-        const file =
-            files[i];
+try{
+const userResult=await supabaseClient.auth.getUser();
+if(userResult.error||!userResult.data.user){alert("انتهت جلسة تسجيل الدخول. يرجى تسجيل الدخول مرة أخرى.");window.location.href="login.html";return;}
 
+const user=userResult.data.user;
+const title=document.getElementById("title").value.trim();
+const category=document.getElementById("category").value;
+const description=document.getElementById("description").value.trim();
+const priceValue=document.getElementById("price").value;
+const city=document.getElementById("city").value.trim();
+const phone=document.getElementById("phone").value.trim();
 
-        const extension =
-            file.name
-            .split(".")
-            .pop()
-            .toLowerCase();
+if(!title||!category||!description)throw new Error("يرجى تعبئة الحقول المطلوبة.");
 
+let imageUrls=[];
+if(selectedFiles.length>0){message.textContent="جاري رفع الصور...";imageUrls=await uploadImages(selectedFiles,user.id);}
 
-        const fileName =
-            userId +
-            "/" +
-            Date.now() +
-            "_" +
-            Math.random()
-            .toString(36)
-            .substring(2) +
-            "." +
-            extension;
+message.textContent="جاري حفظ الإعلان...";
 
+const adData={user_id:user.id,title,category,description,city:city||null,phone:phone||null,image_urls:imageUrls,price:priceValue!==""?Number(priceValue):null};
 
-        const result =
-            await supabaseClient
-            .storage
-            .from("ad-images")
-            .upload(
-                fileName,
-                file,
-                {
-                    cacheControl:"3600",
-                    upsert:false,
-                    contentType:file.type
-                }
-            );
+const insertResult=await supabaseClient.from("ads").insert(adData).select().single();
 
+if(insertResult.error){
+console.error("خطأ قاعدة البيانات:",insertResult.error);
+throw new Error("تعذر حفظ الإعلان: "+insertResult.error.message);
+}
 
-        if(result.error){
+message.textContent="✅ تم نشر الإعلان بنجاح";message.style.color="#16823b";
+adForm.reset();selectedFiles=[];imagePreview.innerHTML="";
+await loadAds();
 
-            console.er
+setTimeout(()=>{addModal.style.display="none";message.textContent="";message.style.color="";},1200);
+
+}catch(error){
+console.error(error);message.textContent="❌ "+error.message;message.style.color="#b51f2a";
+}finally{
+saveButton.disabled=false;saveButton.textContent="نشر الإعلان";
+}
+});
+
+async function loadAds(){
+adsList.innerHTML='<div class="loading">جاري تحميل الإعلانات...</div>';
+resultsCount.textContent="جاري تحميل الإعلانات...";
+
+try{
+const result=await supabaseClient.from("ads").select("id,user_id,title,category,description,price,city,phone,image_urls,created_at").order("created_at",{ascending:false});
+if(result.error)throw new Error("تعذر تحميل الإعلانات: "+result.error.message);
+allAds=result.data||[];
+applyFilters();
+}catch(error){
+console.error(error);
+resultsCount.textContent="تعذر تحميل الإعلانات";
+adsList.innerHTML='<div class="empty">❌ '+escapeHTML(error.message)+'<br><br>يرجى تحديث الصفحة والمحاولة مرة أخرى.</div>';
+}
+}
+
+function applyFilters(){
+let filtered=[...allAds];
+const search=searchInput.value.trim().toLowerCase();
+const category=categoryFilter.value;
+const city=cityFilter.value.trim().toLowerCase();
+const min=minPrice.value!==""?Number(minPrice.value):null;
+const max=maxPrice.value!==""?Number(maxPrice.value):null;
+
+if(search)filtered=filtered.filter(ad=>[ad.title,ad.description,ad.category,ad.city].filter(Boolean).join(" ").toLowerCase().includes(search));
+if(category)filtered=filtered.filter(ad=>ad.category===category);
+if(city)filtered=filtered.filter(ad=>String(ad.city||"").toLowerCase().includes(city));
+if(min!==null)filtered=filtered.filter(ad=>ad.price!==null&&Number(ad.price)>=min);
+if(max!==null)filtered=filtered.filter(ad=>ad.price!==null&&Number(ad.price)<=max);
+
+const sort=sortSelect.value;
+filtered.sort((a,b)=>{
+if(sort==="oldest")return new Date(a.created_at)-new Date(b.created_at);
+if(sort==="low"){const ap=a.price===null?Infinity:Number(a.price);const bp=b.price===null?Infinity:Number(b.price);return ap-bp;}
+if(sort==="high"){const ap=a.price===null?-Infinity:Number(a.price);const bp=b.price===null?-Infinity:Number(b.price);return bp-ap;}
+return new Date(b.created_at)-new Date(a.created_at);
+});
+renderAds(filtered);
+}
+
+function renderAds(ads){
+resultsCount.textContent="عدد الإعلانات: "+ads.length;
+if(ads.length===0){adsList.innerHTML='<div class="empty">📭 لا توجد إعلانات مطابقة للبحث.</div>';return;}
+adsList.innerHTML="";
+
+ads.forEach(ad=>{
+const card=document.createElement("div");card.className="ad-card";
+card.addEventListener("click",()=>{window.location.href="ad-details.html?id="+encodeURIComponent(ad.id);});
+
+let imageHTML='<div class="ad-no-image">📦</div>';
+if(Array.isArray(ad.image_urls)&&ad.image_urls.length>0){
+imageHTML='<img class="ad-image" src="'+escapeAttribute(ad.image_urls[0])+'" alt="صورة الإعلان" loading="lazy">';
+}
+
+const priceHTML=ad.price!==null&&ad.price!==undefined&&ad.price!==""?'<div class="ad-price">'+formatPrice(ad.price)+'</div>':"";
+const cityHTML=ad.city?"📍 "+escapeHTML(ad.city):"";
+const phoneHTML=ad.phone?"<br>📞 "+escapeHTML(ad.phone):"";
+const dateHTML=ad.created_at?formatDate(ad.created_at):"";
+
+card.innerHTML=imageHTML+
+'<div class="ad-content">'+
+'<h3>'+escapeHTML(ad.title||"بدون عنوان")+'</h3>'+
+'<span class="ad-category">'+escapeHTML(ad.category||"إعلانات أخرى")+'</span>'+
+'<div class="ad-description">'+escapeHTML(ad.description||"")+'</div>'+
+priceHTML+
+'<div class="ad-info">'+cityHTML+phoneHTML+'</div>'+
+'<div class="ad-date">'+dateHTML+'</div>'+
+'</div>';
+
+adsList.appendChild(card);
+});
+}
+
+searchButton.addEventListener("click",applyFilters);
+searchInput.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();applyFilters();}});
+applyButton.addEventListener("click",applyFilters);
+clearButton.addEventListener("click",function(){
+searchInput.value="";categoryFilter.value="";cityFilter.value="";minPrice.value="";maxPrice.value="";sortSelect.value="newest";applyFilters();
+});
+sortSelect.addEventListener("change",applyFilters);
+
+function escapeHTML(value){
+return String(value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+}
+function escapeAttribute(value){return escapeHTML(value);}
+function formatPrice(price){
+const number=Number(price);
+return isNaN(number)?escapeHTML(price)+" شيكل":number.toLocaleString("ar")+" شيكل";
+}
+function formatDate(date){
+try{return new Date(date).toLocaleDateString("ar-PS",{year:"numeric",month:"long",day:"numeric"});}catch(e){return "";}
+}
+
+loadAds();
+</script>
+</body>
+</html>
+
+   
