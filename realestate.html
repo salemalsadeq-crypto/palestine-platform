@@ -43,6 +43,8 @@
 </main>
 
 <script>
+window.onerror=function(m){var g=document.getElementById('grid'),c=document.getElementById('count');if(c)c.textContent='❌ خطأ';if(g)g.innerHTML='<div class="msg error">❌ خطأ بالكود: '+m+'</div>';return false};
+window.addEventListener('unhandledrejection',function(e){var g=document.getElementById('grid'),c=document.getElementById('count');if(c)c.textContent='❌ خطأ';if(g)g.innerHTML='<div class="msg error">❌ خطأ غير متوقع: '+(e.reason&&e.reason.message||e.reason)+'</div>'});
 const URL="https://sesbumfedusbjevbsyzl.supabase.co";
 const KEY="sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
 const db=supabase.createClient(URL,KEY);
@@ -69,7 +71,7 @@ list.sort((a,b)=>so==="old"?new Date(a.created_at)-new Date(b.created_at):so==="
 render(list)}
 async function load(){
 let {data,error}=await db.from("ads").select("*").eq("category","عقارات").order("created_at",{ascending:false});
-if(error){$("grid").innerHTML='<div class="msg error">حدث خطأ: '+esc(error.message)+'</div>';return}ads=data||[];filter()}
+if(error){$("count").textContent="❌ خطأ";$("grid").innerHTML='<div class="msg error">حدث خطأ: '+esc(error.message)+'</div>';return}ads=data||[];filter()}
 async function user(){
 let {data}=await db.auth.getUser();if(!data.user)return;
 $("login").style.display="none";$("account").style.display="inline-block";$("myads").style.display="inline-block";$("logout").style.display="inline-block";

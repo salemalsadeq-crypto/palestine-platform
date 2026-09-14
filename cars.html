@@ -546,6 +546,9 @@ header{
 
 <script>
 
+window.onerror=function(m){var g=document.getElementById('adsGrid'),c=document.getElementById('resultsCount');if(c)c.textContent='❌ خطأ';if(g)g.innerHTML='<div class="error">❌ خطأ بالكود: '+m+'</div>';return false};
+window.addEventListener('unhandledrejection',function(e){var g=document.getElementById('adsGrid'),c=document.getElementById('resultsCount');if(c)c.textContent='❌ خطأ';if(g)g.innerHTML='<div class="error">❌ خطأ غير متوقع: '+(e.reason&&e.reason.message||e.reason)+'</div>'});
+
 const SUPABASE_URL =
 "https://sesbumfedusbjevbsyzl.supabase.co";
 
