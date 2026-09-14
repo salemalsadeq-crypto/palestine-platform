@@ -53,6 +53,10 @@
 <footer class="footer">© 2026 فلسطين بلاتفورم — منصة الإعلانات الفلسطينية</footer>
 
 <script>
+window.onerror=function(m){console.error("خطأ بالكود:",m);var b=document.createElement('div');b.style.cssText='background:#c0392b;color:#fff;padding:10px;text-align:center;font-size:13px';b.textContent='❌ خطأ بالكود: '+m;document.body.prepend(b);return false};
+if(typeof supabase==='undefined'){
+var b=document.createElement('div');b.style.cssText='background:#c0392b;color:#fff;padding:10px;text-align:center;font-size:13px';b.textContent='❌ لم يتم تحميل مكتبة Supabase — تحقق من اتصال الإنترنت';document.body.prepend(b);
+}else{
 const URL="https://sesbumfedusbjevbsyzl.supabase.co",KEY="sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
 const db=supabase.createClient(URL,KEY),$=id=>document.getElementById(id);
 async function user(){
@@ -70,6 +74,7 @@ if(av){$("avatar").src=av;$("avatar").style.display="block"}else $("initial").st
 }catch(e){console.error("خطأ غير متوقع:",e)}
 }
 $("logout").onclick=async()=>{await db.auth.signOut();location.reload()};user();
+}
 </script>
 </body>
 </html>
