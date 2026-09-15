@@ -59,20 +59,8 @@ var b=document.createElement('div');b.style.cssText='background:#c0392b;color:#f
 }else{
 const URL="https://sesbumfedusbjevbsyzl.supabase.co",KEY="sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
 const db=supabase.createClient(URL,KEY),$=id=>document.getElementById(id);
-async function user(){
-try{
-const {data,error}=await db.auth.getUser();
-if(error){console.error("خطأ بجلب المستخدم:",error.message);return}
-if(!data.user)return;
-$("login").style.display="none";$("account").style.display="inline-block";$("myads").style.display="inline-block";$("logout").style.display="inline-block";
-let n=data.user.email?.split("@")[0]||"المستخدم",av="";
-const {data:p,error:pe}=await db.from("profiles").select("full_name,avatar_url").eq("id",data.user.id).maybeSingle();
-if(pe)console.error("خطأ بجلب البروفايل:",pe.message);
-if(p){n=p.full_name||n;av=p.avatar_url||""}
-$("name").textContent=n;$("initial").textContent=n.trim()[0]||"س";
-if(av){$("avatar").src=av;$("avatar").style.display="block"}else $("initial").style.display="flex";
-}catch(e){console.error("خطأ غير متوقع:",e)}
-}
+async function user(){try{const {data:{session}}=await db.auth.getSession();renderUser(session?.user||null);db.auth.onAuthStateChange((_event,session)=>renderUser(session?.user||null));}catch(e){console.error(e)}}
+async function renderUser(u){if(!u){$("login").style.display="inline-block";$("account").style.display="none";$("myads").style.display="none";$("logout").style.display="none";return}$("login").style.display="none";$("account").style.display="inline-block";$("myads").style.display="inline-block";$("logout").style.display="inline-block";let n=u.email?.split("@")[0]||"المستخدم",av="";const {data:p}=await db.from("profiles").select("full_name,avatar_url").eq("id",u.id).maybeSingle();if(p){n=p.full_name||n;av=p.avatar_url||""}$("name").textContent=n;$("initial").textContent=n.trim()[0]||"س";if(av){$("avatar").src=av;$("avatar").style.display="block";$("initial").style.display="none"}else{$("avatar").style.display="none";$("initial").style.display="flex"}}
 $("logout").onclick=async()=>{await db.auth.signOut();location.reload()};user();
 }
 </script>
