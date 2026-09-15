@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>سيارات للبيع | فلسطين بلاتفورم</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0" crossorigin="anonymous"></script>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -556,10 +556,10 @@ const SUPABASE_KEY =
 "sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
 
 const supabaseClient =
-window.supabase.createClient(
+typeof supabase!=='undefined' ? window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
-);
+) : null;
 
 
 let allAds = [];
@@ -1176,6 +1176,12 @@ sortSelect.addEventListener(
 
 
 (async function(){
+
+    if(!supabaseClient){
+        resultsCount.textContent='❌ خطأ';
+        adsGrid.innerHTML='<div class="error">❌ لم يتم تحميل مكتبة Supabase — تحقق من اتصال الإنترنت أو جرب شبكة/متصفح آخر</div>';
+        return;
+    }
 
     await loadUser();
 
