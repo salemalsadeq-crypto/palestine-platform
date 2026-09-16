@@ -67,12 +67,19 @@ $("logout").onclick=async()=>{await db.auth.signOut();location.reload()};checkAu
  try{
   if(typeof supabase==='undefined') return;
   const db=supabase.createClient("https://sesbumfedusbjevbsyzl.supabase.co","sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR");
-  const {data:{user}}=await db.auth.getUser();
-  if(!user) return;
-  const {count,error}=await db.from("notifications").select("id",{count:"exact",head:true}).eq("user_id",user.id).eq("is_read",false);
-  if(error) return;
-  const el=document.getElementById("notifCount");
-  if(el && count>0){el.textContent=count;el.style.display="inline-block";}
+  async function loadNotificationCount(){
+   try{
+    const {data:{user}}=await db.auth.getUser();
+    const el=document.getElementById("notifCount");
+    if(!el) return;
+    if(!user){el.style.display="none";return;}
+    const {count,error}=await db.from("notifications").select("id",{count:"exact",head:true}).eq("user_id",user.id).eq("is_read",false);
+    if(error) return;
+    if(count>0){el.textContent=count;el.style.display="inline-block";}else{el.style.display="none";}
+   }catch(e){}
+  }
+  await loadNotificationCount();
+  setInterval(loadNotificationCount,20000);
  }catch(e){}
 })();
 </script>
