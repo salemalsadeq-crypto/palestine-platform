@@ -27,7 +27,7 @@
 <div class="modal-actions"><button type="submit" class="save" id="saveAd">نشر الإعلان</button><button type="button" class="cancel" id="closeAdd">إلغاء</button></div>
 </form></div></div>
 </main><script>
-const URL='https://sesbumfedusbjevbsyzl.supabase.co',KEY='sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR',db=supabase.createClient(URL,KEY);
+const SUPABASE_URL='https://sesbumfedusbjevbsyzl.supabase.co',KEY='sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR',db=supabase.createClient(SUPABASE_URL,KEY);
 let ads=[],user=null,favs=new Set();const $=x=>document.getElementById(x);
 function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 async function load(){
@@ -63,7 +63,7 @@ $('openAdd').onclick=openAdd;$('closeAdd').onclick=closeAdd;$('addModal').onclic
 $('adImages').onchange=()=>{
  const files=[...$('adImages').files];if(files.length>5){alert('يمكن اختيار 5 صور كحد أقصى.');$('adImages').value='';$('imagePreview').innerHTML='';return}
  if(files.some(f=>f.size>5*1024*1024)){alert('حجم كل صورة يجب ألا يتجاوز 5MB.');$('adImages').value='';$('imagePreview').innerHTML='';return}
- $('imagePreview').innerHTML='';files.forEach(f=>{const img=document.createElement('img');img.src=URL.createObjectURL(f);$('imagePreview').appendChild(img)})
+ $('imagePreview').innerHTML='';files.forEach(f=>{const img=document.createElement('img');img.src=window.URL.createObjectURL(f);$('imagePreview').appendChild(img)})
 };
 $('adForm').onsubmit=async e=>{
  e.preventDefault();if(!user){alert('انتهت جلسة الدخول. سجل الدخول مرة أخرى.');return}
