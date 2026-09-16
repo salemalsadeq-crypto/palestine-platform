@@ -50,6 +50,12 @@ function openReport(){if(!user){if(confirm('يجب تسجيل الدخول لإ�
  catch(e){prompt('انسخ رابط الإعلان:',url);}
  ta.remove();
 }async function toggleFav(){if(!user){if(confirm('يجب تسجيل الدخول لإضافة الإعلان إلى المفضلة. هل تريد تسجيل الدخول؟'))location.href='login.html';return}if(favId){const {error}=await db.from('favorites').delete().eq('id',favId);if(error){alert(error.message);return}favId=null}else{const {data,error}=await db.from('favorites').insert({user_id:user.id,ad_id:ad.id}).select('id').single();if(error){alert(error.message);return}favId=data.id}$('fav').className='btn fav '+(favId?'active':'');$('fav').textContent=favId?'❤️ إزالة من المفضلة':'🤍 إضافة للمفضلة'}
+window.shareAd=shareAd;
+window.openReport=openReport;
+window.closeReport=closeReport;
+window.submitReport=submitReport;
+window.openLightbox=openLightbox;
+window.closeLightbox=closeLightbox;
 load();
 }
 </script></body></html>
