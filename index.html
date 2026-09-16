@@ -18,7 +18,8 @@
 <a id="myads" class="btn blue" href="my-ads.html" style="display:none">إعلاناتي</a>
 <button id="logout" class="btn red" style="display:none">خروج</button>
 <a id="login" class="btn gray" href="login.html">تسجيل الدخول</a>
-</div></div></header>
+</div></div><a href="notifications.html" id="notifLink" style="position:relative">🔔 الإشعارات <span id="notifCount" style="display:none;background:#c62828;color:#fff;border-radius:12px;padding:1px 6px;font-size:11px">0</span></a>
+</header>
 
 <section class="hero">
 <h1>🇵🇸 أهلاً بكم في فلسطين بلاتفورم</h1>
@@ -60,6 +61,20 @@ async function loggedIn(user){$("login").style.display="none";$("account").style
 async function checkAuth(){const {data,error}=await db.auth.getSession();if(error){console.error(error);loggedOut();return}if(data.session)await loggedIn(data.session.user);else loggedOut()}
 db.auth.onAuthStateChange((_event,session)=>{if(session?.user)loggedIn(session.user);else loggedOut()});
 $("logout").onclick=async()=>{await db.auth.signOut();location.reload()};checkAuth();
+</script>
+<script>
+(async()=>{
+ try{
+  if(typeof supabase==='undefined') return;
+  const db=supabase.createClient("https://sesbumfedusbjevbsyzl.supabase.co","sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR");
+  const {data:{user}}=await db.auth.getUser();
+  if(!user) return;
+  const {count,error}=await db.from("notifications").select("id",{count:"exact",head:true}).eq("user_id",user.id).eq("is_read",false);
+  if(error) return;
+  const el=document.getElementById("notifCount");
+  if(el && count>0){el.textContent=count;el.style.display="inline-block";}
+ }catch(e){}
+})();
 </script>
 </body>
 </html>
