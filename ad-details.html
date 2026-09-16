@@ -26,7 +26,30 @@ const profile=p.data;const imgs=Array.isArray(ad.image_urls)?ad.image_urls:[];co
 $('app').innerHTML='<div class="error">❌ حدث خطأ غير متوقع: '+esc(e.message||String(e))+'</div>';
 }
 }
-function openReport(){if(!user){if(confirm('يجب تسجيل الدخول لإرسال بلاغ. هل تريد تسجيل الدخول؟'))location.href='login.html';return}if(user.id===ad?.user_id){alert('لا يمكنك الإبلاغ عن إعلانك الخاص.');return}$('reportModal').classList.add('show')}function closeReport(e){if(e&&e.target&&e.target.id!=='reportModal')return;$('reportModal').classList.remove('show')}async function submitReport(){if(!user||!ad)return;const reason=$('reportReason').value,details=$('reportDetails').value.trim();const {error}=await db.from('ad_reports').insert({user_id:user.id,ad_id:ad.id,reason,details:details||null});if(error){if(error.code==='23505')alert('لقد أرسلت بلاغًا لهذا الإعلان مسبقًا.');else alert('تعذر إرسال البلاغ: '+error.message);return}closeReport();$('reportDetails').value='';alert('تم إرسال البلاغ بنجاح. شكرًا لمساعدتنا في الحفاظ على المنصة.')}function openLightbox(src){$('lightboxImg').src=src;$('lightbox').classList.add('show')}function closeLightbox(e){if(e){e.stopPropagation();if(e.target.id!=='lightbox'&&!e.target.classList.contains('closebox'))return}$('lightbox').classList.remove('show');$('lightboxImg').src=''}async function shareAd(){const url=location.href;try{if(navigator.share){await navigator.share({title:ad?.title||'إعلان',text:'شاهد هذا الإعلان على فلسطين بلاتفورم',url});}else{await navigator.clipboard.writeText(url);alert('تم نسخ رابط الإعلان.');}}catch(e){}}async function toggleFav(){if(!user){if(confirm('يجب تسجيل الدخول لإضافة الإعلان إلى المفضلة. هل تريد تسجيل الدخول؟'))location.href='login.html';return}if(favId){const {error}=await db.from('favorites').delete().eq('id',favId);if(error){alert(error.message);return}favId=null}else{const {data,error}=await db.from('favorites').insert({user_id:user.id,ad_id:ad.id}).select('id').single();if(error){alert(error.message);return}favId=data.id}$('fav').className='btn fav '+(favId?'active':'');$('fav').textContent=favId?'❤️ إزالة من المفضلة':'🤍 إضافة للمفضلة'}
+function openReport(){if(!user){if(confirm('يجب تسجيل الدخول لإرسال بلاغ. هل تريد تسجيل الدخول؟'))location.href='login.html';return}if(user.id===ad?.user_id){alert('لا يمكنك الإبلاغ عن إعلانك الخاص.');return}$('reportModal').classList.add('show')}function closeReport(e){if(e&&e.target&&e.target.id!=='reportModal')return;$('reportModal').classList.remove('show')}async function submitReport(){if(!user||!ad)return;const reason=$('reportReason').value,details=$('reportDetails').value.trim();const {error}=await db.from('ad_reports').insert({reporter_id:user.id,ad_id:ad.id,reason,details:details||null});if(error){if(error.code==='23505')alert('لقد أرسلت بلاغًا لهذا الإعلان مسبقًا.');else alert('تعذر إرسال البلاغ: '+error.message);return}closeReport();$('reportDetails').value='';alert('تم إرسال البلاغ بنجاح. شكرًا لمساعدتنا في الحفاظ على المنصة.')}function openLightbox(src){$('lightboxImg').src=src;$('lightbox').classList.add('show')}function closeLightbox(e){if(e){e.stopPropagation();if(e.target.id!=='lightbox'&&!e.target.classList.contains('closebox'))return}$('lightbox').classList.remove('show');$('lightboxImg').src=''}async function shareAd(){
+ const url=location.href;
+ try{
+   if(navigator.share){
+     await navigator.share({title:ad?.title||'إعلان',text:'شاهد هذا الإعلان على فلسطين بلاتفورم',url});
+     return;
+   }
+ }catch(e){
+   if(e && e.name==='AbortError') return;
+ }
+ try{
+   if(navigator.clipboard && window.isSecureContext){
+     await navigator.clipboard.writeText(url);
+     alert('✅ تم نسخ رابط الإعلان. يمكنك الآن إرساله لأي شخص.');
+     return;
+   }
+ }catch(e){}
+ const ta=document.createElement('textarea');
+ ta.value=url;ta.style.position='fixed';ta.style.opacity='0';
+ document.body.appendChild(ta);ta.focus();ta.select();
+ try{document.execCommand('copy');alert('✅ تم نسخ رابط الإعلان.');}
+ catch(e){prompt('انسخ رابط الإعلان:',url);}
+ ta.remove();
+}async function toggleFav(){if(!user){if(confirm('يجب تسجيل الدخول لإضافة الإعلان إلى المفضلة. هل تريد تسجيل الدخول؟'))location.href='login.html';return}if(favId){const {error}=await db.from('favorites').delete().eq('id',favId);if(error){alert(error.message);return}favId=null}else{const {data,error}=await db.from('favorites').insert({user_id:user.id,ad_id:ad.id}).select('id').single();if(error){alert(error.message);return}favId=data.id}$('fav').className='btn fav '+(favId?'active':'');$('fav').textContent=favId?'❤️ إزالة من المفضلة':'🤍 إضافة للمفضلة'}
 load();
 }
 </script></body></html>
