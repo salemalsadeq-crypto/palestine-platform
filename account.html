@@ -255,6 +255,15 @@ button{
     margin-top:10px;
 }
 
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.stat{background:#fff;border-radius:14px;padding:18px;text-align:center;box-shadow:0 3px 12px rgba(0,0,0,.07)}
+.stat .num{font-size:28px;font-weight:bold;color:#087443;margin-bottom:5px}
+.stat .label{color:#777;font-size:13px}
+.quick-links{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.quick-link{display:block;text-align:center;padding:13px 10px;border-radius:10px;text-decoration:none;font-weight:bold;background:#f1f3f5;color:#222}
+.quick-link.primary{background:#087443;color:#fff}
+@media(max-width:600px){.stats{grid-template-columns:1fr 1fr}.quick-links{grid-template-columns:1fr}.stat:last-child{grid-column:1/-1}}
 @media(max-width:600px){
 
     .header-container{
@@ -320,6 +329,12 @@ style="display:none;">
 إدارة معلومات حسابك وإعلاناتك
 </p>
 
+</div>
+
+<div class="stats">
+<div class="stat"><div class="num" id="adsCount">0</div><div class="label">📢 إعلاناتي</div></div>
+<div class="stat"><div class="num" id="favoritesCount">0</div><div class="label">❤️ المفضلة</div></div>
+<div class="stat"><div class="num" id="notificationsCount">0</div><div class="label">🔔 غير مقروء</div></div>
 </div>
 
 
@@ -486,7 +501,7 @@ class="ads-button">
 
 
 <a
-href="edit-ad.html"
+href="ads.html"
 class="add-ad-button">
 
 ➕ إضافة إعلان جديد
@@ -526,7 +541,7 @@ id="logoutBtn">
 
 
 <script
-src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0" crossorigin="anonymous">
+src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
 </script>
 
 
@@ -1279,9 +1294,26 @@ document.getElementById(
 );
 
 
+/* =========================
+   الإحصائيات
+========================= */
+async function loadAccountStats(){
+    if(!currentUser) return;
+
+    const [adsRes, favRes, notifRes] = await Promise.all([
+        supabaseClient.from("ads").select("id",{count:"exact",head:true}).eq("user_id",currentUser.id),
+        supabaseClient.from("favorites").select("id",{count:"exact",head:true}).eq("user_id",currentUser.id),
+        supabaseClient.from("notifications").select("id",{count:"exact",head:true}).eq("user_id",currentUser.id).eq("is_read",false)
+    ]);
+
+    document.getElementById("adsCount").textContent = adsRes.count ?? 0;
+    document.getElementById("favoritesCount").textContent = favRes.count ?? 0;
+    document.getElementById("notificationsCount").textContent = notifRes.count ?? 0;
+}
+
 /* تشغيل الصفحة */
 
-loadAccount();
+loadAccount().then(loadAccountStats);
 
 </script>
 
