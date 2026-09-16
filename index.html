@@ -44,7 +44,7 @@
 <div class="quick">
 <h2>ماذا تريد أن تفعل؟</h2>
 <a href="ads.html">🔎 البحث عن إعلان</a>
-<a href="edit-ad.html">➕ إضافة إعلان</a>
+<a href="ads.html#add">➕ إضافة إعلان</a>
 <a href="my-ads.html">📋 إعلاناتي</a>
 <a href="account.html">👤 حسابي</a>
 </div>
@@ -53,16 +53,13 @@
 <footer class="footer">© 2026 فلسطين بلاتفورم — منصة الإعلانات الفلسطينية</footer>
 
 <script>
-window.onerror=function(m){console.error("خطأ بالكود:",m);var b=document.createElement('div');b.style.cssText='background:#c0392b;color:#fff;padding:10px;text-align:center;font-size:13px';b.textContent='❌ خطأ بالكود: '+m;document.body.prepend(b);return false};
-if(typeof supabase==='undefined'){
-var b=document.createElement('div');b.style.cssText='background:#c0392b;color:#fff;padding:10px;text-align:center;font-size:13px';b.textContent='❌ لم يتم تحميل مكتبة Supabase — تحقق من اتصال الإنترنت';document.body.prepend(b);
-}else{
-const URL="https://sesbumfedusbjevbsyzl.supabase.co",KEY="sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
-const db=supabase.createClient(URL,KEY),$=id=>document.getElementById(id);
-async function user(){try{const {data:{session}}=await db.auth.getSession();renderUser(session?.user||null);db.auth.onAuthStateChange((_event,session)=>renderUser(session?.user||null));}catch(e){console.error(e)}}
-async function renderUser(u){if(!u){$("login").style.display="inline-block";$("account").style.display="none";$("myads").style.display="none";$("logout").style.display="none";return}$("login").style.display="none";$("account").style.display="inline-block";$("myads").style.display="inline-block";$("logout").style.display="inline-block";let n=u.email?.split("@")[0]||"المستخدم",av="";const {data:p}=await db.from("profiles").select("full_name,avatar_url").eq("id",u.id).maybeSingle();if(p){n=p.full_name||n;av=p.avatar_url||""}$("name").textContent=n;$("initial").textContent=n.trim()[0]||"س";if(av){$("avatar").src=av;$("avatar").style.display="block";$("initial").style.display="none"}else{$("avatar").style.display="none";$("initial").style.display="flex"}}
-$("logout").onclick=async()=>{await db.auth.signOut();location.reload()};user();
-}
+const SUPABASE_URL="https://sesbumfedusbjevbsyzl.supabase.co",SUPABASE_KEY="sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}),$=id=>document.getElementById(id);
+function loggedOut(){$("name").textContent="";$("login").style.display="inline-block";$("account").style.display="none";$("myads").style.display="none";$("logout").style.display="none";$("avatar").style.display="none";$("initial").style.display="none"}
+async function loggedIn(user){$("login").style.display="none";$("account").style.display="inline-block";$("myads").style.display="inline-block";$("logout").style.display="inline-block";let name=user.email?.split("@")[0]||"المستخدم",av="";const {data:p}=await db.from("profiles").select("full_name,avatar_url").eq("id",user.id).maybeSingle();if(p){name=p.full_name||name;av=p.avatar_url||""}$("name").textContent=name;$("initial").textContent=name.trim()[0]||"س";if(av){$("avatar").src=av;$("avatar").style.display="block";$("initial").style.display="none"}else{$("avatar").style.display="none";$("initial").style.display="flex"}}
+async function checkAuth(){const {data,error}=await db.auth.getSession();if(error){console.error(error);loggedOut();return}if(data.session)await loggedIn(data.session.user);else loggedOut()}
+db.auth.onAuthStateChange((_event,session)=>{if(session?.user)loggedIn(session.user);else loggedOut()});
+$("logout").onclick=async()=>{await db.auth.signOut();location.reload()};checkAuth();
 </script>
 </body>
 </html>
