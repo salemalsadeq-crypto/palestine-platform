@@ -353,7 +353,8 @@ style="display:none;">
 <div class="stats">
 <div class="stat"><div class="num" id="adsCount">0</div><div class="label">📢 إعلاناتي</div></div>
 <div class="stat"><div class="num" id="favoritesCount">0</div><div class="label">❤️ المفضلة</div></div>
-<div class="stat"><div class="num" id="notificationsCount">0</div><div class="label">🔔 غير مقروء</div></div>
+<div class="stat"><div class="num" id="notificationsCount">0</div><div class="label">🔔 الإشعارات</div></div>
+<div class="stat"><div class="num" id="messagesCount">0</div><div class="label">💬 الرسائل</div></div>
 </div>
 
 
@@ -526,6 +527,8 @@ class="add-ad-button">
 ➕ إضافة إعلان جديد
 
 </a>
+
+<a href="messages.html" class="quick-link" style="margin-top:10px">💬 الرسائل <span id="messagesLinkBadge"></span></a>
 
 </div>
 
@@ -1335,20 +1338,33 @@ document.getElementById(
 async function loadAccountStats(){
     if(!currentUser) return;
 
-    const [adsRes, favRes, notifRes] = await Promise.all([
+    const [adsRes, favRes, notifRes, msgRes] = await Promise.all([
         supabaseClient.from("ads").select("id",{count:"exact",head:true}).eq("user_id",currentUser.id),
         supabaseClient.from("favorites").select("id",{count:"exact",head:true}).eq("user_id",currentUser.id),
-        supabaseClient.from("notifications").select("id",{count:"exact",head:true}).eq("user_id",currentUser.id).eq("is_read",false)
+        supabaseClient.from("notifications").select("id",{count:"exact",head:true}).eq("user_id",currentUser.id).eq("is_read",false),
+        supabaseClient.from("messages").select("id",{count:"exact",head:true}).neq("sender_id",currentUser.id).eq("is_read",false)
     ]);
 
+    const msgCount = msgRes.error ? 0 : (msgRes.count ?? 0);
     document.getElementById("adsCount").textContent = adsRes.count ?? 0;
     document.getElementById("favoritesCount").textContent = favRes.count ?? 0;
     document.getElementById("notificationsCount").textContent = notifRes.count ?? 0;
+    document.getElementById("messagesCount").textContent = msgCount;
+    const badge=document.getElementById("messagesLinkBadge");
+    if(badge){ badge.textContent=msgCount?` (${msgCount} جديدة)`:''; badge.style.color='#b51f2a'; }
+}
+
+let accountRealtimeChannel=null;
+function startAccountRealtime(){
+    if(!currentUser || accountRealtimeChannel) return;
+    accountRealtimeChannel=supabaseClient.channel('account-live-'+currentUser.id)
+      .on('postgres_changes',{event:'*',schema:'public',table:'messages'},()=>loadAccountStats())
+      .on('postgres_changes',{event:'*',schema:'public',table:'notifications',filter:'user_id=eq.'+currentUser.id},()=>loadAccountStats())
+      .subscribe();
 }
 
 /* تشغيل الصفحة */
-
-loadAccount().then(loadAccountStats);
+loadAccount().then(()=>{loadAccountStats();startAccountRealtime();});
 
 </script>
 
