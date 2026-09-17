@@ -255,6 +255,25 @@ button{
     margin-top:10px;
 }
 
+.admin-card{
+    border:2px solid #d8b54a;
+    background:#fffaf0;
+}
+.admin-title{
+    color:#7a5a00;
+}
+.admin-btn-account{
+    display:block;
+    text-align:center;
+    background:#a67c00;
+    color:#fff;
+    text-decoration:none;
+    padding:14px;
+    border-radius:9px;
+    margin-top:10px;
+    font-weight:bold;
+}
+
 
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
 .stat{background:#fff;border-radius:14px;padding:18px;text-align:center;box-shadow:0 3px 12px rgba(0,0,0,.07)}
@@ -511,6 +530,19 @@ class="add-ad-button">
 </div>
 
 
+<!-- لوحة المدير -->
+
+<div class="card admin-card" id="adminCard" style="display:none;">
+
+<h2 class="admin-title">👑 مدير المنصة</h2>
+
+<p>لديك صلاحيات إدارة الإعلانات والمستخدمين والبلاغات.</p>
+
+<a href="admin.html" class="admin-btn-account">فتح لوحة المدير</a>
+
+</div>
+
+
 <!-- تسجيل الخروج -->
 
 <div class="card">
@@ -649,6 +681,9 @@ async function loadAccount(){
             profile.full_name,
             profile.avatar_url
         );
+
+        const isAdmin = profile.role === "admin" && profile.status === "active";
+        document.getElementById("adminCard").style.display = isAdmin ? "block" : "none";
 
     }else{
 
