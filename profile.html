@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>الملف الشخصي - فلسطين بلاتفورم</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,Tahoma,sans-serif;background:#f5f7fa;color:#172033}
@@ -158,6 +158,7 @@ async function load(){
     .from('ads')
     .select('id,title,category,description,price,city,image_urls,created_at')
     .eq('user_id',profileId)
+    .eq('status','active')
     .order('created_at',{ascending:false});
 
   if(adsError){
