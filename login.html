@@ -185,7 +185,9 @@ const supabaseClient = supabase.createClient(
         auth: {
             persistSession: true,
             autoRefreshToken: true,
-            detectSessionInUrl: true
+            detectSessionInUrl: true,
+            storage: window.localStorage,
+            storageKey: "palestine-platform-auth"
         }
     }
 );
@@ -322,12 +324,7 @@ form.addEventListener("submit", async function(event) {
         }
 
 
-        setTimeout(function() {
-
-            window.location.href =
-                "index.html";
-
-        }, 500);
+        window.location.replace("index.html");
 
 
     } catch (error) {
