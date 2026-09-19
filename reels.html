@@ -14,8 +14,39 @@ function localKey(kind,id){return 'pplat_'+kind+'_'+id}
 function localToggle(kind,id){const k=localKey(kind,id),v=localStorage.getItem(k)==='1';if(v)localStorage.removeItem(k);else localStorage.setItem(k,'1');return !v}
 function isLocal(kind,id){return localStorage.getItem(localKey(kind,id))==='1'}
 function paintLocalButtons(){document.querySelectorAll('.reel').forEach(r=>{const id=r.dataset.id;const l=r.querySelector('.like'),s=r.querySelector('.save');if(l&&isLocal('like',id)){l.classList.add('active');l.firstChild.textContent='❤️'}if(s&&isLocal('save',id))s.classList.add('active')})}
-async function like(b,id){if(!user){location.href='login.html?return=reels.html';return}b.disabled=true;try{const q=await api('ad_video_likes?select=id&ad_id=eq.'+encodeURIComponent(id)+'&user_id=eq.'+encodeURIComponent(user.id)+'&limit=1');if(q?.length){await api('ad_video_likes?id=eq.'+encodeURIComponent(q[0].id),{method:'DELETE'});b.classList.remove('active');b.firstChild.textContent='🤍';localStorage.removeItem(localKey('like',id))}else{await api('ad_video_likes',{method:'POST',headers:{Prefer:'return=minimal'},body:JSON.stringify({ad_id:id,user_id:user.id})});b.classList.add('active');b.firstChild.textContent='❤️';localStorage.setItem(localKey('like',id),'1')}}catch(e){const on=localToggle('like',id);b.classList.toggle('active',on);b.firstChild.textContent=on?'❤️':'🤍'}b.disabled=false}
-async function save(b,id){if(!user){location.href='login.html?return=reels.html';return}b.disabled=true;try{const q=await api('favorites?select=id&ad_id=eq.'+encodeURIComponent(id)+'&user_id=eq.'+encodeURIComponent(user.id)+'&limit=1');if(q?.length){await api('favorites?id=eq.'+encodeURIComponent(q[0].id),{method:'DELETE'});b.classList.remove('active');localStorage.removeItem(localKey('save',id))}else{await api('favorites',{method:'POST',headers:{Prefer:'return=minimal'},body:JSON.stringify({ad_id:id,user_id:user.id})});b.classList.add('active');localStorage.setItem(localKey('save',id),'1')}}catch(e){const on=localToggle('save',id);b.classList.toggle('active',on)}b.disabled=false}
+async function like(b,id){
+  const on=localToggle('like',id);
+  b.classList.toggle('active',on);
+  b.firstChild.textContent=on?'❤️':'🤍';
+  b.disabled=true;
+  try{
+    if(user?.id){
+      const q=await api('ad_video_likes?select=id&ad_id=eq.'+encodeURIComponent(id)+'&user_id=eq.'+encodeURIComponent(user.id)+'&limit=1');
+      if(on && !q?.length){
+        await api('ad_video_likes',{method:'POST',headers:{Prefer:'return=minimal'},body:JSON.stringify({ad_id:id,user_id:user.id})});
+      }else if(!on && q?.length){
+        await api('ad_video_likes?id=eq.'+encodeURIComponent(q[0].id),{method:'DELETE'});
+      }
+    }
+  }catch(e){console.warn('like sync skipped:',e.message||e)}
+  b.disabled=false;
+}
+async function save(b,id){
+  const on=localToggle('save',id);
+  b.classList.toggle('active',on);
+  b.disabled=true;
+  try{
+    if(user?.id){
+      const q=await api('favorites?select=id&ad_id=eq.'+encodeURIComponent(id)+'&user_id=eq.'+encodeURIComponent(user.id)+'&limit=1');
+      if(on && !q?.length){
+        await api('favorites',{method:'POST',headers:{Prefer:'return=minimal'},body:JSON.stringify({ad_id:id,user_id:user.id})});
+      }else if(!on && q?.length){
+        await api('favorites?id=eq.'+encodeURIComponent(q[0].id),{method:'DELETE'});
+      }
+    }
+  }catch(e){console.warn('save sync skipped:',e.message||e)}
+  b.disabled=false;
+}
 async function share(id){const url=location.origin+location.pathname.replace('reels.html','ad-details.html')+'?id='+encodeURIComponent(id);try{if(navigator.share){await navigator.share({title:'إعلان من فلسطين بلاتفورم',url});}else if(navigator.clipboard){await navigator.clipboard.writeText(url);alert('تم نسخ رابط الإعلان');}else{prompt('انسخ رابط الإعلان:',url)}}catch(e){if(e.name!=='AbortError')alert('تعذر المشاركة حالياً')}}
 function bindActions(){document.querySelectorAll('[data-action]').forEach(b=>{b.addEventListener('click',()=>{const a=b.dataset.action,id=b.dataset.id;if(a==='play')togglePlay(b);else if(a==='like')like(b,id);else if(a==='save')save(b,id);else if(a==='share')share(id)})})}
 function setupObserver(){const obs=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target.querySelector('video'),b=e.target.querySelector('.center');if(e.isIntersecting&&e.intersectionRatio>.7){v.play().then(()=>b.textContent='❚❚').catch(()=>b.textContent='▶');recordView(e.target.dataset.id)}else{v.pause();b.textContent='▶'}}),{threshold:[.7]});document.querySelectorAll('.reel').forEach(x=>obs.observe(x))}
