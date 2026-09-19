@@ -52,12 +52,38 @@
 window.onerror=function(m){console.error(m);return false};
 const URL="https://sesbumfedusbjevbsyzl.supabase.co",KEY="sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
 const db=supabase.createClient(URL,KEY),$=id=>document.getElementById(id);
-async function loadUser(){try{const {data,error}=await db.auth.getUser();if(error||!data.user)return;const u=data.user;$('login').style.display='none';$('account').style.display='inline-block';$('myads').style.display='inline-block';$('logout').style.display='inline-block';let n=u.email?.split('@')[0]||'المستخدم',av='';let p=await db.from('profiles').select('full_name,avatar_url,role,status').eq('id',u.id).maybeSingle();if(p.data){n=p.data.full_name||n;av=p.data.avatar_url||'';if(p.data.role==='admin'&&p.data.status==='active')$('adminLink').style.display='inline-block'}$('name').textContent=n;$('initial').textContent=n.trim()[0]||'س';if(av){$('avatar').src=av;$('avatar').style.display='block'}else $('initial').style.display='flex'}catch(e){console.error(e)}}
-$('logout').onclick=async()=>{await db.auth.signOut();location.reload()};
-$('searchForm').onsubmit=e=>{e.preventDefault();const q=$('searchInput').value.trim();location.href='ads.html'+(q?'?q='+encodeURIComponent(q):'')};
-async function loadLatest(){const box=$('latestAds');const r=await db.from('ads').select('id,title,price,city,image_urls,video_url,created_at,status').eq('status','active').order('created_at',{ascending:false}).limit(4);if(r.error){box.innerHTML='<div class="empty">تعذر تحميل الإعلانات حاليًا.</div>';return}if(!r.data?.length){box.innerHTML='<div class="empty">لا توجد إعلانات منشورة بعد.</div>';return}box.innerHTML=r.data.map(a=>{const im=Array.isArray(a.image_urls)&&a.image_urls[0]?'<img src="'+a.image_urls[0]+'" alt="">':'📢';return '<a class="ad" href="ad-details.html?id='+encodeURIComponent(a.id)+'"><div class="adImg">'+im+'</div><div class="adBody"><h3>'+esc(a.title)+'</h3><div class="meta"><span>'+(a.city?esc(a.city):'فلسطين')+'</span><b>'+(a.price!=null?esc(String(a.price))+' ₪':'تواصل')+'</b></div></div></a>'}).join('')}
-async function loadVideos(){const box=$('videoFeed');const r=await db.from('ads').select('id,title,city,video_url,created_at,status').eq('status','active').not('video_url','is',null).order('created_at',{ascending:false}).limit(6);if(r.error||!r.data?.length){box.innerHTML='<div class="empty">🎬 لا توجد فيديوهات إعلانية بعد. كن أول من يضيف فيديو!</div>';return}box.innerHTML=r.data.map(a=>'<a class="videoCard" href="ad-details.html?id='+encodeURIComponent(a.id)+'"><video src="'+esc(a.video_url)+'" muted playsinline preload="metadata"></video><span class="vcPlay">▶</span><div class="vcBody"><h3>'+esc(a.title)+'</h3><div class="vcMeta">'+esc(a.city||'فلسطين')+' • فيديو إعلان</div></div></a>').join('')}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function setLoggedOut(){$('login').style.display='inline-block';$('account').style.display='none';$('myads').style.display='none';$('adminLink').style.display='none';$('logout').style.display='none';$('name').textContent='';$('avatar').style.display='none';$('initial').style.display='none'}
+async function applyUser(user){
+ if(!user){setLoggedOut();return}
+ $('login').style.display='none';$('account').style.display='inline-block';$('myads').style.display='inline-block';$('logout').style.display='inline-block';
+ let n=user.email?.split('@')[0]||'المستخدم',av='';
+ try{const p=await db.from('profiles').select('full_name,avatar_url,role,status').eq('id',user.id).maybeSingle();if(p.data){n=p.data.full_name||n;av=p.data.avatar_url||'';if(p.data.role==='admin'&&p.data.status==='active')$('adminLink').style.display='inline-block'}}catch(e){console.error('profile:',e)}
+ $('name').textContent=n;$('initial').textContent=n.trim()[0]||'س';
+ if(av){$('avatar').src=av;$('avatar').style.display='block';$('initial').style.display='none'}else{$('avatar').style.display='none';$('initial').style.display='flex'}
+}
+async function loadUser(){try{const r=await db.auth.getSession();await applyUser(r.data?.session?.user||null)}catch(e){console.error('session:',e);setLoggedOut()}}
+$('logout').onclick=async()=>{await db.auth.signOut();setLoggedOut()};
+db.auth.onAuthStateChange((_event,session)=>{applyUser(session?.user||null)});
+$('searchForm').onsubmit=e=>{e.preventDefault();const q=$('searchInput').value.trim();location.href='ads.html'+(q?'?q='+encodeURIComponent(q):'')};
+async function loadLatest(){
+ const box=$('latestAds');
+ try{
+  const r=await Promise.race([db.from('ads').select('id,title,price,city,image_urls,video_url,created_at,status').eq('status','active').order('created_at',{ascending:false}).limit(4),new Promise((_,reject)=>setTimeout(()=>reject(new Error('انتهت مهلة الاتصال بقاعدة البيانات')),10000))]);
+  if(r.error)throw r.error;
+  if(!r.data?.length){box.innerHTML='<div class="empty">لا توجد إعلانات منشورة بعد.</div>';return}
+  box.innerHTML=r.data.map(a=>{const im=Array.isArray(a.image_urls)&&a.image_urls[0]?'<img src="'+esc(a.image_urls[0])+'" alt="">':'📢';return '<a class="ad" href="ad-details.html?id='+encodeURIComponent(a.id)+'"><div class="adImg">'+im+'</div><div class="adBody"><h3>'+esc(a.title)+'</h3><div class="meta"><span>'+(a.city?esc(a.city):'فلسطين')+'</span><b>'+(a.price!=null?esc(String(a.price))+' ₪':'تواصل')+'</b></div></div></a>'}).join('')
+ }catch(e){console.error('latestAds:',e);box.innerHTML='<div class="empty">❌ تعذر تحميل الإعلانات: '+esc(e.message||e)+'</div>'}
+}
+async function loadVideos(){
+ const box=$('videoFeed');
+ try{
+  const r=await Promise.race([db.from('ads').select('id,title,city,video_url,created_at,status').eq('status','active').not('video_url','is',null).order('created_at',{ascending:false}).limit(6),new Promise((_,reject)=>setTimeout(()=>reject(new Error('انتهت مهلة تحميل الفيديوهات')),10000))]);
+  if(r.error)throw r.error;
+  if(!r.data?.length){box.innerHTML='<div class="empty">🎬 لا توجد فيديوهات إعلانية منشورة بعد.</div>';return}
+  box.innerHTML=r.data.map(a=>'<a class="videoCard" href="ad-details.html?id='+encodeURIComponent(a.id)+'"><video src="'+esc(a.video_url)+'" muted playsinline preload="metadata" controls></video><span class="vcPlay">▶</span><div class="vcBody"><h3>'+esc(a.title)+'</h3><div class="vcMeta">'+esc(a.city||'فلسطين')+' • فيديو إعلان</div></div></a>').join('')
+ }catch(e){console.error('videos:',e);box.innerHTML='<div class="empty">❌ تعذر تحميل الفيديوهات: '+esc(e.message||e)+'</div>'}
+}
 loadUser();loadLatest();loadVideos();
 </script>
 </body></html>
