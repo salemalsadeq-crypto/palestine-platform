@@ -92,7 +92,7 @@ let so=$("sort").value;
 list.sort((a,b)=>so==="old"?new Date(a.created_at)-new Date(b.created_at):so==="high"?(b.price==null?-Infinity:+b.price)-(a.price==null?-Infinity:+a.price):so==="low"?(a.price==null?Infinity:+a.price)-(b.price==null?Infinity:+b.price):new Date(b.created_at)-new Date(a.created_at));
 render(list)}
 async function load(){
-let {data,error}=await db.from("ads").select("*").eq("category","وظائف").eq("status","active").order("created_at",{ascending:false});
+let {data,error}=await db.from("ads").select("*").eq("category","وظائف").order("created_at",{ascending:false});
 if(error){$("count").textContent="❌ خطأ";$("grid").innerHTML='<div class="msg error">حدث خطأ: '+esc(error.message)+'</div>';return}
 ads=data||[];filter()}
 async function user(){
