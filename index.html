@@ -3,68 +3,60 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>فلسطين بلاتفورم</title>
+<title>فلسطين بلاتفورم | المنصة الفلسطينية الشاملة</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0" crossorigin="anonymous"></script>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Tahoma,sans-serif;background:#f5f7fa;color:#172033}a{text-decoration:none}header{background:#fff;padding:15px;box-shadow:0 2px 10px #0001}.head{max-width:1150px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.logo{font-size:23px;font-weight:bold;color:#173b68}.logo span{color:#b51f2a}.account{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.avatar,.initial{width:40px;height:40px;border-radius:50%}.avatar{object-fit:cover;display:none}.initial{background:#edf2f8;color:#173b68;display:none;align-items:center;justify-content:center;font-weight:bold}.btn{padding:9px 12px;border-radius:8px;font-weight:bold;font-size:13px}.blue{background:#173b68;color:#fff}.red{background:#b51f2a;color:#fff;border:0;cursor:pointer}.gray{background:#eee;color:#333}.hero{background:#173b68;color:#fff;text-align:center;padding:55px 15px}.hero h1{font-size:38px;margin:0 0 12px}.hero p{font-size:18px;margin:0 0 22px}.hero a{display:inline-block;background:#b51f2a;color:#fff;padding:13px 22px;border-radius:9px;font-weight:bold}.container{max-width:1150px;margin:auto;padding:30px 15px}.section-title{text-align:center;margin:0 0 22px;font-size:28px}.categories{display:grid;grid-template-columns:repeat(5,1fr);gap:15px}.cat{background:#fff;padding:25px 10px;border-radius:14px;text-align:center;box-shadow:0 3px 15px #0000000d;color:#173b68;font-weight:bold;transition:.2s}.cat:hover{transform:translateY(-4px);box-shadow:0 7px 20px #0002}.icon{font-size:40px;display:block;margin-bottom:10px}.quick{margin-top:35px;background:#fff;border-radius:15px;padding:25px;text-align:center;box-shadow:0 3px 15px #0000000d}.quick a{display:inline-block;margin:6px;padding:11px 16px;border-radius:8px;background:#173b68;color:#fff;font-weight:bold}.footer{margin-top:40px;background:#172033;color:#fff;text-align:center;padding:25px}@media(max-width:800px){.categories{grid-template-columns:repeat(3,1fr)}}@media(max-width:500px){.categories{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:30px}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,Tahoma,sans-serif;background:#f4f7fb;color:#172033}a{text-decoration:none;color:inherit}button,input{font:inherit}.top{background:#173b68;color:#fff;font-size:12px}.topin,.head,.wrap{max-width:1180px;margin:auto;padding-left:16px;padding-right:16px}.topin{min-height:34px;display:flex;align-items:center;justify-content:space-between;gap:12px}.top a{color:#fff;font-weight:bold}.head{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:15px}.header{background:#fff;box-shadow:0 2px 18px #102a4d18;position:sticky;top:0;z-index:30}.logo{font-size:23px;font-weight:900;color:#173b68;white-space:nowrap}.logo span{color:#b51f2a}.account{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.avatar,.initial{width:38px;height:38px;border-radius:50%}.avatar{object-fit:cover;display:none}.initial{background:#edf2f8;color:#173b68;display:none;align-items:center;justify-content:center;font-weight:bold}.name{font-weight:bold;font-size:13px}.btn{border:0;border-radius:10px;padding:9px 12px;font-weight:bold;font-size:12px;cursor:pointer}.blue{background:#173b68;color:#fff}.red{background:#b51f2a;color:#fff}.gray{background:#eef2f6;color:#24364f}.gold{background:#d5a62b;color:#172033}.hero{background:linear-gradient(135deg,#102f56,#1b4e86 55%,#8c1825);color:#fff;padding:48px 16px 42px;position:relative;overflow:hidden}.hero:before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;background:#ffffff12;left:-170px;top:-190px}.hero:after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;background:#ffffff0d;right:-110px;bottom:-160px}.heroIn{max-width:1180px;margin:auto;position:relative;z-index:1}.hero h1{font-size:40px;margin:0 0 10px;line-height:1.25}.hero p{font-size:17px;margin:0 0 25px;color:#e9f0f8}.search{max-width:820px;background:#fff;padding:7px;border-radius:15px;display:flex;gap:7px;box-shadow:0 12px 35px #071d391f}.search input{flex:1;border:0;outline:0;padding:13px 14px;color:#172033;min-width:0}.search button{background:#b51f2a;color:#fff;border:0;border-radius:11px;padding:0 22px;font-weight:bold;cursor:pointer}.heroLinks{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.heroLinks a{background:#ffffff18;border:1px solid #ffffff35;padding:9px 13px;border-radius:10px;font-size:12px;font-weight:bold}.section{padding:28px 0}.titleRow{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:15px}.sectionTitle{font-size:23px;margin:0}.sub{font-size:12px;color:#66758a}.link{color:#173b68;font-weight:bold;font-size:12px}.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.cat{background:#fff;border:1px solid #e7edf5;border-radius:15px;padding:18px 8px;text-align:center;box-shadow:0 5px 18px #102a4d09;transition:.2s}.cat:hover{transform:translateY(-4px);box-shadow:0 12px 25px #102a4d18}.icon{display:block;font-size:32px;margin-bottom:9px}.cat b{font-size:13px;color:#203a5d}.services{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.service{background:#fff;border-radius:15px;padding:18px;min-height:125px;border:1px solid #e7edf5;position:relative;overflow:hidden}.service strong{display:block;font-size:15px;margin:7px 0}.service p{font-size:12px;color:#6c7b8e;margin:0;line-height:1.7}.soon{position:absolute;top:12px;left:12px;background:#eef2f6;color:#617087;border-radius:20px;padding:4px 8px;font-size:10px;font-weight:bold}.adsStrip{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.ad{background:#fff;border-radius:15px;overflow:hidden;border:1px solid #e5ebf3;box-shadow:0 5px 18px #102a4d09}.adImg{height:145px;background:linear-gradient(135deg,#dfe8f2,#f5f7fa);display:flex;align-items:center;justify-content:center;color:#789;font-size:38px;overflow:hidden}.adImg img{width:100%;height:100%;object-fit:cover}.adBody{padding:13px}.adBody h3{margin:0 0 7px;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.meta{font-size:11px;color:#738197;display:flex;justify-content:space-between;gap:6px}.videoBox{background:linear-gradient(135deg,#101d30,#173b68);border-radius:20px;padding:22px;color:#fff;display:grid;grid-template-columns:1.3fr 1fr;gap:20px;align-items:center;overflow:hidden}.videoFake{height:230px;border-radius:15px;background:linear-gradient(145deg,#6e1522,#173b68);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:inset 0 0 0 1px #fff2}.play{width:66px;height:66px;border-radius:50%;background:#fff;color:#173b68;display:flex;align-items:center;justify-content:center;font-size:25px;padding-right:3px}.videoText h2{font-size:27px;margin:0 0 10px}.videoText p{color:#d8e2ee;line-height:1.8;font-size:13px}.videoText a{display:inline-block;background:#b51f2a;color:#fff;border-radius:10px;padding:10px 14px;font-weight:bold;font-size:12px}.mapCard{background:#fff;border:1px solid #e5ebf3;border-radius:18px;padding:20px;display:flex;justify-content:space-between;align-items:center;gap:15px}.mapIcon{font-size:45px}.footer{margin-top:25px;background:#111d2e;color:#dce5ef;padding:30px 16px}.footIn{max-width:1180px;margin:auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:25px}.footer h3{margin-top:0;color:#fff}.footer p,.footer a{font-size:12px;line-height:2;color:#b9c6d5}.bottomNav{display:none}.empty{padding:30px;text-align:center;color:#718096;background:#fff;border-radius:15px}@media(max-width:900px){.grid{grid-template-columns:repeat(3,1fr)}.adsStrip{grid-template-columns:repeat(2,1fr)}.services{grid-template-columns:repeat(2,1fr)}.videoBox{grid-template-columns:1fr}.footIn{grid-template-columns:1fr 1fr}}@media(max-width:600px){.top{display:none}.head{min-height:64px}.logo{font-size:19px}.name{display:none}.account .btn{padding:8px 9px}.hero{padding:35px 14px}.hero h1{font-size:29px}.hero p{font-size:14px}.search{border-radius:13px}.search input{padding:12px 8px}.search button{padding:0 13px}.grid{grid-template-columns:repeat(3,1fr);gap:8px}.cat{padding:14px 5px}.icon{font-size:26px}.cat b{font-size:11px}.adsStrip,.services{grid-template-columns:1fr 1fr;gap:9px}.adImg{height:115px}.videoBox{padding:15px}.videoFake{height:190px}.videoText h2{font-size:22px}.footIn{grid-template-columns:1fr}.bottomNav{display:flex;position:fixed;bottom:0;right:0;left:0;background:#fff;border-top:1px solid #dde5ee;z-index:50;justify-content:space-around;padding:7px 4px}.bottomNav a{font-size:10px;text-align:center;color:#506177}.bottomNav span{display:block;font-size:20px;margin-bottom:2px}.footer{padding-bottom:80px}}
 </style>
 </head>
 <body>
-<header><div class="head">
+<div class="top"><div class="topin"><span>🇵🇸 منصة فلسطينية تجمع السوق والخدمات والأماكن في مكان واحد</span><span><a href="shops.html">المتاجر</a>　<a href="services.html">الخدمات</a></span></div></div>
+<header class="header"><div class="head">
 <div class="logo">فلسطين <span>بلاتفورم</span></div>
-<div class="account">
-<img id="avatar" class="avatar"><div id="initial" class="initial">س</div><span id="name"></span>
-<a id="account" class="btn blue" href="account.html" style="display:none">حسابي</a>
-<a id="myads" class="btn blue" href="my-ads.html" style="display:none">إعلاناتي</a>
-<a id="adminLink" class="btn" href="admin.html" style="display:none;background:#a67c00;color:#fff">👑 لوحة المدير</a>
-<button id="logout" class="btn red" style="display:none">خروج</button>
-<a id="login" class="btn gray" href="login.html">تسجيل الدخول</a>
-</div></div></header>
+<div class="account"><img id="avatar" class="avatar"><div id="initial" class="initial">س</div><span id="name" class="name"></span><a id="account" class="btn blue" href="account.html" style="display:none">حسابي</a><a id="myads" class="btn blue" href="my-ads.html" style="display:none">إعلاناتي</a><a id="adminLink" class="btn gold" href="admin.html" style="display:none">👑 المدير</a><button id="logout" class="btn red" style="display:none">خروج</button><a id="login" class="btn gray" href="login.html">تسجيل الدخول</a></div>
+</div></header>
 
-<section class="hero">
-<h1>🇵🇸 أهلاً بكم في فلسطين بلاتفورم</h1>
-<p>منصة فلسطينية للإعلانات والخدمات والوظائف والعقارات والمتاجر</p>
-<a href="ads.html">📢 تصفح جميع الإعلانات</a>
-</section>
+<section class="hero"><div class="heroIn">
+<h1>🇵🇸 كل ما تحتاجه في فلسطين... في مكان واحد</h1>
+<p>إعلانات، سيارات، عقارات، وظائف، خدمات، متاجر، أماكن ومشاريع فلسطينية — والمنصة تتوسع باستمرار.</p>
+<form class="search" id="searchForm"><input id="searchInput" placeholder="ابحث عن إعلان، خدمة، متجر أو أي شيء..." autocomplete="off"><button>🔎 بحث</button></form>
+<div class="heroLinks"><a href="ads.html">📢 جميع الإعلانات</a><a href="edit-ad.html">➕ أضف إعلانك</a><a href="#places">📍 اكتشف الأماكن</a><a href="#future">🚀 الخدمات الجديدة</a></div>
+</div></section>
 
-<main class="container">
-<h2 class="section-title">الأقسام الرئيسية</h2>
-<div class="categories">
-<a class="cat" href="cars.html"><span class="icon">🚗</span>السيارات</a>
-<a class="cat" href="realestate.html"><span class="icon">🏠</span>العقارات</a>
-<a class="cat" href="jobs.html"><span class="icon">💼</span>الوظائف</a>
-<a class="cat" href="services.html"><span class="icon">🛠️</span>الخدمات</a>
-<a class="cat" href="shops.html"><span class="icon">🛍️</span>المتاجر</a>
-<a class="cat" href="ads.html?category=أثاث ومستلزمات"><span class="icon">🛋️</span>الأثاث</a>
-<a class="cat" href="ads.html?category=أجهزة وإلكترونيات"><span class="icon">📱</span>الإلكترونيات والأجهزة</a>
-<a class="cat" href="ads.html?category=ملابس وأغراض شخصية"><span class="icon">👕</span>الملابس</a>
-<a class="cat" href="ads.html?category=مواشي وحيوانات"><span class="icon">🐐</span>مواشي وحيوانات</a>
-<a class="cat" href="ads.html?category=إعلانات أخرى"><span class="icon">📦</span>أخرى</a>
-</div>
+<main class="wrap">
+<section class="section"><div class="titleRow"><div><h2 class="sectionTitle">استكشف فلسطين بلاتفورم</h2><div class="sub">وصول سريع إلى أهم أقسام المنصة</div></div></div>
+<div class="grid">
+<a class="cat" href="cars.html"><span class="icon">🚗</span><b>السيارات</b></a><a class="cat" href="realestate.html"><span class="icon">🏠</span><b>العقارات</b></a><a class="cat" href="jobs.html"><span class="icon">💼</span><b>الوظائف</b></a><a class="cat" href="services.html"><span class="icon">🛠️</span><b>الخدمات</b></a><a class="cat" href="shops.html"><span class="icon">🛍️</span><b>المتاجر</b></a><a class="cat" href="ads.html"><span class="icon">📢</span><b>كل الإعلانات</b></a>
+<a class="cat" href="ads.html?category=أثاث ومستلزمات"><span class="icon">🛋️</span><b>الأثاث</b></a><a class="cat" href="ads.html?category=أجهزة وإلكترونيات"><span class="icon">📱</span><b>الإلكترونيات</b></a><a class="cat" href="ads.html?category=ملابس وأغراض شخصية"><span class="icon">👕</span><b>الملابس</b></a><a class="cat" href="ads.html?category=مواشي وحيوانات"><span class="icon">🐐</span><b>مواشي وحيوانات</b></a><a class="cat" href="ads.html?category=بيع وشراء"><span class="icon">🛒</span><b>بيع وشراء</b></a><a class="cat" href="ads.html?category=إعلانات أخرى"><span class="icon">📦</span><b>أخرى</b></a>
+</div></section>
 
-<div class="quick">
-<h2>ماذا تريد أن تفعل؟</h2>
-<a href="ads.html">🔎 البحث عن إعلان</a>
-<a href="ads.html">➕ إضافة إعلان</a>
-<a href="my-ads.html">📋 إعلاناتي</a>
-<a href="account.html">👤 حسابي</a><a href="map.html">🗺️ خريطة الإعلانات</a>
-</div>
+<section class="section" id="places"><div class="titleRow"><div><h2 class="sectionTitle">دليل فلسطين</h2><div class="sub">أقسام جديدة نجهزها لتصبح المنصة دليلًا فلسطينيًا شاملًا</div></div></div>
+<div class="services">
+<div class="service"><span class="soon">قريبًا</span><div>🍔</div><strong>المطاعم والمقاهي</strong><p>قوائم الطعام، التقييمات، المواقع، العروض والتوصيل.</p></div>
+<div class="service"><span class="soon">قريبًا</span><div>🎡</div><strong>الترفيه والفعاليات</strong><p>أماكن ترفيه، سياحة، فعاليات، حدائق وقاعات.</p></div>
+<div class="service"><span class="soon">قريبًا</span><div>🚚</div><strong>التوصيل والشحن</strong><p>شركات التوصيل، الشحن والطرود والخدمات اللوجستية.</p></div>
+<div class="service"><span class="soon">قريبًا</span><div>💳</div><strong>الدفع الإلكتروني</strong><p>خدمات دفع وفواتير وربط مزودي الدفع الرسميين.</p></div>
+</div></section>
+
+<section class="section"><div class="titleRow"><div><h2 class="sectionTitle">🔥 أحدث الإعلانات</h2><div class="sub">آخر ما نُشر على المنصة</div></div><a class="link" href="ads.html">عرض الكل ←</a></div><div id="latestAds" class="adsStrip"><div class="empty">جاري تحميل الإعلانات...</div></div></section>
+
+<section class="section" id="future"><div class="videoBox"><div class="videoFake"><div class="play">▶</div></div><div class="videoText"><h2>🎬 فيديوهات الإعلانات</h2><p>نحوّل الإعلانات من صور ونصوص فقط إلى تجربة فيديو قصيرة وتفاعلية: مشاهدة، إعجاب، مشاركة، حفظ، تواصل وفتح الإعلان مباشرة.</p><a href="ads.html">استكشف الإعلانات الآن</a></div></div></section>
+
+<section class="section"><div class="mapCard"><div><h2 class="sectionTitle">📍 خريطة فلسطين التفاعلية</h2><div class="sub">سنربط الإعلانات والمتاجر والخدمات والأماكن بخريطة واحدة قابلة للبحث والتصفية.</div></div><div class="mapIcon">🗺️</div></div></section>
 </main>
 
-<footer class="footer">© 2026 فلسطين بلاتفورم — منصة الإعلانات الفلسطينية</footer>
+<footer class="footer"><div class="footIn"><div><h3>فلسطين بلاتفورم</h3><p>منصة رقمية فلسطينية تهدف إلى جمع الإعلانات والخدمات والأعمال والأماكن في تجربة واحدة سهلة وسريعة.</p></div><div><h3>روابط</h3><p><a href="ads.html">الإعلانات</a><br><a href="cars.html">السيارات</a><br><a href="realestate.html">العقارات</a><br><a href="jobs.html">الوظائف</a></p></div><div><h3>حسابك</h3><p><a href="account.html">حسابي</a><br><a href="favorites.html">المفضلة</a><br><a href="login.html">تسجيل الدخول</a></p></div></div></footer>
+<nav class="bottomNav"><a href="index.html"><span>🏠</span>الرئيسية</a><a href="ads.html"><span>🔎</span>بحث</a><a href="edit-ad.html"><span>➕</span>إضافة</a><a href="favorites.html"><span>❤️</span>المفضلة</a><a href="account.html"><span>👤</span>حسابي</a></nav>
 
 <script>
-window.onerror=function(m){console.error("خطأ بالكود:",m);var b=document.createElement('div');b.style.cssText='background:#c0392b;color:#fff;padding:10px;text-align:center;font-size:13px';b.textContent='❌ خطأ بالكود: '+m;document.body.prepend(b);return false};
-if(typeof supabase==='undefined'){
-var b=document.createElement('div');b.style.cssText='background:#c0392b;color:#fff;padding:10px;text-align:center;font-size:13px';b.textContent='❌ لم يتم تحميل مكتبة Supabase — تحقق من اتصال الإنترنت';document.body.prepend(b);
-}else{
+window.onerror=function(m){console.error(m);return false};
 const URL="https://sesbumfedusbjevbsyzl.supabase.co",KEY="sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
 const db=supabase.createClient(URL,KEY),$=id=>document.getElementById(id);
-async function user(){try{const {data:{session}}=await db.auth.getSession();renderUser(session?.user||null);db.auth.onAuthStateChange((_event,session)=>renderUser(session?.user||null));}catch(e){console.error(e)}}
-async function renderUser(u){if(!u){$("login").style.display="inline-block";$("account").style.display="none";$("myads").style.display="none";$("adminLink").style.display="none";$("logout").style.display="none";return}$("login").style.display="none";$("account").style.display="inline-block";$("myads").style.display="inline-block";$("logout").style.display="inline-block";let n=u.email?.split("@")[0]||"المستخدم",av="";const {data:p}=await db.from("profiles").select("full_name,avatar_url,role,status").eq("id",u.id).maybeSingle();if(p){n=p.full_name||n;av=p.avatar_url||"";$("adminLink").style.display=(p.role==="admin"&&p.status==="active")?"inline-block":"none"}else{$("adminLink").style.display="none"}$("name").textContent=n;$("initial").textContent=n.trim()[0]||"س";if(av){$("avatar").src=av;$("avatar").style.display="block";$("initial").style.display="none"}else{$("avatar").style.display="none";$("initial").style.display="flex"}}
-$("logout").onclick=async()=>{await db.auth.signOut();location.reload()};user();
-}
+async function loadUser(){try{const {data,error}=await db.auth.getUser();if(error||!data.user)return;const u=data.user;$('login').style.display='none';$('account').style.display='inline-block';$('myads').style.display='inline-block';$('logout').style.display='inline-block';let n=u.email?.split('@')[0]||'المستخدم',av='';let p=await db.from('profiles').select('full_name,avatar_url,role,status').eq('id',u.id).maybeSingle();if(p.data){n=p.data.full_name||n;av=p.data.avatar_url||'';if(p.data.role==='admin'&&p.data.status==='active')$('adminLink').style.display='inline-block'}$('name').textContent=n;$('initial').textContent=n.trim()[0]||'س';if(av){$('avatar').src=av;$('avatar').style.display='block'}else $('initial').style.display='flex'}catch(e){console.error(e)}}
+$('logout').onclick=async()=>{await db.auth.signOut();location.reload()};
+$('searchForm').onsubmit=e=>{e.preventDefault();const q=$('searchInput').value.trim();location.href='ads.html'+(q?'?q='+encodeURIComponent(q):'')};
+async function loadLatest(){const box=$('latestAds');const r=await db.from('ads').select('id,title,price,city,image_urls,created_at,status').eq('status','active').order('created_at',{ascending:false}).limit(4);if(r.error){box.innerHTML='<div class="empty">تعذر تحميل الإعلانات حاليًا.</div>';return}if(!r.data?.length){box.innerHTML='<div class="empty">لا توجد إعلانات منشورة بعد.</div>';return}box.innerHTML=r.data.map(a=>{const im=Array.isArray(a.image_urls)&&a.image_urls[0]?'<img src="'+a.image_urls[0]+'" alt="">':'📢';return '<a class="ad" href="ad-details.html?id='+encodeURIComponent(a.id)+'"><div class="adImg">'+im+'</div><div class="adBody"><h3>'+esc(a.title)+'</h3><div class="meta"><span>'+(a.city?esc(a.city):'فلسطين')+'</span><b>'+(a.price!=null?esc(String(a.price))+' ₪':'تواصل')+'</b></div></div></a>'}).join('')}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+loadUser();loadLatest();
 </script>
-</body>
-</html>
-
+</body></html>
