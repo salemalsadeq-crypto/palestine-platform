@@ -16,6 +16,7 @@
 <img id="avatar" class="avatar"><div id="initial" class="initial">س</div><span id="name"></span>
 <a id="account" class="btn blue" href="account.html" style="display:none">حسابي</a>
 <a id="myads" class="btn blue" href="my-ads.html" style="display:none">إعلاناتي</a>
+<a id="adminLink" class="btn" href="admin.html" style="display:none;background:#a67c00;color:#fff">👑 لوحة المدير</a>
 <button id="logout" class="btn red" style="display:none">خروج</button>
 <a id="login" class="btn gray" href="login.html">تسجيل الدخول</a>
 </div></div></header>
@@ -60,7 +61,7 @@ var b=document.createElement('div');b.style.cssText='background:#c0392b;color:#f
 const URL="https://sesbumfedusbjevbsyzl.supabase.co",KEY="sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
 const db=supabase.createClient(URL,KEY),$=id=>document.getElementById(id);
 async function user(){try{const {data:{session}}=await db.auth.getSession();renderUser(session?.user||null);db.auth.onAuthStateChange((_event,session)=>renderUser(session?.user||null));}catch(e){console.error(e)}}
-async function renderUser(u){if(!u){$("login").style.display="inline-block";$("account").style.display="none";$("myads").style.display="none";$("logout").style.display="none";return}$("login").style.display="none";$("account").style.display="inline-block";$("myads").style.display="inline-block";$("logout").style.display="inline-block";let n=u.email?.split("@")[0]||"المستخدم",av="";const {data:p}=await db.from("profiles").select("full_name,avatar_url").eq("id",u.id).maybeSingle();if(p){n=p.full_name||n;av=p.avatar_url||""}$("name").textContent=n;$("initial").textContent=n.trim()[0]||"س";if(av){$("avatar").src=av;$("avatar").style.display="block";$("initial").style.display="none"}else{$("avatar").style.display="none";$("initial").style.display="flex"}}
+async function renderUser(u){if(!u){$("login").style.display="inline-block";$("account").style.display="none";$("myads").style.display="none";$("adminLink").style.display="none";$("logout").style.display="none";return}$("login").style.display="none";$("account").style.display="inline-block";$("myads").style.display="inline-block";$("logout").style.display="inline-block";let n=u.email?.split("@")[0]||"المستخدم",av="";const {data:p}=await db.from("profiles").select("full_name,avatar_url,role,status").eq("id",u.id).maybeSingle();if(p){n=p.full_name||n;av=p.avatar_url||"";$("adminLink").style.display=(p.role==="admin"&&p.status==="active")?"inline-block":"none"}else{$("adminLink").style.display="none"}$("name").textContent=n;$("initial").textContent=n.trim()[0]||"س";if(av){$("avatar").src=av;$("avatar").style.display="block";$("initial").style.display="none"}else{$("avatar").style.display="none";$("initial").style.display="flex"}}
 $("logout").onclick=async()=>{await db.auth.signOut();location.reload()};user();
 }
 </script>
