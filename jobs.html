@@ -25,9 +25,9 @@
 <section class="hero"><h1>💼 الوظائف</h1><p>أحدث فرص العمل والإعلانات الوظيفية في فلسطين</p></section>
 
 <main class="container">
-<div class="actions">
-<a href="edit-ad.html?category=وظائف" class="red">➕ أضف إعلان وظيفة</a>
-<a href="ads.html" class="blue">📢 جميع الإعلانات</a>
+<div class="actions" data-main-actions="1">
+<a href="ads.html?category=وظائف#add" class="red">➕ أضف إعلان وظيفة</a>
+<a href="ads.html?category=وظائف" class="blue">📢 جميع الإعلانات</a>
 </div>
 
 <div class="filters">
@@ -41,6 +41,22 @@
 <div class="bar"><b id="count">جاري التحميل...</b><select id="sort"><option value="new">الأحدث أولاً</option><option value="old">الأقدم أولاً</option><option value="high">الراتب الأعلى</option><option value="low">الراتب الأقل</option></select></div>
 <div id="grid" class="grid"><div class="msg">جاري تحميل الوظائف...</div></div>
 </main>
+<script data-fixed-actions="1">
+(function(){
+  function cleanAndFix(){
+    var blocks=document.querySelectorAll('.actions');
+    for(var i=1;i<blocks.length;i++){ blocks[i].remove(); }
+    var main=document.querySelector('[data-main-actions="1"]');
+    if(!main) return;
+    main.querySelectorAll('a').forEach(function(a){
+      a.style.pointerEvents='auto';
+      a.style.position='relative';
+      a.style.zIndex='10';
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',cleanAndFix); else cleanAndFix();
+})();
+</script>
 <script>
 window.onerror=function(m){var g=document.getElementById('grid'),c=document.getElementById('count');if(c)c.textContent='❌ خطأ';if(g)g.innerHTML='<div class="msg error">❌ خطأ بالكود: '+m+'</div>';return false};
 window.addEventListener('unhandledrejection',function(e){var g=document.getElementById('grid'),c=document.getElementById('count');if(c)c.textContent='❌ خطأ';if(g)g.innerHTML='<div class="msg error">❌ خطأ غير متوقع: '+(e.reason&&e.reason.message||e.reason)+'</div>'});
