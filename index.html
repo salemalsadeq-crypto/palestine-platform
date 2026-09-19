@@ -50,8 +50,8 @@
 
 <script>
 window.onerror=function(m){console.error(m);return false};
-const URL="https://sesbumfedusbjevbsyzl.supabase.co",KEY="sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
-const db=supabase.createClient(URL,KEY),$=id=>document.getElementById(id);
+const SUPABASE_URL="https://sesbumfedusbjevbsyzl.supabase.co",KEY="sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
+const db=supabase.createClient(SUPABASE_URL,KEY),$=id=>document.getElementById(id);
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function setLoggedOut(){$('login').style.display='inline-block';$('account').style.display='none';$('myads').style.display='none';$('adminLink').style.display='none';$('logout').style.display='none';$('name').textContent='';$('avatar').style.display='none';$('initial').style.display='none'}
 async function applyUser(user){

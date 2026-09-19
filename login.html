@@ -297,31 +297,6 @@ form.addEventListener("submit", async function(event) {
             "✅ تم تسجيل الدخول بنجاح";
 
 
-        /*
-         * التأكد أن الجلسة محفوظة
-         * قبل الانتقال إلى الصفحة الرئيسية
-         */
-
-        const { data: sessionData } =
-            await supabaseClient.auth.getSession();
-
-
-        if (!sessionData.session) {
-
-            message.style.color = "red";
-
-            message.textContent =
-                "❌ تعذر حفظ جلسة تسجيل الدخول";
-
-            button.disabled = false;
-
-            button.textContent =
-                "تسجيل الدخول";
-
-            return;
-        }
-
-
         window.location.replace("index.html");
 
 

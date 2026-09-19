@@ -64,9 +64,9 @@ if(typeof supabase==='undefined'){
 document.getElementById('count').textContent='❌ خطأ';
 document.getElementById('grid').innerHTML='<div class="msg error">❌ لم يتم تحميل مكتبة Supabase — تحقق من اتصال الإنترنت أو جرب شبكة/متصفح آخر</div>';
 }else{
-const URL="https://sesbumfedusbjevbsyzl.supabase.co";
+const SUPABASE_URL="https://sesbumfedusbjevbsyzl.supabase.co";
 const KEY="sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
-const db=supabase.createClient(URL,KEY);
+const db=supabase.createClient(SUPABASE_URL,KEY);
 let ads=[];
 const $=id=>document.getElementById(id);
 function esc(x){return String(x??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}

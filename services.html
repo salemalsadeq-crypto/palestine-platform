@@ -60,8 +60,8 @@ if(typeof supabase==='undefined'){
 document.getElementById('count').textContent='❌ خطأ';
 document.getElementById('grid').innerHTML='<div class="msg error">❌ لم يتم تحميل مكتبة Supabase — تحقق من اتصال الإنترنت أو جرب شبكة/متصفح آخر</div>';
 }else{
-const URL="https://sesbumfedusbjevbsyzl.supabase.co",KEY="sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
-const db=supabase.createClient(URL,KEY);let ads=[];const $=id=>document.getElementById(id);
+const SUPABASE_URL="https://sesbumfedusbjevbsyzl.supabase.co",KEY="sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
+const db=supabase.createClient(SUPABASE_URL,KEY);let ads=[];const $=id=>document.getElementById(id);
 function esc(x){return String(x??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 function money(x){return x==null||x===""?"السعر غير محدد":Number(x).toLocaleString("ar-PS")+" شيكل"}
 function date(x){try{return new Date(x).toLocaleDateString("ar-PS")}catch(e){return""}}
