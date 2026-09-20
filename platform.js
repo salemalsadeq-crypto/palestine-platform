@@ -1,5 +1,5 @@
 // فلسطين بلاتفورم - طبقة مشتركة للنسخة الجديدة
-window.PP_CONFIG={SUPABASE_URL:"https://sesbumfedusbjevbsyzl.supabase.co",SUPABASE_KEY:"sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWQK"};
+window.PP_CONFIG={SUPABASE_URL:"https://sesbumfedusbjevbsyzl.supabase.co",SUPABASE_KEY:"sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR"};
 window.ppClient=window.supabase?.createClient(window.PP_CONFIG.SUPABASE_URL,window.PP_CONFIG.SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 window.ppEsc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 window.ppUser=async()=>{if(!window.ppClient)return null;const {data}=await ppClient.auth.getUser();return data?.user||null};
