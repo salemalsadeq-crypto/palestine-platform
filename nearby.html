@@ -35,45 +35,29 @@ let map,me,userPos=null,platformAds=[],placeData=[],layers=[];const cache=new Ma
 const $=id=>document.getElementById(id);
 const esc=x=>String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 function km(a,b,c,d){const R=6371,r=Math.PI/180,x=(c-a)*r,y=(d-b)*r;const h=Math.sin(x/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin(y/2)**2;return R*2*Math.atan2(Math.sqrt(h),Math.sqrt(1-h))}
-function initMap(){map=L.map('map').setView([31.9,35.2],9);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(map)}
+function initMap(){map=L.map('map').setView([31.9,35.2],9);L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:20,attribution:'© OpenStreetMap contributors © CARTO'}).addTo(map)}
 function iconFor(t){return ({food:'🍽️',shop:'🛒',pharmacy:'💊',health:'🏥',hotel:'🏨',fuel:'⛽',bank:'🏦',fun:'🎭'})[t]||'📍'}
 function categoryOf(tags){const a=tags.amenity||'',s=tags.shop||'',t=tags.tourism||'',l=tags.leisure||'';if(/restaurant|cafe|fast_food|food_court/.test(a))return'food';if(a==='pharmacy')return'pharmacy';if(/hospital|clinic|doctors|dentist/.test(a))return'health';if(a==='fuel')return'fuel';if(a==='bank')return'bank';if(/hotel|hostel|guest_house|motel|apartment/.test(t))return'hotel';if(/museum|attraction|theme_park|water_park|sports_centre|stadium|park|playground/.test(t+'|'+l))return'fun';if(s)return'shop';return'other'}
 function nameOf(tags){return tags['name:ar']||tags.name||tags['name:en']||'مكان بدون اسم'}
 async function loadPlatformAds(){try{const r=await fetch(API,{headers:{apikey:KEY,Authorization:'Bearer '+KEY}});if(r.ok)platformAds=await r.json();else platformAds=[]}catch(e){platformAds=[]}}
-function overpassQuery(lat,lng,meters,cat){const parts=[];const around=`(around:${meters},${lat},${lng})`;if(!cat||cat==='food')parts.push(`nwr${around}["name"]["amenity"~"restaurant|cafe|fast_food|food_court"]`);if(!cat||cat==='pharmacy')parts.push(`nwr${around}["name"]["amenity"="pharmacy"]`);if(!cat||cat==='health')parts.push(`nwr${around}["name"]["amenity"~"hospital|clinic|doctors|dentist"]`);if(!cat||cat==='fuel')parts.push(`nwr${around}["name"]["amenity"="fuel"]`);if(!cat||cat==='bank')parts.push(`nwr${around}["name"]["amenity"="bank"]`);if(!cat||cat==='hotel')parts.push(`nwr${around}["name"]["tourism"~"hotel|hostel|guest_house|motel"]`);if(!cat||cat==='fun')parts.push(`nwr${around}["name"]["tourism"~"museum|attraction|theme_park|water_park"];nwr${around}["name"]["leisure"~"park|playground|sports_centre|stadium"]`);if(!cat||cat==='shop')parts.push(`nwr${around}["name"]["shop"]`);return`[out:json][timeout:25];(${parts.join(';')};);out center tags;`}
-async function loadRealPlaces(){
- if(!userPos)return;
- const rad=Number($('radius').value),cat=$('category').value,key=userPos.lat.toFixed(4)+','+userPos.lng.toFixed(4)+'|'+rad+'|'+cat;
- if(cache.has(key)){placeData=cache.get(key);return}
- const q=overpassQuery(userPos.lat,userPos.lng,rad*1000,cat);let lastError=null;
- for(const endpoint of OVERPASS_ENDPOINTS){
-  try{
-   const r=await fetch(endpoint+'?data='+encodeURIComponent(q),{headers:{'Accept':'application/json'},mode:'cors'});
-   if(!r.ok)throw new Error('HTTP '+r.status);
-   const j=await r.json();
-   const els=Array.isArray(j.elements)?j.elements:[];
-   placeData=els.map(e=>{const lat=e.lat??e.center?.lat,lon=e.lon??e.center?.lon,t=e.tags||{};return lat!=null&&lon!=null?{id:'osm-'+e.type+'-'+e.id,lat:Number(lat),lon:Number(lon),name:nameOf(t),cat:categoryOf(t),tags:t,source:'osm'}:null}).filter(Boolean);
-   if(placeData.length){cache.set(key,placeData);return}
-   lastError=new Error('لم تُرجع الخدمة أماكن');
-  }catch(e){lastError=e}
- }
- // Fallback: Photon nearby search. It is less complete than Overpass but prevents an empty map when an Overpass endpoint is unavailable.
- try{
-  const queries=cat==='food'?['restaurant','cafe','fast food']:cat==='shop'?['shop','store']:cat==='pharmacy'?['pharmacy']:cat==='health'?['hospital','clinic','doctor']:cat==='fuel'?['fuel','gas station']:cat==='bank'?['bank']:cat==='hotel'?['hotel','hostel']:cat==='fun'?['park','museum','stadium','attraction']:['restaurant','cafe','pharmacy','hospital','shop','hotel','bank','fuel','park'];
-  const all=[];const seen=new Set();
-  for(const term of queries){
-   const u=PHOTON+'?q='+encodeURIComponent(term)+'&lat='+encodeURIComponent(userPos.lat)+'&lon='+encodeURIComponent(userPos.lng)+'&limit=30&lang=en';
-   const r=await fetch(u,{headers:{'Accept':'application/json'},mode:'cors'});if(!r.ok)continue;const j=await r.json();
-   for(const f of (j.features||[])){const c=f.geometry?.coordinates||[];const lon=Number(c[0]),lat=Number(c[1]);if(!Number.isFinite(lat)||!Number.isFinite(lon))continue;const p=f.properties||{};const id='photon-'+(f.properties?.osm_id||lat+'-'+lon+'-'+(p.name||''));if(seen.has(id))continue;seen.add(id);const tags={name:p.name||p.name_en||p.name_ar||'مكان بدون اسم',amenity:p.osm_value||p.type||'',shop:p.osm_key==='shop'?p.osm_value:'',phone:p.phone||'',website:p.website||'',opening_hours:p.opening_hours||'',city:p.city||p.town||p.village||'',street:p.street||''};all.push({id,lat,lon,name:tags.name,cat:categoryOf(tags),tags,source:'photon'});}
-  }
-  if(all.length){placeData=all;cache.set(key,placeData);return}
- }catch(e){lastError=e}
- throw new Error('تعذر تحميل الأماكن الحقيقية الآن. تحقق من اتصال الإنترنت ثم اضغط إعادة المحاولة.');
+function overpassQuery(lat,lng,meters,cat){
+ const around=`(around:${meters},${lat},${lng})`;
+ const groups={
+  food:`nwr${around}[\"name\"][\"amenity\"~\"restaurant|cafe|fast_food|food_court|ice_cream|bakery\"]`,
+  pharmacy:`nwr${around}[\"name\"][\"amenity\"=\"pharmacy\"]`,
+  health:`nwr${around}[\"name\"][\"amenity\"~\"hospital|clinic|doctors|dentist|veterinary\"]`,
+  fuel:`nwr${around}[\"name\"][\"amenity\"=\"fuel\"]`,
+  bank:`nwr${around}[\"name\"][\"amenity\"~\"bank|atm\"]`,
+  hotel:`nwr${around}[\"name\"][\"tourism\"~\"hotel|hostel|guest_house|motel\"]`,
+  fun:`nwr${around}[\"name\"][\"tourism\"~\"museum|attraction|theme_park|water_park\"];nwr${around}[\"name\"][\"leisure\"~\"park|playground|sports_centre|stadium|fitness_centre\"]`,
+  shop:`nwr${around}[\"name\"][\"shop\"]`,
+  company:`nwr${around}[\"name\"][\"office\"];nwr${around}[\"name\"][\"craft\"];nwr${around}[\"name\"][\"industrial\"];nwr${around}[\"name\"][\"building\"=\"office\"]`,
+  education:`nwr${around}[\"name\"][\"amenity\"~\"school|college|university|kindergarten\"]`,
+  government:`nwr${around}[\"name\"][\"office\"~\"government|administrative|association\"];nwr${around}[\"name\"][\"amenity\"~\"police|fire_station|post_office\"]`
+ };
+ const selected=cat&&groups[cat]?groups[cat]:Object.values(groups).join(';');
+ return `[out:json][timeout:50];(${selected};);out center tags;`;
 }
-function clearLayers(){layers.forEach(x=>map.removeLayer(x));layers=[]}
-function osmLink(p){return'https://www.openstreetmap.org/?mlat='+p.lat+'&mlon='+p.lon+'#map=18/'+p.lat+'/'+p.lon}
-function tagFirst(t,keys){for(const k of keys){if(t&&t[k])return t[k]}return ''}
-function mapsLink(p){return 'https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(p.lat+','+p.lon)}
 function placeInfo(p){const t=p.tags||{};const phone=tagFirst(t,['phone','contact:phone','mobile']);const web=tagFirst(t,['website','contact:website']);const hours=t.opening_hours||'';const cuisine=t.cuisine||'';const street=t['addr:street']||'';const city=t['addr:city']||t['addr:town']||t['addr:village']||'';return {phone,web,hours,cuisine,address:[street,city].filter(Boolean).join('، ')}}
 function render(){clearLayers();const rad=Number($('radius').value),cat=$('category').value;let real=placeData.filter(p=>!cat||p.cat===cat).map(p=>({...p,distance:km(userPos.lat,userPos.lng,p.lat,p.lon)})).filter(p=>p.distance<=rad).sort((a,b)=>a.distance-b.distance);let ads=platformAds.map(a=>({...a,distance:km(userPos.lat,userPos.lng,Number(a.latitude),Number(a.longitude))})).filter(a=>a.distance<=rad).filter(a=>!cat||({'shop':'متاجر','food':'مطاعم','pharmacy':'خدمات','health':'خدمات','hotel':'ترفيه','fuel':'خدمات','bank':'خدمات','fun':'ترفيه'}[cat]||'')===a.category).sort((a,b)=>a.distance-b.distance);
 if(me)map.removeLayer(me);me=L.circleMarker([userPos.lat,userPos.lng],{radius:9,weight:3,color:'#fff',fillColor:'#198754',fillOpacity:1}).addTo(map).bindPopup('📍 موقعك الحالي');layers.push(me);
