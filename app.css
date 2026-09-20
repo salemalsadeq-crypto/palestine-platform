@@ -46,3 +46,29 @@ img[loading="lazy"]{content-visibility:auto}
   .pp-toast-host{bottom:77px}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* v16 - Navigation & interaction system */
+.pp-menu-btn{position:fixed;top:12px;right:12px;z-index:2147483000;width:48px;height:48px;border:0;border-radius:15px;background:#123b68;color:#fff;font-size:23px;font-weight:900;box-shadow:0 10px 28px rgba(18,59,104,.24);cursor:pointer}
+.pp-menu-btn:hover{transform:translateY(-1px);box-shadow:0 14px 32px rgba(18,59,104,.3)}
+.pp-menu-backdrop{position:fixed;inset:0;background:rgba(7,20,36,.45);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:2147482990;opacity:0;pointer-events:none;transition:opacity .25s ease}
+.pp-menu-backdrop.open{opacity:1;pointer-events:auto}
+.pp-drawer{position:fixed;top:0;right:0;height:100dvh;width:min(390px,92vw);background:#fff;z-index:2147482995;box-shadow:-18px 0 55px rgba(0,0,0,.18);transform:translateX(105%);transition:transform .3s cubic-bezier(.2,.8,.2,1);overflow:auto;padding:0 16px 28px}
+.pp-drawer.open{transform:translateX(0)}
+.pp-drawer-head{position:sticky;top:0;background:#fff;z-index:2;padding:18px 4px 12px;border-bottom:1px solid #e9eef4;display:flex;align-items:center;justify-content:space-between}
+.pp-drawer-brand{font-size:20px;font-weight:900;color:#123b68}.pp-drawer-brand span{color:#b51f2a}
+.pp-drawer-close{width:42px;height:42px;border:0;border-radius:12px;background:#f1f4f8;color:#123b68;font-size:22px;cursor:pointer}
+.pp-menu-user{margin:14px 0;padding:14px;border-radius:17px;background:linear-gradient(135deg,#123b68,#1d5b96);color:#fff;display:flex;align-items:center;gap:11px}
+.pp-menu-user .avatar{display:block;width:44px;height:44px}.pp-menu-user .initial{display:flex;width:44px;height:44px;background:#ffffff22;color:#fff}
+.pp-menu-user b{display:block;font-size:14px}.pp-menu-user small{opacity:.82}
+.pp-quick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0 18px}
+.pp-quick a{min-height:86px;padding:12px;border-radius:16px;text-decoration:none;display:flex;flex-direction:column;justify-content:center;gap:6px;font-weight:900;border:1px solid #e3e9f0;box-shadow:0 5px 16px rgba(18,59,104,.06);transition:.18s}
+.pp-quick a:hover{transform:translateY(-2px);box-shadow:0 9px 22px rgba(18,59,104,.12)}
+.pp-quick .q-blue{background:#eef5fc;color:#123b68}.pp-quick .q-red{background:#fff0f1;color:#a51e29}.pp-quick .q-green{background:#edf9f3;color:#13734c}.pp-quick .q-gold{background:#fff8e6;color:#8a6811}
+.pp-menu-section{margin:17px 0}.pp-menu-title{font-size:11px;color:#7a8797;font-weight:900;padding:0 5px 7px}
+.pp-menu-link{display:flex;align-items:center;gap:11px;width:100%;padding:12px 10px;border:0;border-radius:12px;background:transparent;color:#26374a;text-decoration:none;font-weight:700;text-align:right;cursor:pointer}
+.pp-menu-link:hover{background:#f1f5f9;color:#123b68}.pp-menu-icon{width:30px;text-align:center;font-size:19px}
+.pp-menu-divider{height:1px;background:#e9eef4;margin:8px 0}
+body.pp-menu-open{overflow:hidden}
+@media(max-width:600px){.pp-menu-btn{top:9px;right:9px;width:45px;height:45px}.pp-drawer{width:92vw}.pp-quick a{min-height:78px}}
+/* Make primary add-ad actions visually obvious */
+a[href="add-ad.html"],a[href*="add-ad.html"]{font-weight:900!important}
