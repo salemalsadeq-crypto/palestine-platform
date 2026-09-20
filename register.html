@@ -82,7 +82,7 @@ button:disabled {
     text-decoration: none;
 }
 
-</style><script src="platform.js"></script></head><body><div class="container"><h1>🇵🇸 إنشاء حساب</h1><p class="subtitle">
+</style></head><body><div class="container"><h1>🇵🇸 إنشاء حساب</h1><p class="subtitle">
 انضم إلى فلسطين بلاتفورم
 </p><form id="registerForm"><label for="name">
 الاسم
@@ -154,7 +154,7 @@ required
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0" crossorigin="anonymous"></script><script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0" crossorigin="anonymous"></script><script src="platform.js"></script><script>
 const supabaseClient=window.ppClient,form=document.getElementById('registerForm'),button=document.getElementById('registerButton'),message=document.getElementById('message');
 form.addEventListener('submit',async e=>{e.preventDefault();const name=document.getElementById('name').value.trim(),email=document.getElementById('email').value.trim(),password=document.getElementById('password').value,confirmPassword=document.getElementById('confirmPassword').value;message.textContent='';if(!name)return message.textContent='❌ أدخل الاسم';if(password.length<6)return message.textContent='❌ كلمة المرور يجب أن تكون 6 أحرف على الأقل';if(password!==confirmPassword)return message.textContent='❌ كلمتا المرور غير متطابقتين';button.disabled=true;button.textContent='جاري إنشاء الحساب...';try{const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{name,full_name:name}}});if(error)throw error;if(data.session){message.style.color='green';message.textContent='✅ تم إنشاء الحساب وتسجيل الدخول';setTimeout(()=>location.replace('index.html'),600)}else{message.style.color='green';message.textContent='✅ تم إنشاء الحساب. تحقق من بريدك الإلكتروني ثم سجل الدخول.'}}catch(err){message.style.color='red';message.textContent='❌ '+(err.message||'تعذر إنشاء الحساب')}finally{button.disabled=false;button.textContent='إنشاء الحساب'}});
 </script></body></html>
