@@ -101,6 +101,7 @@ button:disabled {
 }
 </style>
 
+<link rel="stylesheet" href="app.css">
 </head>
 
 <body>
@@ -176,5 +177,6 @@ const form=document.getElementById('loginForm'),button=document.getElementById('
 form.addEventListener('submit',async e=>{e.preventDefault();message.textContent='';button.disabled=true;button.textContent='جاري تسجيل الدخول...';try{const email=document.getElementById('email').value.trim();const password=document.getElementById('password').value;if(!email||!password)throw Error('أدخل البريد الإلكتروني وكلمة المرور.');const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});if(error)throw error;if(!data.session)throw Error('تم التحقق لكن لم يتم إنشاء جلسة. أعد المحاولة.');message.style.color='green';message.textContent='✅ تم تسجيل الدخول بنجاح';await new Promise(r=>setTimeout(r,250));location.replace('index.html')}catch(err){message.style.color='red';const m=(err.message||'').toLowerCase();message.textContent=m.includes('invalid login')?'❌ البريد الإلكتروني أو كلمة المرور غير صحيحة':m.includes('email not confirmed')?'❌ يجب تأكيد البريد الإلكتروني أولاً':'❌ '+(err.message||'حدث خطأ')}finally{button.disabled=false;button.textContent='تسجيل الدخول'}});
 </script>
 
+<script src="app-ui.js" defer></script>
 </body>
     </html>

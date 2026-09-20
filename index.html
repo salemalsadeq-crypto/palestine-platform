@@ -21,7 +21,8 @@
 @media(max-width:950px){.categories{grid-template-columns:repeat(4,1fr)}.featureGrid{grid-template-columns:1fr 1fr}.cards,.videoGrid{grid-template-columns:repeat(2,1fr)}.tools{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){.top{display:none}.head{min-height:62px}.logo{font-size:18px}.account .name,.account .avatar{display:none}.account .btn{padding:8px 9px}.hero{padding:31px 0 27px}.hero h1{font-size:29px}.hero p{font-size:13px}.search{border-radius:13px}.search input{padding:12px 8px}.search button{padding:0 13px}.quick a{font-size:10px}.section{padding:22px 0}.titleRow h2{font-size:19px}.categories{grid-template-columns:repeat(4,1fr);gap:7px}.cat{padding:12px 4px}.cat .ico{font-size:24px}.cat b{font-size:10px}.featureGrid{grid-template-columns:1fr}.feature{min-height:185px;padding:18px}.feature h3{font-size:20px}.cards,.videoGrid,.tools{grid-template-columns:1fr 1fr;gap:8px}.adImg{height:115px}.video video{height:230px}.video .play{top:88px}.map{padding:16px}.mapIcon{font-size:42px}.foot{grid-template-columns:1fr}.bottom{display:flex;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #dce4ee;z-index:100;justify-content:space-around;padding:6px 3px}.bottom a{text-align:center;font-size:9px;color:#52657b}.bottom span{display:block;font-size:19px;margin-bottom:1px}}
 </style>
-<script src="platform.js"></script></head>
+<script src="platform.js"></script><link rel="stylesheet" href="app.css">
+</head>
 <body>
 <div class="top"><div class="topin"><span>🇵🇸 منصة فلسطينية تجمع السوق والخدمات والأماكن في مكان واحد</span><span>سريع • بسيط • فلسطيني</span></div></div>
 <header class="header"><div class="head"><a class="logo" href="index.html">فلسطين <i>بلاتفورم</i></a><div class="account"><div id="initial" class="initial">س</div><img id="avatar" class="avatar" alt=""><span id="name" class="name"></span><a id="account" class="btn blue" href="account.html" style="display:none">حسابي</a><a id="myads" class="btn blue" href="my-ads.html" style="display:none">إعلاناتي</a><a id="adminLink" class="btn gold" href="admin.html" style="display:none">👑 المدير</a><button id="logout" class="btn red" style="display:none">خروج</button><a id="login" class="btn gray" href="login.html">تسجيل الدخول</a></div></div></header>
@@ -46,4 +47,5 @@ async function loadVideos(){const box=$('videoFeed');try{const {data,error}=awai
 $('searchForm').onsubmit=e=>{e.preventDefault();const q=$('searchInput').value.trim();location.href='ads.html'+(q?'?q='+encodeURIComponent(q):'')};
 (async()=>{await applyUser();await Promise.all([loadLatest(),loadVideos()]);db.auth.onAuthStateChange(()=>{setTimeout(applyUser,0)})})();
 </script>
+<script src="app-ui.js" defer></script>
 </body></html>
