@@ -251,3 +251,121 @@ GRANT EXECUTE ON FUNCTION public.set_order_paid(uuid,text) TO authenticated;
 CREATE OR REPLACE FUNCTION public.set_orders_updated_at() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN NEW.updated_at=now(); RETURN NEW; END; $$;
 DROP TRIGGER IF EXISTS orders_updated_at ON public.orders;
 CREATE TRIGGER orders_updated_at BEFORE UPDATE ON public.orders FOR EACH ROW EXECUTE FUNCTION public.set_orders_updated_at();
+
+
+-- =========================================================
+-- 15) نظام الإشعارات
+-- =========================================================
+
+CREATE TABLE IF NOT EXISTS public.notifications (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  type text NOT NULL DEFAULT 'system',
+  title text NOT NULL,
+  message text NOT NULL,
+  related_ad_id uuid REFERENCES public.ads(id) ON DELETE SET NULL,
+  related_order_id uuid REFERENCES public.orders(id) ON DELETE SET NULL,
+  related_conversation_id uuid REFERENCES public.conversations(id) ON DELETE SET NULL,
+  is_read boolean NOT NULL DEFAULT false,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS notifications_user_idx
+ON public.notifications(user_id, created_at DESC);
+
+CREATE INDEX IF NOT EXISTS notifications_unread_idx
+ON public.notifications(user_id, is_read, created_at DESC);
+
+ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS notifications_read_own ON public.notifications;
+CREATE POLICY notifications_read_own
+ON public.notifications FOR SELECT TO authenticated
+USING (user_id=auth.uid());
+
+DROP POLICY IF EXISTS notifications_update_own ON public.notifications;
+CREATE POLICY notifications_update_own
+ON public.notifications FOR UPDATE TO authenticated
+USING (user_id=auth.uid())
+WITH CHECK (user_id=auth.uid());
+
+DROP POLICY IF EXISTS notifications_insert_system ON public.notifications;
+CREATE POLICY notifications_insert_system
+ON public.notifications FOR INSERT TO authenticated
+WITH CHECK (user_id=auth.uid());
+
+CREATE OR REPLACE FUNCTION public.notify_order_event()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path=public
+AS $$
+DECLARE
+  v_title text;
+  v_message text;
+BEGIN
+  IF TG_OP='INSERT' THEN
+    v_title := 'طلب جديد 🛍️';
+    v_message := 'لديك طلب جديد رقم ' || left(NEW.id::text,8) || ' بانتظار المراجعة.';
+    INSERT INTO public.notifications(user_id,type,title,message,related_ad_id,related_order_id)
+    VALUES(NEW.seller_id,'order',v_title,v_message,NEW.ad_id,NEW.id);
+    RETURN NEW;
+  END IF;
+
+  IF TG_OP='UPDATE' THEN
+    IF NEW.order_status IS DISTINCT FROM OLD.order_status THEN
+      v_title := 'تحديث حالة الطلب 📦';
+      v_message := CASE NEW.order_status
+        WHEN 'confirmed' THEN 'تم تأكيد طلبك.'
+        WHEN 'preparing' THEN 'بدأ تجهيز طلبك.'
+        WHEN 'out_for_delivery' THEN 'طلبك خرج للتوصيل.'
+        WHEN 'delivered' THEN 'تم تسليم طلبك.'
+        WHEN 'cancelled' THEN 'تم إلغاء الطلب.'
+        ELSE 'تم تحديث حالة طلبك إلى: ' || NEW.order_status
+      END;
+      INSERT INTO public.notifications(user_id,type,title,message,related_ad_id,related_order_id)
+      VALUES(NEW.buyer_id,'order',v_title,v_message,NEW.ad_id,NEW.id);
+    END IF;
+
+    IF NEW.payment_status IS DISTINCT FROM OLD.payment_status AND NEW.payment_status='paid' THEN
+      INSERT INTO public.notifications(user_id,type,title,message,related_ad_id,related_order_id)
+      VALUES(NEW.buyer_id,'payment','تم تأكيد الدفع 💳','تم تسجيل دفع طلبك بنجاح.',NEW.ad_id,NEW.id);
+    END IF;
+    RETURN NEW;
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS orders_notify_trigger ON public.orders;
+CREATE TRIGGER orders_notify_trigger
+AFTER INSERT OR UPDATE ON public.orders
+FOR EACH ROW EXECUTE FUNCTION public.notify_order_event();
+
+CREATE OR REPLACE FUNCTION public.notify_new_message()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path=public
+AS $$
+DECLARE
+  v_recipient uuid;
+  v_ad uuid;
+BEGIN
+  SELECT CASE WHEN buyer_id=NEW.sender_id THEN seller_id ELSE buyer_id END, ad_id
+  INTO v_recipient, v_ad
+  FROM public.conversations
+  WHERE id=NEW.conversation_id;
+
+  IF v_recipient IS NOT NULL AND v_recipient <> NEW.sender_id THEN
+    INSERT INTO public.notifications(user_id,type,title,message,related_ad_id,related_conversation_id)
+    VALUES(v_recipient,'message','رسالة جديدة 💬','لديك رسالة جديدة في المحادثات.',v_ad,NEW.conversation_id);
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS messages_notify_trigger ON public.messages;
+CREATE TRIGGER messages_notify_trigger
+AFTER INSERT ON public.messages
+FOR EACH ROW EXECUTE FUNCTION public.notify_new_message();

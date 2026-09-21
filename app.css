@@ -162,3 +162,5 @@ header .account,.header .account{display:flex!important;align-items:center!impor
 #map{width:100%;height:calc(100vh - 250px);min-height:460px;position:relative}
 @media(max-width:900px){#map{height:62vh;min-height:400px}.layout{display:block}.panel{margin-top:10px;max-height:none}}
 .map-loading-card{direction:rtl}
+
+.pp-notif-badge{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;margin-right:auto;margin-left:4px;border-radius:999px;background:#b51f2a;color:#fff;font-size:10px;font-weight:800;line-height:1}.pp-menu-link{display:flex;align-items:center;gap:8px}.pp-menu-link .pp-notif-badge{margin-right:auto}
