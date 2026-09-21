@@ -174,3 +174,27 @@ header .account,.header .account{display:flex!important;align-items:center!impor
 .pp-drawer-logout:hover{background:#ffe9eb!important}
 .pp-menu-section.pp-main-menu{border:1px solid #e7edf4}
 @media(max-width:600px){.pp-drawer{width:min(340px,88vw)!important;padding-left:12px!important;padding-right:12px!important}}
+
+
+/* v22 - unified navigation: profile menu is only Account + Logout */
+.bottom{display:none!important}
+.pp-profile-menu{width:min(270px,calc(100vw - 24px))!important;padding:10px!important;border:0!important;border-radius:22px!important;box-shadow:0 22px 60px rgba(12,43,76,.24)!important;overflow:hidden!important;background:#fff!important}
+.pp-profile-head{margin:-10px -10px 8px!important;padding:18px 14px 16px!important;background:linear-gradient(135deg,#123b68,#1d5b96)!important;color:#fff!important;border:0!important}
+.pp-profile-head b{color:#fff!important;font-size:16px!important}
+.pp-profile-head small{color:rgba(255,255,255,.78)!important;font-size:11px!important}
+.pp-profile-menu .pp-menu-link,.pp-profile-link{min-height:50px!important;border-radius:14px!important;font-size:14px!important}
+.pp-profile-menu .pp-menu-link:hover{background:#edf5fc!important}
+.pp-profile-link.danger{background:#fff5f5!important;margin-top:4px!important}
+.pp-profile-link.danger:hover{background:#ffe9eb!important;color:#a51e29!important}
+.pp-drawer{border-radius:0 0 0 24px!important;background:#fbfcfe!important}
+.pp-drawer-head{background:linear-gradient(135deg,#123b68,#1d5b96)!important;color:#fff!important;border:0!important;padding:18px 12px 16px!important}
+.pp-drawer-brand{color:#fff!important;font-size:21px!important}
+.pp-drawer-brand span{color:#ffd8dc!important}
+.pp-drawer-close{background:rgba(255,255,255,.16)!important;color:#fff!important;border:1px solid rgba(255,255,255,.22)!important}
+.pp-menu-user{margin:12px 0!important;border-radius:18px!important;box-shadow:0 8px 24px rgba(18,59,104,.10)!important}
+.pp-main-menu{background:#fff!important;border:1px solid #e4ebf3!important;box-shadow:0 8px 24px rgba(18,59,104,.07)!important}
+.pp-main-menu .pp-menu-link{min-height:52px!important;border-bottom:1px solid #eef2f6!important;border-radius:12px!important}
+.pp-main-menu .pp-menu-link:last-child{border-bottom:0!important}
+.pp-main-menu .pp-menu-icon{width:34px!important;font-size:21px!important}
+.pp-admin-menu{background:#f2f7fc!important;border:1px solid #dbe8f4!important}
+@media(max-width:600px){.pp-profile-menu{right:-10px!important}.pp-drawer{width:min(360px,90vw)!important}}

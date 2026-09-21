@@ -42,9 +42,7 @@ window.ppSetupHeader=async()=>{const u=await ppUser();const login=document.getEl
         if(avatarUrl) avatar.innerHTML='<img src="'+esc(avatarUrl)+'" alt="" loading="eager"><span class="pp-profile-online"></span>';
         else avatar.innerHTML='<span class="pp-profile-initial">'+esc(name[0]||'م')+'</span><span class="pp-profile-online"></span>';
         const isAdmin=!!(p&&p.status==='active'&&p.role&&p.role!=='member'&&p.role!=='user');
-        menu.innerHTML='<div class="pp-profile-head"><div><b>'+name+'</b><small>حسابك في فلسطين بلاتفورم</small></div></div>'+
-          link('account.html','👤','حسابي')+link('my-ads.html','📋','إعلاناتي')+link('favorites.html','❤️','المفضلة')+link('messages.html','💬','الرسائل')+link('notifications.html','🔔','الإشعارات')+link('orders.html','🛍️','طلباتي ومشترياتي')+(isAdmin?link('admin.html','👑','لوحة المدير')+link('orders-admin.html','📦','إدارة الطلبات والتوصيل'):'')+
-          '<div class="pp-profile-divider"></div><button id="ppProfileLogout" class="pp-profile-link danger" type="button"><span>🚪</span><span>تسجيل الخروج</span></button>';
+        menu.innerHTML='<div class="pp-profile-head"><div><b>'+name+'</b><small>إدارة حسابك</small></div></div>'+link('account.html','👤','حسابي')+'<div class="pp-profile-divider"></div><button id="ppProfileLogout" class="pp-profile-link danger" type="button"><span>🚪</span><span>تسجيل الخروج</span></button>';
         menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
         menu.querySelector('#ppProfileLogout').onclick=async()=>{close();try{await ppClient.auth.signOut()}finally{location.href='index.html'}};
       }else{
@@ -64,7 +62,7 @@ window.ppSetupHeader=async()=>{const u=await ppUser();const login=document.getEl
     const drawer=document.createElement('aside');drawer.id='ppDrawer';drawer.className='pp-drawer';drawer.setAttribute('aria-label','القائمة الرئيسية');
     drawer.innerHTML='<div class="pp-drawer-head"><div class="pp-drawer-brand">فلسطين <span>بلاتفورم</span></div><button id="ppMenuClose" class="pp-drawer-close" aria-label="إغلاق">×</button></div>'+
       '<div id="ppMenuUser" class="pp-menu-user"><div class="initial">👤</div><div><b>مرحبًا بك</b><small>حسابك في فلسطين بلاتفورم</small></div></div>'+
-      '<div class="pp-menu-section pp-main-menu">'+link('index.html','🏠','الرئيسية')+link('account.html','👤','حسابي')+link('my-ads.html','📋','إعلاناتي')+link('favorites.html','❤️','المفضلة')+link('messages.html','💬','المحادثات')+link('notifications.html','🔔','الإشعارات')+link('orders.html','🛍️','طلباتي ومشترياتي')+'</div>'+
+      '<div class="pp-menu-section pp-main-menu">'+link('index.html','🏠','الرئيسية')+link('my-ads.html','📋','إعلاناتي')+link('favorites.html','❤️','المفضلة')+link('messages.html','💬','المحادثات')+link('notifications.html','🔔','الإشعارات')+link('orders.html','🛍️','طلباتي ومشترياتي')+'</div>'+
       '<div id="ppMenuAdmin"></div>'+
       '<div class="pp-menu-divider"></div><div id="ppMenuAuth"></div>';
     document.body.appendChild(btn);document.body.appendChild(back);document.body.appendChild(drawer);
@@ -78,8 +76,7 @@ window.ppSetupHeader=async()=>{const u=await ppUser();const login=document.getEl
         const adminBox=document.getElementById('ppMenuAdmin');
         const isAdmin=!!(p&&p.status==='active'&&p.role&&p.role!=='member'&&p.role!=='user');
         adminBox.innerHTML=isAdmin?'<div class="pp-menu-section pp-admin-menu">'+link('admin.html','👑','لوحة المدير')+link('orders-admin.html','📦','إدارة الطلبات والتوصيل')+'</div>':'';
-        auth.innerHTML='<button id="ppDrawerLogout" class="pp-menu-link pp-drawer-logout" type="button"><span class="pp-menu-icon">🚪</span><span>تسجيل الخروج</span></button>';
-        document.getElementById('ppDrawerLogout').onclick=async()=>{try{await ppClient.auth.signOut()}finally{location.href='index.html'}};
+        auth.innerHTML='';
       }
       else{userBox.innerHTML='<div class="initial">👤</div><div><b>زائر</b><small>سجّل الدخول للاستفادة من جميع الخدمات</small></div>';document.getElementById('ppMenuAdmin').innerHTML='';auth.innerHTML=link('login.html','🔐','تسجيل الدخول')+link('register.html','📝','إنشاء حساب');}
     }catch(e){}
