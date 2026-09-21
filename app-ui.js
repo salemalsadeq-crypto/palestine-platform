@@ -28,22 +28,7 @@
   // Native select polish: add a small accessible label when a select has no visible label.
   document.querySelectorAll('select').forEach(s=>{s.setAttribute('aria-label',s.getAttribute('aria-label')||s.previousElementSibling?.textContent?.trim()||'اختيار');});
 
-  if(!excludedDock.has(path) && !document.querySelector('.pp-dock,.bottom')){
-    document.body.classList.add('pp-has-dock');
-    const dock=document.createElement('nav'); dock.className='pp-dock'; dock.setAttribute('aria-label','تنقل سريع');
-    const items=[
-      ['index.html','🏠','الرئيسية'],['ads.html','🔎','بحث'],['__add__','➕','إضافة'],['map.html','🗺️','الخريطة'],['account.html','👤','حسابي']
-    ];
-    dock.innerHTML=items.map(([href,icon,label])=>href==='__add__'?`<button type="button" class="dock-add" id="ppAddBtn" aria-expanded="false"><span>${icon}</span>${label}</button>`:`<a href="${href}" class="${path===href?'active':''}"><span>${icon}</span>${label}</a>`).join('');
-    document.body.appendChild(dock);
-    const menu=document.createElement('div'); menu.className='pp-add-menu'; menu.id='ppAddMenu'; menu.setAttribute('aria-hidden','true');
-    menu.innerHTML='<a href="add-ad.html">📢 إضافة إعلان</a><a href="add-place.html">📍 إضافة مكان</a><a href="reels.html">🎬 إضافة/مشاهدة الريلز</a>';
-    document.body.appendChild(menu);
-    const btn=dock.querySelector('#ppAddBtn');
-    const close=()=>{menu.classList.remove('open');menu.setAttribute('aria-hidden','true');btn?.setAttribute('aria-expanded','false')};
-    btn?.addEventListener('click',e=>{e.stopPropagation();const open=!menu.classList.contains('open');menu.classList.toggle('open',open);menu.setAttribute('aria-hidden',String(!open));btn.setAttribute('aria-expanded',String(open))});
-    document.addEventListener('click',close);
-  }
+  // v19: the side menu is the single navigation system; no generated bottom dock.
 
   const top=document.createElement('button'); top.className='pp-top'; top.type='button'; top.textContent='↑'; top.setAttribute('aria-label','العودة إلى الأعلى'); document.body.appendChild(top);
   const updateTop=()=>top.classList.toggle('show',scrollY>420); window.addEventListener('scroll',updateTop,{passive:true}); updateTop();

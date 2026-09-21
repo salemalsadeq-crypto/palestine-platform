@@ -141,3 +141,24 @@ header .account,.header .account{display:flex!important;align-items:center!impor
   .pp-profile-chevron{display:none}
   .pp-profile-menu{right:-8px;top:calc(100% + 8px)}
 }
+
+/* v19 - single close control + payment/order UI */
+.pp-menu-btn.is-hidden{opacity:0!important;pointer-events:none!important;transform:scale(.9)!important}
+.pp-drawer-close{position:relative;z-index:3}
+.pp-order-card{background:#fff;border:1px solid var(--pp-line);border-radius:18px;padding:16px;box-shadow:var(--pp-shadow)}
+.pp-order-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pp-order-grid .full{grid-column:1/-1}
+.pp-order-field label{display:block;font-weight:800;font-size:12px;color:#52657b;margin-bottom:6px}
+.pp-order-field input,.pp-order-field select,.pp-order-field textarea{width:100%;box-sizing:border-box;padding:12px;border:1px solid #d8e1eb;border-radius:12px;font:inherit;background:#fff}
+.pp-payment-option{display:flex;align-items:center;gap:10px;border:1px solid #dce5ee;border-radius:14px;padding:12px;margin:8px 0;cursor:pointer}
+.pp-payment-option.active{border-color:#1d5b96;background:#eef5fc;box-shadow:0 0 0 2px #1d5b9614}
+.pp-payment-option input{width:auto}
+.pp-status{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:6px 10px;font-size:11px;font-weight:900}
+.pp-status.pending{background:#fff7df;color:#8a6811}.pp-status.paid{background:#eaf8f1;color:#13734c}.pp-status.failed{background:#fff0f1;color:#a51e29}.pp-status.ship{background:#eef5fc;color:#123b68}
+.pp-timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:14px 0}.pp-step{padding:8px 4px;border-radius:10px;background:#eef2f6;color:#718096;text-align:center;font-size:10px;font-weight:800}.pp-step.active{background:#123b68;color:#fff}
+.pp-pay-note{padding:12px;border-radius:12px;background:#f7f9fb;color:#596b7e;font-size:12px;line-height:1.8}
+@media(max-width:650px){.pp-order-grid{grid-template-columns:1fr}.pp-order-grid .full{grid-column:auto}.pp-timeline{grid-template-columns:1fr 1fr}}
+/* v19 map stability */
+#map{width:100%;height:calc(100vh - 250px);min-height:460px;position:relative}
+@media(max-width:900px){#map{height:62vh;min-height:400px}.layout{display:block}.panel{margin-top:10px;max-height:none}}
+.map-loading-card{direction:rtl}

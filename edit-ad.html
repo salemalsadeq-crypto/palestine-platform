@@ -70,7 +70,7 @@ textarea{min-height:130px;resize:vertical}
 <div class="form-group"><label for="phone">رقم الهاتف</label><input type="tel" id="phone" placeholder="رقم الهاتف"></div>
 </div>
 <div class="form-group"><label>📍 موقع الإعلان</label><div class="row"><div class="form-group"><input type="number" step="any" id="latitude" placeholder="خط العرض Latitude"></div><div class="form-group"><input type="number" step="any" id="longitude" placeholder="خط الطول Longitude"></div></div><input type="text" id="locationName" placeholder="اسم الموقع أو العنوان (اختياري)"><button type="button" id="locateBtn" style="margin-top:8px;width:100%;padding:11px;border:1px solid #ccc;border-radius:8px;background:#f5f7fa;font-weight:bold;cursor:pointer">📍 تحديد موقعي تلقائياً</button></div>
-<div class="form-group"><label for="description">وصف الإعلان</label><textarea id="description" placeholder="اكتب تفاصيل الإعلان..."></textarea></div>
+<div class="form-group"><label for="description">وصف الإعلان</label><textarea id="description" placeholder="اكتب تفاصيل الإعلان..."></textarea></div><div class="form-group" style="padding:14px;background:#f7fafc;border:1px solid #e1e8f0;border-radius:14px"><label>🚚 البيع والتوصيل والدفع</label><div class="row"><label style="font-weight:600"><input id="deliveryAvailable" type="checkbox" style="width:auto"> أقبل طلبات التوصيل</label><label style="font-weight:600"><input id="allowCod" type="checkbox" style="width:auto"> الدفع عند الاستلام</label><label style="font-weight:600"><input id="allowOnline" type="checkbox" style="width:auto"> الدفع الإلكتروني</label><div><label style="font-weight:600">رسوم التوصيل (₪)</label><input id="deliveryFee" type="number" min="0" step="0.01" value="0"></div></div><small style="display:block;margin-top:8px;color:#667085">لا يتم تخزين بيانات البطاقات داخل المنصة.</small></div>
 <div class="images-title">🖼️ الصور الحالية</div>
 <div class="images-info">يمكنك حذف الصور التي لا تريدها، ثم إضافة صور جديدة. الحد الأقصى 5 صور.</div>
 <div id="currentImages" class="images-grid"></div>
@@ -104,7 +104,7 @@ document.getElementById("category").value=ad.category||"";
 document.getElementById("description").value=ad.description||"";
 document.getElementById("price").value=ad.price??"";
 document.getElementById("city").value=ad.city||"";
-document.getElementById("phone").value=ad.phone||"";
+document.getElementById("phone").value=ad.phone||"";document.getElementById("deliveryAvailable").checked=!!ad.delivery_available;document.getElementById("deliveryFee").value=ad.delivery_fee??0;document.getElementById("allowCod").checked=ad.allow_cod!==false;document.getElementById("allowOnline").checked=!!ad.allow_online_payment;
 currentImages=Array.isArray(ad.image_urls)?[...ad.image_urls]:[];currentVideoUrl=ad.video_url||null;removeVideoFlag=false;renderCurrentImages();renderCurrentVideo();loading.style.display="none";formCard.style.display="block"
 }
 function renderCurrentVideo(){if(currentVideoUrl&&!removeVideoFlag){currentVideoBox.innerHTML='<video src="'+currentVideoUrl.replace(/"/g,'&quot;')+'" controls playsinline style="width:100%;max-height:300px;border-radius:10px;background:#111"></video>';removeVideoBtn.style.display='inline-block'}else{currentVideoBox.textContent='لا يوجد فيديو حالي.';removeVideoBtn.style.display='none'}}
@@ -165,7 +165,7 @@ if(!title)throw new Error("يرجى كتابة عنوان الإعلان.");
 if(!category)throw new Error("يرجى اختيار التصنيف.");
 showMessage("جاري رفع الصور وحفظ التعديلات...","success");
 const newUrls=await uploadNewImages(),finalImages=[...currentImages,...newUrls];let finalVideo=currentVideoUrl;if(newVideoInput.files[0]){if(finalVideo)await deleteVideoUrl(finalVideo);finalVideo=await uploadNewVideo()}else if(removeVideoFlag&&currentAd.video_url){await deleteVideoUrl(currentAd.video_url);finalVideo=null}
-const {error:updateError}=await supabaseClient.from("ads").update({title,category,description:description||null,price:priceValue===""?null:Number(priceValue),city:city||null,phone:phone||null,latitude:$("latitude").value===""?null:Number($("latitude").value),longitude:$("longitude").value===""?null:Number($("longitude").value),location_name:$("locationName").value.trim()||null,image_urls:finalImages,video_url:finalVideo}).eq("id",currentAd.id).eq("user_id",currentUser.id);
+const {error:updateError}=await supabaseClient.from("ads").update({title,category,description:description||null,price:priceValue===""?null:Number(priceValue),city:city||null,phone:phone||null,latitude:$("latitude").value===""?null:Number($("latitude").value),longitude:$("longitude").value===""?null:Number($("longitude").value),location_name:$("locationName").value.trim()||null,image_urls:finalImages,video_url:finalVideo,delivery_available:$("deliveryAvailable").checked,delivery_fee:Number($("deliveryFee").value||0),allow_cod:$("allowCod").checked,allow_online_payment:$("allowOnline").checked}).eq("id",currentAd.id).eq("user_id",currentUser.id);
 if(updateError)throw new Error("فشل حفظ الإعلان: "+updateError.message);
 showMessage("✅ تم حفظ التعديلات بنجاح","success");
 setTimeout(()=>window.location.href="my-ads.html",1200)
