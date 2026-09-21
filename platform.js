@@ -15,51 +15,67 @@ window.ppSetupHeader=async()=>{const u=await ppUser();const login=document.getEl
   function page(){return location.pathname.split('/').pop()||'index.html';}
   function link(h,icon,label){return '<a class="pp-menu-link" href="'+h+'"><span class="pp-menu-icon">'+icon+'</span><span>'+label+'</span></a>';}
   function quick(h,icon,label,cls){return '<a class="'+cls+'" href="'+h+'"><span style="font-size:25px">'+icon+'</span><span>'+label+'</span></a>';}
+
+  async function buildProfileControl(){
+    const header=document.querySelector('header,.header');
+    if(!header || document.getElementById('ppProfileControl')) return;
+    const oldIds=['account','myads','adminLink','logout','login','name','initial','avatar'];
+    oldIds.forEach(id=>{const el=document.getElementById(id);if(el){el.style.display='none';el.setAttribute('aria-hidden','true');}});
+    const host=document.createElement('div'); host.id='ppProfileControl'; host.className='pp-profile-control';
+    host.innerHTML='<button class="pp-profile-btn" id="ppProfileBtn" type="button" aria-expanded="false" aria-haspopup="menu" aria-label="حسابي"><span class="pp-profile-avatar" id="ppProfileAvatar"><span class="pp-profile-initial">م</span></span><span class="pp-profile-chevron">⌄</span></button><div class="pp-profile-menu" id="ppProfileMenu" role="menu" aria-hidden="true"></div>';
+    const account=header.querySelector('.account');
+    if(account){account.replaceChildren(host)}else{header.querySelector('.head,.headin')?.appendChild(host)}
+    const btn=host.querySelector('#ppProfileBtn'), menu=host.querySelector('#ppProfileMenu');
+    const close=()=>{menu.classList.remove('open');menu.setAttribute('aria-hidden','true');btn.setAttribute('aria-expanded','false')};
+    const open=()=>{menu.classList.add('open');menu.setAttribute('aria-hidden','false');btn.setAttribute('aria-expanded','true')};
+    btn.addEventListener('click',e=>{e.stopPropagation();menu.classList.contains('open')?close():open()});
+    document.addEventListener('click',e=>{if(!host.contains(e.target))close()});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+    try{
+      const u=window.ppUser?await ppUser():null;
+      const avatar=host.querySelector('#ppProfileAvatar');
+      if(u){
+        const p=await ppProfile(u.id);
+        const name=esc(p?.full_name||u.user_metadata?.name||u.user_metadata?.full_name||u.email?.split('@')[0]||'المستخدم');
+        const avatarUrl=p?.avatar_url||u.user_metadata?.avatar_url||'';
+        if(avatarUrl) avatar.innerHTML='<img src="'+esc(avatarUrl)+'" alt="" loading="eager"><span class="pp-profile-online"></span>';
+        else avatar.innerHTML='<span class="pp-profile-initial">'+esc(name[0]||'م')+'</span><span class="pp-profile-online"></span>';
+        const isAdmin=!!(p&&p.status==='active'&&p.role&&p.role!=='member'&&p.role!=='user');
+        menu.innerHTML='<div class="pp-profile-head"><div><b>'+name+'</b><small>حسابك في فلسطين بلاتفورم</small></div></div>'+
+          link('account.html','👤','حسابي')+link('my-ads.html','📋','إعلاناتي')+link('favorites.html','❤️','المفضلة')+link('messages.html','💬','الرسائل')+(isAdmin?link('admin.html','👑','لوحة المدير'):'')+
+          '<div class="pp-profile-divider"></div><button id="ppProfileLogout" class="pp-profile-link danger" type="button"><span>🚪</span><span>تسجيل الخروج</span></button>';
+        menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
+        menu.querySelector('#ppProfileLogout').onclick=async()=>{close();try{await ppClient.auth.signOut()}finally{location.href='index.html'}};
+      }else{
+        avatar.innerHTML='<span class="pp-profile-initial">👤</span>';
+        menu.innerHTML='<div class="pp-profile-head"><div><b>زائر</b><small>سجّل الدخول للوصول إلى حسابك</small></div></div>'+link('login.html','🔐','تسجيل الدخول')+link('register.html','📝','إنشاء حساب');
+        menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
+      }
+    }catch(e){
+      menu.innerHTML=link('login.html','🔐','تسجيل الدخول');
+    }
+  }
+
   async function buildMenu(){
     if(document.getElementById('ppMenuBtn')) return;
-    const p=page();
     const btn=document.createElement('button');btn.id='ppMenuBtn';btn.className='pp-menu-btn';btn.type='button';btn.setAttribute('aria-label','فتح القائمة');btn.textContent='☰';
     const back=document.createElement('div');back.id='ppMenuBackdrop';back.className='pp-menu-backdrop';
     const drawer=document.createElement('aside');drawer.id='ppDrawer';drawer.className='pp-drawer';drawer.setAttribute('aria-label','القائمة الرئيسية');
     drawer.innerHTML='<div class="pp-drawer-head"><div class="pp-drawer-brand">فلسطين <span>بلاتفورم</span></div><button id="ppMenuClose" class="pp-drawer-close" aria-label="إغلاق">×</button></div>'+
       '<div id="ppMenuUser" class="pp-menu-user"><div class="initial">👤</div><div><b>مرحبًا بك</b><small>استكشف المنصة</small></div></div>'+
-      '<div class="pp-quick">'+
-      quick('ads.html','📢','الإعلانات','q-blue')+
-      quick('add-ad.html','➕','إضافة إعلان','q-red')+
-      quick('map.html','🗺️','الخريطة','q-green')+
-      quick('add-place.html','📍','إضافة مكان','q-gold')+
-      '</div>'+
-      '<div class="pp-menu-section"><div class="pp-menu-title">استكشف</div>'+
-      link('index.html','🏠','الرئيسية')+link('ads.html','📢','كل الإعلانات')+link('reels.html','🎬','الريلز')+
-      link('places.html','📍','دليل الأماكن')+link('map.html','🗺️','الخريطة')+
-      link('shops.html','🛍️','المتاجر')+link('restaurants.html','🍽️','المطاعم')+
-      link('services.html','🛠️','الخدمات')+link('jobs.html','💼','الوظائف')+link('realestate.html','🏠','العقارات')+link('cars.html','🚗','السيارات')+
-      '</div><div class="pp-menu-divider"></div>'+
-      '<div class="pp-menu-section"><div class="pp-menu-title">حسابك</div>'+
-      link('account.html','👤','حسابي')+link('my-ads.html','📋','إعلاناتي')+link('my-places.html','📍','أماكني')+
-      link('messages.html','💬','الرسائل')+link('favorites.html','❤️','المفضلة')+
-      '</div><div class="pp-menu-divider"></div>'+
-      '<div id="ppMenuAuth"></div>';
+      '<div class="pp-quick">'+quick('ads.html','📢','الإعلانات','q-blue')+quick('add-ad.html','➕','إضافة إعلان','q-red')+quick('map.html','🗺️','الخريطة','q-green')+quick('add-place.html','📍','إضافة مكان','q-gold')+'</div>'+ 
+      '<div class="pp-menu-section"><div class="pp-menu-title">استكشف</div>'+link('index.html','🏠','الرئيسية')+link('ads.html','📢','كل الإعلانات')+link('reels.html','🎬','الريلز')+link('places.html','📍','دليل الأماكن')+link('map.html','🗺️','الخريطة')+link('shops.html','🛍️','المتاجر')+link('restaurants.html','🍽️','المطاعم')+link('services.html','🛠️','الخدمات')+link('jobs.html','💼','الوظائف')+link('realestate.html','🏠','العقارات')+link('cars.html','🚗','السيارات')+'</div><div class="pp-menu-divider"></div>'+ 
+      '<div class="pp-menu-section"><div class="pp-menu-title">حسابك</div>'+link('account.html','👤','حسابي')+link('my-ads.html','📋','إعلاناتي')+link('my-places.html','📍','أماكني')+link('messages.html','💬','الرسائل')+link('favorites.html','❤️','المفضلة')+'</div><div class="pp-menu-divider"></div><div id="ppMenuAuth"></div>';
     document.body.appendChild(btn);document.body.appendChild(back);document.body.appendChild(drawer);
     const open=()=>{drawer.classList.add('open');back.classList.add('open');document.body.classList.add('pp-menu-open');btn.textContent='×';btn.setAttribute('aria-label','إغلاق القائمة')};
     const close=()=>{drawer.classList.remove('open');back.classList.remove('open');document.body.classList.remove('pp-menu-open');btn.textContent='☰';btn.setAttribute('aria-label','فتح القائمة')};
     btn.onclick=()=>drawer.classList.contains('open')?close():open();back.onclick=close;document.getElementById('ppMenuClose').onclick=close;
-    document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
-    drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>close()));
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
     try{
-      const u=window.ppUser?await ppUser():null;
-      const userBox=document.getElementById('ppMenuUser'), auth=document.getElementById('ppMenuAuth');
-      if(u){
-        const name=esc(u.user_metadata?.name||u.user_metadata?.full_name||u.email?.split('@')[0]||'المستخدم');
-        userBox.innerHTML='<div class="initial">👤</div><div><b>'+name+'</b><small>حسابك في فلسطين بلاتفورم</small></div>';
-        auth.innerHTML=link('add-ad.html','➕','إضافة إعلان')+link('add-place.html','📍','إضافة مكان')+
-          '<button id="ppLogoutMenu" class="pp-menu-link" type="button"><span class="pp-menu-icon">🚪</span><span>تسجيل الخروج</span></button>';
-        document.getElementById('ppLogoutMenu').onclick=async()=>{await ppClient.auth.signOut();location.href='index.html'};
-      }else{
-        userBox.innerHTML='<div class="initial">👤</div><div><b>زائر</b><small>سجّل الدخول للاستفادة من جميع الخدمات</small></div>';
-        auth.innerHTML=link('login.html','🔐','تسجيل الدخول')+link('register.html','📝','إنشاء حساب');
-      }
+      const u=window.ppUser?await ppUser():null; const userBox=document.getElementById('ppMenuUser'),auth=document.getElementById('ppMenuAuth');
+      if(u){const p=await ppProfile(u.id);const name=esc(p?.full_name||u.user_metadata?.name||u.user_metadata?.full_name||u.email?.split('@')[0]||'المستخدم');const avatar=p?.avatar_url||u.user_metadata?.avatar_url||'';userBox.innerHTML=(avatar?'<img class="avatar" src="'+esc(avatar)+'" alt="">':'<div class="initial">'+esc(name[0]||'م')+'</div>')+'<div><b>'+name+'</b><small>حسابك في فلسطين بلاتفورم</small></div>';auth.innerHTML=link('add-ad.html','➕','إضافة إعلان')+link('add-place.html','📍','إضافة مكان')+'<button id="ppLogoutMenu" class="pp-menu-link" type="button"><span class="pp-menu-icon">🚪</span><span>تسجيل الخروج</span></button>';document.getElementById('ppLogoutMenu').onclick=async()=>{await ppClient.auth.signOut();location.href='index.html'};}
+      else{userBox.innerHTML='<div class="initial">👤</div><div><b>زائر</b><small>سجّل الدخول للاستفادة من جميع الخدمات</small></div>';auth.innerHTML=link('login.html','🔐','تسجيل الدخول')+link('register.html','📝','إنشاء حساب');}
     }catch(e){}
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',buildMenu);else buildMenu();
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{buildMenu();buildProfileControl()});else{buildMenu();buildProfileControl()}
 })();
