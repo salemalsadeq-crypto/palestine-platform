@@ -63,10 +63,10 @@ window.ppSetupHeader=async()=>{const u=await ppUser();const login=document.getEl
     const back=document.createElement('div');back.id='ppMenuBackdrop';back.className='pp-menu-backdrop';
     const drawer=document.createElement('aside');drawer.id='ppDrawer';drawer.className='pp-drawer';drawer.setAttribute('aria-label','القائمة الرئيسية');
     drawer.innerHTML='<div class="pp-drawer-head"><div class="pp-drawer-brand">فلسطين <span>بلاتفورم</span></div><button id="ppMenuClose" class="pp-drawer-close" aria-label="إغلاق">×</button></div>'+
-      '<div id="ppMenuUser" class="pp-menu-user"><div class="initial">👤</div><div><b>مرحبًا بك</b><small>استكشف المنصة</small></div></div>'+
-      '<div class="pp-quick">'+quick('ads.html','📢','الإعلانات','q-blue')+quick('add-ad.html','➕','إضافة إعلان','q-red')+quick('map.html','🗺️','الخريطة','q-green')+quick('add-place.html','📍','إضافة مكان','q-gold')+'</div>'+ 
-      '<div class="pp-menu-section"><div class="pp-menu-title">استكشف</div>'+link('index.html','🏠','الرئيسية')+link('ads.html','📢','كل الإعلانات')+link('reels.html','🎬','الريلز')+link('places.html','📍','دليل الأماكن')+link('map.html','🗺️','الخريطة')+link('shops.html','🛍️','المتاجر')+link('restaurants.html','🍽️','المطاعم')+link('services.html','🛠️','الخدمات')+link('jobs.html','💼','الوظائف')+link('realestate.html','🏠','العقارات')+link('cars.html','🚗','السيارات')+'</div><div class="pp-menu-divider"></div>'+ 
-      '<div class="pp-menu-section"><div class="pp-menu-title">حسابك</div>'+link('account.html','👤','حسابي')+link('my-ads.html','📋','إعلاناتي')+link('my-places.html','📍','أماكني')+link('messages.html','💬','الرسائل')+link('notifications.html','🔔','الإشعارات')+link('favorites.html','❤️','المفضلة')+link('orders.html','🛍️','طلباتي ومشترياتي')+'</div><div class="pp-menu-divider"></div><div id="ppMenuAuth"></div>';
+      '<div id="ppMenuUser" class="pp-menu-user"><div class="initial">👤</div><div><b>مرحبًا بك</b><small>حسابك في فلسطين بلاتفورم</small></div></div>'+
+      '<div class="pp-menu-section pp-main-menu">'+link('index.html','🏠','الرئيسية')+link('account.html','👤','حسابي')+link('my-ads.html','📋','إعلاناتي')+link('favorites.html','❤️','المفضلة')+link('messages.html','💬','المحادثات')+link('notifications.html','🔔','الإشعارات')+link('orders.html','🛍️','طلباتي ومشترياتي')+'</div>'+
+      '<div id="ppMenuAdmin"></div>'+
+      '<div class="pp-menu-divider"></div><div id="ppMenuAuth"></div>';
     document.body.appendChild(btn);document.body.appendChild(back);document.body.appendChild(drawer);
     const open=()=>{drawer.classList.add('open');back.classList.add('open');document.body.classList.add('pp-menu-open');btn.classList.add('is-hidden');btn.setAttribute('aria-label','إغلاق القائمة')};
     const close=()=>{drawer.classList.remove('open');back.classList.remove('open');document.body.classList.remove('pp-menu-open');btn.classList.remove('is-hidden');btn.setAttribute('aria-label','فتح القائمة')};
@@ -74,8 +74,14 @@ window.ppSetupHeader=async()=>{const u=await ppUser();const login=document.getEl
     document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
     try{
       const u=window.ppUser?await ppUser():null; const userBox=document.getElementById('ppMenuUser'),auth=document.getElementById('ppMenuAuth');
-      if(u){const p=await ppProfile(u.id);const name=esc(p?.full_name||u.user_metadata?.name||u.user_metadata?.full_name||u.email?.split('@')[0]||'المستخدم');const avatar=p?.avatar_url||u.user_metadata?.avatar_url||'';userBox.innerHTML=(avatar?'<img class="avatar" src="'+esc(avatar)+'" alt="">':'<div class="initial">'+esc(name[0]||'م')+'</div>')+'<div><b>'+name+'</b><small>حسابك في فلسطين بلاتفورم</small></div>';auth.innerHTML='';}
-      else{userBox.innerHTML='<div class="initial">👤</div><div><b>زائر</b><small>سجّل الدخول للاستفادة من جميع الخدمات</small></div>';auth.innerHTML=link('login.html','🔐','تسجيل الدخول')+link('register.html','📝','إنشاء حساب');}
+      if(u){const p=await ppProfile(u.id);const name=esc(p?.full_name||u.user_metadata?.name||u.user_metadata?.full_name||u.email?.split('@')[0]||'المستخدم');const avatar=p?.avatar_url||u.user_metadata?.avatar_url||'';userBox.innerHTML=(avatar?'<img class="avatar" src="'+esc(avatar)+'" alt="">':'<div class="initial">'+esc(name[0]||'م')+'</div>')+'<div><b>'+name+'</b><small>حسابك في فلسطين بلاتفورم</small></div>';
+        const adminBox=document.getElementById('ppMenuAdmin');
+        const isAdmin=!!(p&&p.status==='active'&&p.role&&p.role!=='member'&&p.role!=='user');
+        adminBox.innerHTML=isAdmin?'<div class="pp-menu-section pp-admin-menu">'+link('admin.html','👑','لوحة المدير')+link('orders-admin.html','📦','إدارة الطلبات والتوصيل')+'</div>':'';
+        auth.innerHTML='<button id="ppDrawerLogout" class="pp-menu-link pp-drawer-logout" type="button"><span class="pp-menu-icon">🚪</span><span>تسجيل الخروج</span></button>';
+        document.getElementById('ppDrawerLogout').onclick=async()=>{try{await ppClient.auth.signOut()}finally{location.href='index.html'}};
+      }
+      else{userBox.innerHTML='<div class="initial">👤</div><div><b>زائر</b><small>سجّل الدخول للاستفادة من جميع الخدمات</small></div>';document.getElementById('ppMenuAdmin').innerHTML='';auth.innerHTML=link('login.html','🔐','تسجيل الدخول')+link('register.html','📝','إنشاء حساب');}
     }catch(e){}
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{buildMenu();buildProfileControl()});else{buildMenu();buildProfileControl()}
