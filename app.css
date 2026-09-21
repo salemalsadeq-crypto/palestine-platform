@@ -72,3 +72,37 @@ body.pp-menu-open{overflow:hidden}
 @media(max-width:600px){.pp-menu-btn{top:9px;right:9px;width:45px;height:45px}.pp-drawer{width:92vw}.pp-quick a{min-height:78px}}
 /* Make primary add-ad actions visually obvious */
 a[href="add-ad.html"],a[href*="add-ad.html"]{font-weight:900!important}
+
+/* v17 - Unified navigation cleanup and mobile-first header */
+header{position:relative!important;z-index:1200!important;min-height:70px!important;padding:10px 74px 10px 18px!important;display:flex!important;align-items:center!important;background:linear-gradient(135deg,#123b68,#1d5b96)!important;color:#fff!important;box-shadow:0 8px 28px rgba(18,59,104,.14)!important}
+header .head,header .headin{width:100%!important;max-width:1180px!important;margin:0 auto!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;background:transparent!important;color:#fff!important}
+header .logo,header .head .logo{color:#fff!important;font-weight:900!important;font-size:clamp(17px,4vw,23px)!important;line-height:1.35!important;margin:0!important}
+header .logo span{color:#ffd9dc!important}
+header nav,header .nav,header .links{display:none!important}
+header .headin>b,header .headin>strong{color:#fff!important}
+body{overflow-x:hidden}
+.pp-menu-btn{position:absolute!important;top:13px!important;right:12px!important;width:48px!important;height:48px!important;border-radius:14px!important;background:#fff!important;color:#123b68!important;box-shadow:0 7px 22px rgba(0,0,0,.16)!important;font-size:24px!important}
+.pp-menu-btn:hover{background:#f4f8fc!important}
+.pp-drawer{width:min(400px,92vw)!important}
+.pp-quick a{position:relative;overflow:hidden}
+.pp-quick a:after{content:"";position:absolute;inset:-40% auto auto -30%;width:90px;height:90px;border-radius:50%;background:#fff8;transform:scale(0);transition:transform .3s ease}
+.pp-quick a:active:after{transform:scale(2)}
+.pp-menu-section{border-radius:18px;background:#f8fafc;padding:8px;margin-top:12px}
+.pp-menu-link{min-height:48px!important}
+.pp-menu-link:active{background:#e8f0f8!important;transform:scale(.985)}
+.pp-drawer-head{padding-top:calc(14px + env(safe-area-inset-top))!important}
+.pp-drawer::-webkit-scrollbar{width:5px}.pp-drawer::-webkit-scrollbar-thumb{background:#cbd7e5;border-radius:10px}
+/* Hide the old mobile dock when the new side navigation is the primary navigation. */
+@media(max-width:700px){
+  body.pp-has-dock{padding-bottom:0!important}
+  .pp-dock{display:none!important}
+  .pp-add-menu{display:none!important}
+  header{min-height:64px!important;padding-right:70px!important}
+  .pp-menu-btn{top:9px!important;right:10px!important}
+}
+/* Map: polished loading state and stable viewport */
+.map-wrap,.map-container,#map{min-height:460px}
+.map-wrap,#map{border-radius:20px;overflow:hidden}
+#map{background:linear-gradient(135deg,#eef3f7,#e4ebf1)!important}
+.map-loading{position:absolute;inset:12px;z-index:500;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.map-loading .map-loading-card{background:#fff;color:#123b68;border:1px solid #e1e8f0;border-radius:16px;padding:12px 16px;box-shadow:0 10px 30px rgba(18,59,104,.12);font-weight:800}
