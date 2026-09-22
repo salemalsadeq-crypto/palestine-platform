@@ -37,6 +37,7 @@ nav a{color:#fff;text-decoration:none;padding:8px 11px;background:#234d7e;border
 .view{display:block;background:#173b68;color:#fff;text-decoration:none;text-align:center;padding:10px;border-radius:8px;margin-top:12px;font-weight:bold}
 .empty,.error,.loading{background:#fff;border-radius:14px;padding:40px;text-align:center}
 .back{display:inline-block;background:#173b68;color:#fff;text-decoration:none;padding:10px 15px;border-radius:9px;margin-bottom:18px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.action{border:0;text-decoration:none;cursor:pointer;padding:10px 15px;border-radius:10px;font-weight:bold;font-size:14px}.primary{background:#173b68;color:#fff}.light{background:#eef3f8;color:#173b68}.success{background:#198754;color:#fff}.danger{background:#b51f2a;color:#fff}.share-note{font-size:13px;color:#667085;margin-top:8px;min-height:18px}.section-sub{color:#667085;font-size:14px}.card{transition:transform .18s ease,box-shadow .18s ease}.card:hover{transform:translateY(-2px);box-shadow:0 8px 22px #0002}.status{display:inline-flex;align-items:center;gap:6px;background:#eef8f2;color:#198754;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:bold}.badge{display:inline-block;background:#f1f4f8;color:#475467;border-radius:999px;padding:5px 9px;font-size:12px;margin-top:4px}.empty{grid-column:1/-1}
 @media(max-width:800px){.grid{grid-template-columns:1fr 1fr}}
 @media(max-width:520px){
  .wrap{padding:0 10px;margin-top:18px}
@@ -95,16 +96,16 @@ function render(profile,ads){
   const initial=esc(name.charAt(0)||'م');
   const city=profile?.city ? '📍 '+esc(profile.city) : '📍 المدينة غير محددة';
   const phone=profile?.phone ? '📞 '+esc(profile.phone) : '';
-
+  const userLink=`profile.html?id=${encodeURIComponent(profile.id)}`;
   const cards=ads.length ? ads.map(ad=>{
     const img=firstImage(ad);
+    const date=ad.created_at ? new Date(ad.created_at).toLocaleDateString('ar-PS') : '';
     return `<article class="card">
-      ${img
-        ? `<img class="pic" src="${esc(img)}" alt="${esc(ad.title||'إعلان')}">`
-        : `<div class="nop">📦</div>`}
+      ${img ? `<img class="pic" src="${esc(img)}" alt="${esc(ad.title||'إعلان')}" loading="lazy">` : `<div class="nop">📦</div>`}
       <div class="body">
         <div class="title">${esc(ad.title||'إعلان')}</div>
-        <div class="card-meta">${esc(ad.category||'')} ${ad.city?' • '+esc(ad.city):''}</div>
+        <div class="card-meta">${esc(ad.category||'إعلان')} ${ad.city?' • '+esc(ad.city):''}</div>
+        ${date ? `<div class="badge">🗓️ ${esc(date)}</div>` : ''}
         ${ad.price!=null && ad.price!=='' ? `<div class="price">${esc(ad.price)} ₪</div>` : ''}
         <div class="desc">${esc(ad.description||'')}</div>
         <a class="view" href="ad-details.html?id=${encodeURIComponent(ad.id)}">عرض الإعلان</a>
@@ -116,25 +117,50 @@ function render(profile,ads){
     <section class="profile-card">
       <div class="profile-top">
         ${profile?.avatar_url
-          ? `<img class="avatar" src="${esc(profile.avatar_url)}" alt="صورة ${esc(name)}"
-               onerror="this.outerHTML='<div class=\\'initial\\'>${initial}</div>'">`
+          ? `<img class="avatar" src="${esc(profile.avatar_url)}" alt="صورة ${esc(name)}" onerror="this.outerHTML='<div class=\'initial\'>${initial}</div>'">`
           : `<div class="initial">${initial}</div>`}
         <div class="info">
           <div class="name">${esc(name)}</div>
+          <div class="status">● عضو في فلسطين بلاتفورم</div>
           <div class="meta">${city}</div>
           ${phone ? `<div class="meta">${phone}</div>` : ''}
+          <div class="actions">
+            <a class="action primary" href="messages.html?user=${encodeURIComponent(profile.id)}">💬 مراسلة</a>
+            ${phone ? `<a class="action success" href="tel:${encodeURIComponent(profile.phone)}">📞 اتصال</a>` : ''}
+            <button class="action light" type="button" onclick="shareProfile()">🔗 مشاركة الملف</button>
+          </div>
+          <div id="shareNote" class="share-note"></div>
           <div class="stats">
             <div class="stat"><strong>${ads.length}</strong><span>إعلان منشور</span></div>
+            <div class="stat"><strong>✓</strong><span>حساب نشط</span></div>
           </div>
         </div>
       </div>
     </section>
     <section>
       <div class="section-title">
-        <h2>📢 إعلانات ${esc(name)}</h2>
+        <div><h2>📢 إعلانات ${esc(name)}</h2><div class="section-sub">آخر الإعلانات المنشورة من هذا المستخدم</div></div>
       </div>
       <div class="grid">${cards}</div>
     </section>`;
+}
+
+async function shareProfile(){
+  const url=location.href;
+  const note=document.getElementById('shareNote');
+  try{
+    if(navigator.share){
+      await navigator.share({title:'الملف الشخصي - فلسطين بلاتفورم',url});
+      if(note) note.textContent='تم فتح المشاركة.';
+    }else if(navigator.clipboard){
+      await navigator.clipboard.writeText(url);
+      if(note) note.textContent='✅ تم نسخ رابط الملف الشخصي.';
+    }else{
+      if(note) note.textContent='انسخ الرابط من شريط المتصفح لمشاركته.';
+    }
+  }catch(e){
+    if(note) note.textContent='يمكنك نسخ رابط الصفحة ومشاركته.';
+  }
 }
 
 async function load(){
