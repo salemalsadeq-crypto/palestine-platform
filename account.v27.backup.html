@@ -298,24 +298,6 @@ button{
 </style>
 
 <link rel="stylesheet" href="app.css">
-
-<style id="v28-account-style">
-:root{--pp-blue:#173b68;--pp-blue2:#2563a6;--pp-red:#b51f2a}
-body{background:linear-gradient(180deg,#f3f7fb 0,#f8fafc 45%,#eef3f8 100%)}
-header{background:linear-gradient(135deg,#12365f,#2563a6);border:0;box-shadow:0 4px 18px #12365f25}
-.logo{color:#fff!important}.back{color:#fff!important;background:#ffffff18;padding:9px 13px;border-radius:10px}
-.container{max-width:980px;margin:22px auto}
-.page-title{background:linear-gradient(135deg,#173b68,#2c72b7);color:#fff;border-radius:22px;padding:24px 18px;margin-bottom:18px;box-shadow:0 8px 24px #173b6830}
-.page-title h1{margin:0 0 7px}.page-title p{color:#dbeafe;margin:0}
-.stats{grid-template-columns:repeat(4,1fr);gap:12px}.stat{border:1px solid #e7edf4;transition:.2s;cursor:pointer}.stat:hover{transform:translateY(-2px);box-shadow:0 7px 18px #0001}.stat .num{color:var(--pp-blue)}
-.card{border:1px solid #e7edf4;box-shadow:0 5px 18px #0000000d}
-.profile-top{position:relative;padding:28px}.avatar{width:126px;height:126px;background:linear-gradient(135deg,#173b68,#3d83c7);font-size:46px}
-#displayName{margin:8px 0 4px;font-size:25px;color:#173b68}.email{margin-bottom:4px}
-.quick-links{grid-template-columns:repeat(2,1fr);gap:12px}.quick-link{background:#f7f9fc;border:1px solid #e5ebf2;color:#173b68;transition:.2s}.quick-link:hover{transform:translateY(-2px);background:#eef5fc}.quick-link.primary{background:linear-gradient(135deg,#173b68,#2563a6);border:0}
-.account-section-title{display:flex;align-items:center;justify-content:space-between;gap:10px}.account-section-title h2{margin:0}.section-note{font-size:12px;color:#7b8794}
-@media(max-width:700px){.stats{grid-template-columns:1fr 1fr}.profile-top{padding:22px}.quick-links{grid-template-columns:1fr 1fr}}
-@media(max-width:430px){.container{padding:0 10px}.stats{gap:8px}.stat{padding:13px 8px}.stat .num{font-size:24px}.quick-links{grid-template-columns:1fr}.page-title{border-radius:16px}}
-</style>
 </head>
 
 <body>
@@ -520,19 +502,10 @@ class="message">
 <!-- الإعلانات -->
 
 <div class="card">
-<div class="account-section-title"><h2>📌 الوصول السريع</h2><span class="section-note">كل وظائف الحساب من هنا</span></div>
-<div class="quick-links">
-<a href="my-ads.html" class="quick-link primary">📢 إعلاناتي</a>
-<a href="favorites.html" class="quick-link">❤️ المفضلة</a>
-<a href="messages.html" class="quick-link">💬 الرسائل</a>
-<a href="notifications.html" class="quick-link">🔔 الإشعارات</a>
-<a href="orders.html" class="quick-link">🛍️ طلباتي ومشترياتي</a>
-<a href="services.html" class="quick-link">⚡ الخدمات</a>
-</div>
-</div>
 
-<div class="card">
-<div class="account-section-title"><h2>📢 إعلاناتي</h2></div>
+<h2>
+📢 إعلاناتي
+</h2>
 
 <p>
 إدارة الإعلانات التي قمت بنشرها
@@ -556,6 +529,7 @@ class="add-ad-button">
 
 </a>
 
+<a href="messages.html" class="quick-link" style="margin-top:10px">💬 الرسائل <span id="messagesLinkBadge"></span></a>
 
 </div>
 
