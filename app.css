@@ -199,7 +199,6 @@ header .account,.header .account{display:flex!important;align-items:center!impor
 .pp-admin-menu{background:#f2f7fc!important;border:1px solid #dbe8f4!important}
 @media(max-width:600px){.pp-profile-menu{right:-10px!important}.pp-drawer{width:min(360px,90vw)!important}}
 
-/* V26: profile menu must stay fully visible on mobile and desktop. */
-.pp-profile-menu{position:fixed!important;top:74px!important;right:12px!important;left:auto!important;z-index:2147483647!important;max-height:calc(100vh - 88px)!important;overflow-y:auto!important;overflow-x:hidden!important;box-sizing:border-box!important}
-@media(max-width:700px){.pp-profile-menu{top:64px!important;right:10px!important;width:min(280px,calc(100vw - 20px))!important;max-height:calc(100vh - 76px)!important}}
+/* V27: profile menu is positioned from the actual profile button and clamped inside the viewport. */
+.pp-profile-menu{position:fixed!important;left:8px;top:8px;right:auto!important;z-index:2147483647!important;width:min(280px,calc(100vw - 16px))!important;max-height:calc(100vh - 16px)!important;overflow-y:auto!important;overflow-x:hidden!important;box-sizing:border-box!important}
 .pp-profile-control{z-index:2147483646!important}

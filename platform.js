@@ -28,8 +28,11 @@ window.ppSetupHeader=async()=>{const u=await ppUser();const login=document.getEl
     if(account){account.replaceChildren(host)}else{header.querySelector('.head,.headin')?.appendChild(host)}
     const btn=host.querySelector('#ppProfileBtn'), menu=host.querySelector('#ppProfileMenu');
     const close=()=>{menu.classList.remove('open');menu.setAttribute('aria-hidden','true');btn.setAttribute('aria-expanded','false')};
-    const open=()=>{menu.classList.add('open');menu.setAttribute('aria-hidden','false');btn.setAttribute('aria-expanded','true')};
+    const placeMenu=()=>{if(!menu.classList.contains('open'))return;const r=btn.getBoundingClientRect();const gap=8;const vw=window.innerWidth;const vh=window.innerHeight;const mw=Math.min(menu.offsetWidth||270,vw-16);const mh=menu.offsetHeight||180;let left=r.left;let top=r.bottom+gap;if(left+mw>vw-8)left=vw-mw-8;if(left<8)left=8;if(top+mh>vh-8){const above=r.top-gap-mh;if(above>=8)top=above;else top=8}menu.style.left=Math.round(left)+'px';menu.style.top=Math.round(top)+'px';menu.style.right='auto'};
+    const open=()=>{menu.classList.add('open');menu.setAttribute('aria-hidden','false');btn.setAttribute('aria-expanded','true');requestAnimationFrame(placeMenu)};
     btn.addEventListener('click',e=>{e.stopPropagation();menu.classList.contains('open')?close():open()});
+    window.addEventListener('resize',placeMenu,{passive:true});
+    window.addEventListener('scroll',placeMenu,{passive:true});
     document.addEventListener('click',e=>{if(!host.contains(e.target))close()});
     document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
     try{
