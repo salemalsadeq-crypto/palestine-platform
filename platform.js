@@ -62,7 +62,7 @@ window.ppSetupHeader=async()=>{const u=await ppUser();const login=document.getEl
     const drawer=document.createElement('aside');drawer.id='ppDrawer';drawer.className='pp-drawer';drawer.setAttribute('aria-label','القائمة الرئيسية');
     drawer.innerHTML='<div class="pp-drawer-head"><div class="pp-drawer-brand">فلسطين <span>بلاتفورم</span></div><button id="ppMenuClose" class="pp-drawer-close" aria-label="إغلاق">×</button></div>'+
       '<div id="ppMenuUser" class="pp-menu-user"><div class="initial">👤</div><div><b>مرحبًا بك</b><small>حسابك في فلسطين بلاتفورم</small></div></div>'+
-      '<div class="pp-menu-section pp-main-menu">'+link('index.html','🏠','الرئيسية')+link('my-ads.html','📋','إعلاناتي')+link('favorites.html','❤️','المفضلة')+link('messages.html','💬','المحادثات')+link('notifications.html','🔔','الإشعارات')+link('orders.html','🛍️','طلباتي ومشترياتي')+link('service-center.html','⚡','مركز الخدمات')+'</div>'+
+      '<div class="pp-menu-section pp-main-menu">'+link('index.html','🏠','الرئيسية')+link('ads.html','📢','الإعلانات')+link('reels.html','🎬','الريلز')+link('my-ads.html','📋','إعلاناتي')+link('favorites.html','❤️','المفضلة')+link('messages.html','💬','المحادثات')+link('notifications.html','🔔','الإشعارات')+link('orders.html','🛍️','طلباتي ومشترياتي')+link('service-center.html','⚡','مركز الخدمات')+'</div>'+
       '<div id="ppMenuAdmin"></div>'+
       '<div class="pp-menu-divider"></div><div id="ppMenuAuth"></div>';
     document.body.appendChild(btn);document.body.appendChild(back);document.body.appendChild(drawer);
