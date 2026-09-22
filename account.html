@@ -279,6 +279,10 @@ button{
 .stat{background:#fff;border-radius:14px;padding:18px;text-align:center;box-shadow:0 3px 12px rgba(0,0,0,.07)}
 .stat .num{font-size:28px;font-weight:bold;color:#087443;margin-bottom:5px}
 .stat .label{color:#777;font-size:13px}
+.profile-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:14px}
+.profile-action{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border:1px solid #dbe4ee;background:#f7f9fc;color:#173b68;border-radius:10px;padding:10px 14px;font-weight:bold;font-size:14px;cursor:pointer}
+.profile-action.primary{background:#173b68;color:#fff;border-color:#173b68}
+.profile-action:hover{transform:translateY(-1px)}
 .quick-links{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
 .quick-link{display:block;text-align:center;padding:13px 10px;border-radius:10px;text-decoration:none;font-weight:bold;background:#f1f3f5;color:#222}
 .quick-link.primary{background:#087443;color:#fff}
@@ -401,6 +405,10 @@ id="avatar">
 id="email">
 </div>
 
+<div class="profile-actions">
+<a id="publicProfileBtn" href="#" class="profile-action primary">👤 عرض ملفي العام</a>
+<button id="copyProfileBtn" type="button" class="profile-action">🔗 نسخ رابط ملفي</button>
+</div>
 
 <div class="image-buttons">
 
@@ -632,6 +640,28 @@ window.supabase.createClient(
 
 let currentUser = null;
 
+function setupPublicProfileActions(){
+    if(!currentUser) return;
+    const url = new URL(
+        'profile.html?id=' + encodeURIComponent(currentUser.id),
+        window.location.href
+    ).href;
+    const publicBtn = document.getElementById('publicProfileBtn');
+    const copyBtn = document.getElementById('copyProfileBtn');
+    if(publicBtn) publicBtn.href = url;
+    if(copyBtn){
+        copyBtn.onclick = async function(){
+            try{
+                await navigator.clipboard.writeText(url);
+                copyBtn.textContent = '✅ تم نسخ الرابط';
+                setTimeout(() => copyBtn.textContent = '🔗 نسخ رابط ملفي', 1800);
+            }catch(e){
+                window.prompt('انسخ رابط ملفك:', url);
+            }
+        };
+    }
+}
+
 let currentAvatarUrl = null;
 
 
@@ -659,6 +689,7 @@ async function loadAccount(){
 
 
     currentUser = user;
+    setupPublicProfileActions();
 
 
     document.getElementById("email")
