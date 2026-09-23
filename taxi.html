@@ -66,7 +66,7 @@ $('confirmRequest').onclick=async()=>{
   const from='GPS: '+userPos.lat.toFixed(6)+','+userPos.lng.toFixed(6);
   const to='GPS: '+destPos.lat.toFixed(6)+','+destPos.lng.toFixed(6);
   const details='طلب تاكسي ذكي | الركاب: '+people+' | المسافة التقريبية: '+distance(userPos,destPos).toFixed(1)+' كم';
-  const r=await ppClient.rpc('create_direct_service_request',{p_provider_id:selectedDriver.user_id,p_type:'taxi',p_city:city||prof?.city||null,p_phone:phone,p_from_location:from,p_to_location:to,p_details:details,p_budget:null,p_people_count:people,p_scheduled_at:null});
+  const r=await ppClient.rpc('create_taxi_request',{p_provider_id:selectedDriver.user_id,p_city:city||prof?.city||'غير محدد',p_phone:phone,p_from_location:from,p_to_location:to,p_people_count:people,p_from_lat:userPos.lat,p_from_lng:userPos.lng,p_to_lat:destPos.lat,p_to_lng:destPos.lng});
   if(r.error){msg(r.error.message);b.disabled=false;b.textContent='🚕 تأكيد الطلب';return}
   msg('تم إرسال طلب الرحلة إلى السائق ✓',true);b.textContent='تم الإرسال ✓';
   setTimeout(()=>location.href='service-requests.html',900);
