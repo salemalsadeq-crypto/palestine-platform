@@ -1,0 +1,2 @@
+V39: إصلاح خطأ JavaScript الذي كان يمنع تنفيذ الصفحة، مع الحفاظ على وظائف V38، وجعل قبول التاكسي عبر دالة مستقلة حتى لا تتأثر خدمات الطلبات الأخرى.
+شغّل SUPABASE_TAXI_V39.sql مرة واحدة ثم ارفع taxi.html وtaxi-trip.html وservice-provider.html.
