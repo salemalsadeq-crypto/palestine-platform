@@ -23,7 +23,7 @@
 <div id="list"></div>
 </main>
 <script>
-const db=supabase.createClient('https://sesbumfedusbjevbsyzl.supabase.co','sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR');
+const db=window.ppClient;
 const $=x=>document.getElementById(x);
 let currentUser=null;
 function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}

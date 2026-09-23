@@ -617,25 +617,7 @@ src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
 
 <script>
 
-const SUPABASE_URL =
-"https://sesbumfedusbjevbsyzl.supabase.co";
-
-const SUPABASE_KEY =
-"sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
-
-
-const supabaseClient =
-window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY,
-    {
-        auth:{
-            persistSession:true,
-            autoRefreshToken:true,
-            detectSessionInUrl:true
-        }
-    }
-);
+const supabaseClient = window.ppClient;
 
 
 let currentUser = null;

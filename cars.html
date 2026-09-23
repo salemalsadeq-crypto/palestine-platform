@@ -6,6 +6,7 @@
 <title>سيارات للبيع | فلسطين بلاتفورم</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0" crossorigin="anonymous"></script>
+<script src="platform.js"></script>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -550,17 +551,7 @@ header{
 window.onerror=function(m){var g=document.getElementById('adsGrid'),c=document.getElementById('resultsCount');if(c)c.textContent='❌ خطأ';if(g)g.innerHTML='<div class="error">❌ خطأ بالكود: '+m+'</div>';return false};
 window.addEventListener('unhandledrejection',function(e){var g=document.getElementById('adsGrid'),c=document.getElementById('resultsCount');if(c)c.textContent='❌ خطأ';if(g)g.innerHTML='<div class="error">❌ خطأ غير متوقع: '+(e.reason&&e.reason.message||e.reason)+'</div>'});
 
-const SUPABASE_URL =
-"https://sesbumfedusbjevbsyzl.supabase.co";
-
-const SUPABASE_KEY =
-"sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
-
-const supabaseClient =
-typeof supabase!=='undefined' ? window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-) : null;
+const supabaseClient = window.ppClient || null;
 
 
 let allAds = [];

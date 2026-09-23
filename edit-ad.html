@@ -80,9 +80,7 @@ textarea{min-height:130px;resize:vertical}
 </div>
 </div>
 <script>
-const SUPABASE_URL="https://sesbumfedusbjevbsyzl.supabase.co";
-const SUPABASE_KEY="sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const supabaseClient=window.ppClient;
 const $=id=>document.getElementById(id);
 let currentUser=null,currentAd=null,currentImages=[],currentVideoUrl=null,removeVideoFlag=false;
 const adId=new URLSearchParams(window.location.search).get("id");

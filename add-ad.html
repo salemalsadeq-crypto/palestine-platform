@@ -23,7 +23,7 @@
 <button id="submit" class="btn primary" type="submit">🚀 نشر الإعلان</button><div id="msg" class="msg"></div>
 </form></div></main>
 <script>
-const SUPABASE_URL="https://sesbumfedusbjevbsyzl.supabase.co";const SUPABASE_KEY="sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);const $=id=>document.getElementById(id);const params=new URLSearchParams(location.search);if(params.get('category'))$('category').value=params.get('category');
+const db=window.ppClient;const $=id=>document.getElementById(id);const params=new URLSearchParams(location.search);if(params.get('category'))$('category').value=params.get('category');
 $('images').onchange=()=>{$('preview').innerHTML='';[...$('images').files].slice(0,5).forEach(f=>{if(f.size<=5*1024*1024){const i=document.createElement('img');i.src=URL.createObjectURL(f);$('preview').appendChild(i)}})};
 $('video').onchange=()=>{const f=$('video').files[0];$('videoPreview').innerHTML='';if(!f)return;if(f.size>50*1024*1024){$('msg').textContent='❌ الفيديو أكبر من 50MB';$('video').value='';return}const v=document.createElement('video');v.src=URL.createObjectURL(f);v.controls=true;v.playsInline=true;$('videoPreview').appendChild(v)};
 $('locate').onclick=()=>{if(!navigator.geolocation){alert('المتصفح لا يدعم تحديد الموقع');return}navigator.geolocation.getCurrentPosition(p=>{$('latitude').value=p.coords.latitude.toFixed(7);$('longitude').value=p.coords.longitude.toFixed(7);if(!$('locationName').value)$('locationName').value='موقعي الحالي'},()=>alert('تعذر تحديد الموقع. تأكد من السماح للموقع.'))};

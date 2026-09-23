@@ -74,9 +74,7 @@ nav a{color:#fff;text-decoration:none;padding:8px 11px;background:#234d7e;border
 </main>
 
 <script>
-const SUPABASE_URL='https://sesbumfedusbjevbsyzl.supabase.co';
-const SUPABASE_KEY='sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR';
-const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const db=window.ppClient;
 
 const params=new URLSearchParams(location.search);
 const profileId=params.get('id');
