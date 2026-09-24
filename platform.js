@@ -20,11 +20,13 @@ window.ppSetupHeader=async()=>{const u=await ppUser();const login=document.getEl
   async function buildProfileControl(){
     const header=document.querySelector('header,.header');
     if(!header || document.getElementById('ppProfileControl')) return;
-    const oldIds=['account','myads','adminLink','logout','login','name','initial','avatar'];
+    const accountHost=header.querySelector('.account,.account-area');
+    const oldIds=['myads','adminLink','logout','login','name','initial','avatar'];
     oldIds.forEach(id=>{const el=document.getElementById(id);if(el){el.style.display='none';el.setAttribute('aria-hidden','true');}});
+    if(accountHost){accountHost.style.display='flex';accountHost.style.alignItems='center';accountHost.style.marginInlineStart='auto';}
     const host=document.createElement('div'); host.id='ppProfileControl'; host.className='pp-profile-control';
     host.innerHTML='<button class="pp-profile-btn" id="ppProfileBtn" type="button" aria-expanded="false" aria-haspopup="menu" aria-label="حسابي"><span class="pp-profile-avatar" id="ppProfileAvatar"><span class="pp-profile-initial">م</span></span><span class="pp-profile-chevron">⌄</span></button><div class="pp-profile-menu" id="ppProfileMenu" role="menu" aria-hidden="true"></div>';
-    const account=header.querySelector('.account,.account-area');
+    const account=accountHost;
     if(account){account.replaceChildren(host)}else{header.querySelector('.head,.headin,.header')?.appendChild(host); if(!host.parentElement) header.appendChild(host)}
     // Remove legacy header navigation; the side drawer is the single navigation system.
     header.querySelectorAll('nav, .header-nav, .top-nav, .headin > div:not(.logo), .header > div:not(.logo):not(.account-area):not(#ppProfileControl)').forEach(el=>{
