@@ -532,7 +532,7 @@ class="message">
 <div class="card subscription-card" id="subscriptionCard">
 <h2>⭐ عضويتي</h2>
 <p>تابع نوع عضويتك وعدد الأيام المتبقية، أو اختر خطة جديدة.</p>
-<div class="subscription-grid">
+<div id="accountAudience" style="margin:0 0 10px;padding:9px 11px;border-radius:12px;background:#ffffff16;color:#eef8ff;font-size:12px">العضوية الحالية</div><div class="subscription-grid">
 <div class="subscription-box"><small>الخطة الحالية</small><b id="accountPlan">عضو عادي</b></div>
 <div class="subscription-box"><small>المتبقي</small><b id="accountDays">—</b></div>
 <div class="subscription-box"><small>الانتهاء</small><b id="accountEnd" style="font-size:14px">—</b></div>
@@ -1394,10 +1394,10 @@ async function loadAccountSubscription(){
     try{
         const {data,error}=await supabaseClient.from('subscriptions').select('ends_at,plan_id,status,subscription_plans(name)').eq('user_id',currentUser.id).eq('status','active').order('ends_at',{ascending:false}).limit(1).maybeSingle();
         if(error) throw error;
-        const plan=document.getElementById('accountPlan'), days=document.getElementById('accountDays'), end=document.getElementById('accountEnd');
-        if(!data){if(plan)plan.textContent='عضو عادي';if(days)days.textContent='—';if(end)end.textContent='لا يوجد';return;}
+        const plan=document.getElementById('accountPlan'), days=document.getElementById('accountDays'), end=document.getElementById('accountEnd'), audience=document.getElementById('accountAudience');
+        if(!data){if(audience)audience.textContent='👤 مستخدم عادي';if(plan)plan.textContent='عضو عادي';if(days)days.textContent='—';if(end)end.textContent='لا يوجد';return;}
         const dt=new Date(data.ends_at);const d=Math.max(0,Math.ceil((dt-Date.now())/86400000));
-        if(plan)plan.textContent=data.subscription_plans?.name||'اشتراك';
+        if(audience)audience.textContent=data.subscription_plans?.audience==='company'?'🏢 اشتراك شركة':data.subscription_plans?.audience==='provider'?'🚕 اشتراك مقدم خدمة':'⭐ اشتراك بريميوم';if(plan)plan.textContent=data.subscription_plans?.name||'اشتراك';
         if(days)days.textContent=d+' يوم';
         if(end)end.textContent=dt.toLocaleDateString('ar-PS');
     }catch(e){console.warn('subscription summary',e)}
