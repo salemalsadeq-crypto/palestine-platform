@@ -1,70 +1,49 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>الإشعارات | فلسطين بلاتفورم</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script>
+<script src="platform.js"></script><link rel="stylesheet" href="app.css"><link rel="stylesheet" href="theme-v47.css"><link rel="stylesheet" href="theme-v48.css">
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Tahoma,sans-serif;background:#f3f6fa;color:#172033}
-.wrap{max-width:850px;margin:auto;padding:18px}.top{background:linear-gradient(135deg,#173b68,#245789);color:#fff;border-radius:20px;padding:20px;display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:0 8px 25px #173b6830}.heading{display:flex;align-items:center;gap:12px}.bell{width:48px;height:48px;border-radius:50%;background:#ffffff20;display:grid;place-items:center;font-size:25px}.top h1{margin:0;font-size:25px}.count{margin-top:5px;font-size:13px;opacity:.9}.btn{border:0;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:bold}.readall{background:#b51f2a;color:#fff}.readall:disabled{opacity:.55;cursor:not-allowed}.back{display:inline-block;margin:16px 2px;color:#173b68;font-weight:bold;text-decoration:none}.toolbar{display:flex;justify-content:space-between;align-items:center;margin:4px 0 12px}.mini{font-size:13px;color:#6d7685}.card{background:#fff;margin:11px 0;padding:17px;border-radius:16px;box-shadow:0 3px 14px #0000000c;border:1px solid #e9edf2;border-right:5px solid #dfe5ec;transition:.15s}.card.unread{border-right-color:#b51f2a;background:#fffdfd}.card:hover{transform:translateY(-1px);box-shadow:0 6px 18px #00000012}.row{display:flex;align-items:flex-start;gap:12px}.icon{width:42px;height:42px;flex:0 0 42px;border-radius:12px;background:#eef3f8;display:grid;place-items:center;font-size:20px}.card.unread .icon{background:#fdebed}.title{font-size:17px;font-weight:bold;color:#173b68;margin-bottom:6px}.message{line-height:1.7;color:#374151}.date{font-size:12px;color:#7b8491;margin-top:9px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.adlink{display:inline-block;background:#173b68;color:#fff;text-decoration:none;border-radius:9px;padding:9px 12px;font-weight:bold;font-size:13px}.mark{background:#eef2f6;color:#173b68}.empty{text-align:center;background:#fff;padding:55px 20px;border-radius:16px;border:1px solid #e9edf2}.empty .big{font-size:45px;margin-bottom:8px}.status{text-align:center;color:#777;padding:12px}.error{color:#b51f2a;background:#fff1f2;border-radius:12px;padding:14px}.newdot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#b51f2a;margin-left:6px}.loading{opacity:.6}
-@media(max-width:600px){.wrap{padding:12px}.top{padding:16px;border-radius:16px}.top h1{font-size:21px}.bell{width:42px;height:42px}.readall{padding:9px 10px;font-size:12px}.card{padding:14px}.title{font-size:16px}}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Tahoma,sans-serif;background:linear-gradient(180deg,#f3f7fb,#eef2f7);color:#172033}.wrap{max-width:900px;margin:auto;padding:14px}.hero{background:linear-gradient(135deg,#173b68,#2d6da3);color:#fff;border-radius:24px;padding:20px;box-shadow:0 12px 35px #173b6830}.heroTop{display:flex;align-items:center;justify-content:space-between;gap:12px}.heading{display:flex;align-items:center;gap:12px}.bell{width:52px;height:52px;border-radius:17px;background:#ffffff20;display:grid;place-items:center;font-size:27px}.hero h1{margin:0;font-size:25px}.count{margin-top:5px;font-size:13px;opacity:.9}.heroActions{display:flex;gap:8px;flex-wrap:wrap}.btn{border:0;border-radius:12px;padding:10px 13px;cursor:pointer;font-weight:700}.readall{background:#b51f2a;color:#fff}.settingsBtn{background:#fff;color:#173b68}.btn:disabled{opacity:.5;cursor:not-allowed}.back{display:inline-block;margin:15px 3px;color:#173b68;font-weight:bold;text-decoration:none}.panel{background:#fff;border:1px solid #e5eaf0;border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 5px 20px #00000008}.panel h2{font-size:18px;margin:0 0 12px}.settings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.setting{border:1px solid #e5eaf0;border-radius:15px;padding:13px;background:#fafcfe;display:flex;align-items:center;justify-content:space-between;gap:12px}.setting strong{display:block;font-size:14px}.setting small{display:block;color:#748091;margin-top:4px;line-height:1.5}.switch{position:relative;width:48px;height:28px;flex:0 0 48px}.switch input{display:none}.slider{position:absolute;inset:0;background:#cbd3dc;border-radius:99px;cursor:pointer;transition:.2s}.slider:before{content:"";position:absolute;width:22px;height:22px;right:3px;top:3px;background:#fff;border-radius:50%;box-shadow:0 2px 6px #0002;transition:.2s}.switch input:checked+.slider{background:#198754}.switch input:checked+.slider:before{transform:translateX(-20px)}.soundTest{margin-top:10px;background:#eef5fb;color:#173b68}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:8px 2px 12px}.mini{font-size:13px;color:#6d7685}.status{text-align:center;color:#777;padding:12px}.error{color:#a71d2a;background:#fff0f2;border-radius:12px;padding:14px}.card{background:#fff;margin:11px 0;padding:16px;border-radius:17px;box-shadow:0 3px 14px #0000000c;border:1px solid #e9edf2;border-right:5px solid #dfe5ec;transition:.15s}.card.unread{border-right-color:#b51f2a;background:#fffdfd}.card:hover{transform:translateY(-1px);box-shadow:0 7px 20px #00000010}.row{display:flex;align-items:flex-start;gap:12px}.icon{width:44px;height:44px;flex:0 0 44px;border-radius:13px;background:#eef3f8;display:grid;place-items:center;font-size:21px}.card.unread .icon{background:#fdebed}.title{font-size:17px;font-weight:bold;color:#173b68;margin-bottom:6px}.message{line-height:1.75;color:#374151}.date{font-size:12px;color:#7b8491;margin-top:8px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}.adlink{display:inline-block;background:#173b68;color:#fff;text-decoration:none;border-radius:10px;padding:9px 12px;font-weight:bold;font-size:13px}.mark{background:#eef2f6;color:#173b68}.empty{text-align:center;background:#fff;padding:55px 20px;border-radius:18px;border:1px solid #e9edf2}.empty .big{font-size:45px;margin-bottom:8px}.newdot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#b51f2a;margin-left:6px}.loading{opacity:.6}.toast{position:fixed;left:14px;right:14px;bottom:16px;max-width:430px;margin:auto;background:#172033;color:#fff;border-radius:15px;padding:13px 15px;box-shadow:0 10px 30px #0004;display:none;z-index:9999}.toast.show{display:block;animation:up .2s ease}@keyframes up{from{transform:translateY(12px);opacity:0}to{transform:translateY(0);opacity:1}}
+@media(max-width:650px){.wrap{padding:10px}.hero{border-radius:19px;padding:15px}.hero h1{font-size:21px}.bell{width:45px;height:45px}.heroTop{align-items:flex-start}.heroActions{justify-content:flex-end}.settings{grid-template-columns:1fr}.setting{padding:12px}.card{padding:14px}}
 </style>
-<script src="platform.js"></script><link rel="stylesheet" href="app.css">
-<link rel="stylesheet" href="theme-v47.css"><link rel="stylesheet" href="theme-v48.css"></head>
+</head>
 <body>
 <main class="wrap">
-<section class="top">
-  <div class="heading"><div class="bell">🔔</div><div><h1>الإشعارات</h1><div id="count" class="count">جاري التحقق...</div></div></div>
-  <button id="allRead" class="btn readall" disabled>تحديد الكل كمقروء</button>
-</section>
+<section class="hero"><div class="heroTop"><div class="heading"><div class="bell" id="bellIcon">🔔</div><div><h1>الإشعارات</h1><div id="count" class="count">جاري التحقق...</div></div></div><div class="heroActions"><button id="settingsBtn" class="btn settingsBtn">⚙️ التحكم</button><button id="allRead" class="btn readall" disabled>تحديد الكل كمقروء</button></div></div></section>
 <a class="back" href="index.html">← العودة للرئيسية</a>
-<div class="toolbar"><span id="status" class="mini">جاري تحميل الإشعارات...</span><span class="mini">تتحدث تلقائيًا</span></div>
+<section id="settingsPanel" class="panel" hidden>
+<h2>⚙️ التحكم بالإشعارات</h2>
+<div class="settings">
+<div class="setting"><div><strong>🔊 صوت الإشعارات</strong><small>تشغيل صوت عند وصول إشعار جديد أثناء فتح الصفحة.</small></div><label class="switch"><input id="soundToggle" type="checkbox"><span class="slider"></span></label></div>
+<div class="setting"><div><strong>📱 إشعارات الجهاز</strong><small>إظهار إشعار النظام عند توفره وموافقتك عليه.</small></div><label class="switch"><input id="pushToggle" type="checkbox"><span class="slider"></span></label></div>
+<div class="setting"><div><strong>🔄 التحديث التلقائي</strong><small>فحص الإشعارات الجديدة كل 20 ثانية.</small></div><label class="switch"><input id="autoToggle" type="checkbox"><span class="slider"></span></label></div>
+<div class="setting"><div><strong>🔔 تجربة الصوت</strong><small>اضغط لتجربة نغمة الإشعار قبل تفعيلها.</small><button id="testSound" class="btn soundTest">تشغيل التجربة</button></div></div>
+</div>
+<div id="permissionNote" class="mini" style="margin-top:12px"></div>
+</section>
+<div class="toolbar"><span id="status" class="mini">جاري تحميل الإشعارات...</span><span class="mini">آخر تحديث: <b id="lastUpdate">—</b></span></div>
 <div id="list"></div>
-</main>
+</main><div id="toast" class="toast"></div>
 <script>
-const db=window.ppClient;
-const $=x=>document.getElementById(x);
-let currentUser=null;
+const db=window.ppClient,$=x=>document.getElementById(x);let currentUser=null,lastIds=new Set(),firstLoad=true,timer=null,audioCtx=null;
+const STORE='pp_notification_settings_v51';
+function settings(){try{return Object.assign({sound:true,push:false,auto:true},JSON.parse(localStorage.getItem(STORE)||'{}'))}catch(e){return {sound:true,push:false,auto:true}}}
+function saveSettings(s){localStorage.setItem(STORE,JSON.stringify(s))}
 function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-function iconFor(n){if(n.type==='favorite')return '❤️';if(n.type==='message')return '💬';if(n.type==='report')return '⚠️';return '🔔'}
+function iconFor(n){if(n.type==='favorite')return '❤️';if(n.type==='message')return '💬';if(n.type==='report')return '⚠️';if(n.type==='service')return '🚕';if(n.type==='order')return '🛍️';return '🔔'}
 function dateText(v){try{return new Date(v).toLocaleString('ar-PS',{dateStyle:'medium',timeStyle:'short'})}catch(e){return ''}}
-async function load(){
-  if(!currentUser){const {data:{user}}=await db.auth.getUser();currentUser=user}
-  if(!currentUser){location.href='login.html';return}
-  $('status').textContent='جاري التحديث...';$('status').classList.add('loading');
-  const {data,error}=await db.from('notifications').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});
-  $('status').classList.remove('loading');
-  if(error){$('status').className='error';$('status').textContent='❌ تعذر تحميل الإشعارات: '+error.message;return}
-  const list=data||[], unread=list.filter(n=>!n.is_read).length;
-  $('count').innerHTML=unread?`<span class="newdot"></span>${unread} إشعار غير مقروء`:`لا توجد إشعارات غير مقروءة`;
-  $('allRead').disabled=unread===0;
-  if(!list.length){$('list').innerHTML='<div class="empty"><div class="big">🔔</div><strong>لا توجد إشعارات حاليًا</strong><div class="mini" style="margin-top:8px">ستظهر هنا الإشعارات الجديدة المتعلقة بحسابك وإعلاناتك.</div></div>';return}
-  $('list').innerHTML=list.map(n=>`<article class="card ${n.is_read?'':'unread'}">
-    <div class="row"><div class="icon">${iconFor(n)}</div><div style="flex:1;min-width:0">
-      <div class="title">${esc(n.title)}${n.is_read?'':' <span style="font-size:11px;color:#b51f2a">جديد</span>'}</div>
-      <div class="message">${esc(n.message||'')}</div>
-      <div class="date">🕒 ${esc(dateText(n.created_at))}</div>
-      <div class="actions">
-        ${n.related_ad_id?`<a class="adlink" href="ad-details.html?id=${encodeURIComponent(n.related_ad_id)}">عرض الإعلان ←</a>`:''}
-        ${!n.is_read?`<button class="btn mark" onclick="readOne('${n.id}')">✓ تحديد كمقروء</button>`:''}
-      </div>
-    </div></div>
-  </article>`).join('');
-}
-async function readOne(id){
-  if(!currentUser)return;
-  const {error}=await db.from('notifications').update({is_read:true}).eq('id',id).eq('user_id',currentUser.id);
-  if(error){alert('تعذر تحديث الإشعار');return} await load();
-}
-$('allRead').onclick=async()=>{
-  if(!currentUser)return;
-  $('allRead').disabled=true;
-  const {error}=await db.from('notifications').update({is_read:true}).eq('user_id',currentUser.id).eq('is_read',false);
-  if(error){alert('تعذر تحديث الإشعارات');$('allRead').disabled=false;return} await load();
-};
-(async()=>{await load();setInterval(load,20000)})();
-</script>
-<script src="app-ui.js" defer></script>
-</body>
-</html>
+function toast(t){$('toast').textContent=t;$('toast').classList.add('show');clearTimeout(window._pt);window._pt=setTimeout(()=>$('toast').classList.remove('show'),3000)}
+function playSound(){try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();const now=audioCtx.currentTime;[0,0.13].forEach((d,i)=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.value=i?880:660;g.gain.setValueAtTime(.0001,now+d);g.gain.exponentialRampToValueAtTime(.13,now+d+.015);g.gain.exponentialRampToValueAtTime(.0001,now+d+.16);o.connect(g);g.connect(audioCtx.destination);o.start(now+d);o.stop(now+d+.17)})}catch(e){}}
+async function requestPush(){if(!('Notification'in window)){toast('متصفحك لا يدعم إشعارات الجهاز');$('pushToggle').checked=false;return false}if(Notification.permission==='granted')return true;if(Notification.permission==='denied'){toast('إشعارات الجهاز محظورة من إعدادات المتصفح');$('pushToggle').checked=false;return false}const p=await Notification.requestPermission();if(p!=='granted'){toast('لم تتم الموافقة على إشعارات الجهاز');$('pushToggle').checked=false;return false}return true}
+function showSystem(n){try{if(!('Notification'in window)||Notification.permission!=='granted')return;const x=new Notification(n.title||'فلسطين بلاتفورم',{body:n.message||'لديك إشعار جديد',icon:'',tag:'pp-'+n.id});x.onclick=()=>{window.focus();x.close()}}catch(e){}}
+function bindSettings(){const s=settings();$('soundToggle').checked=s.sound;$('autoToggle').checked=s.auto;$('pushToggle').checked=s.push&&('Notification'in window&&Notification.permission==='granted');$('settingsBtn').onclick=()=>{$('settingsPanel').hidden=!$('settingsPanel').hidden};$('soundToggle').onchange=()=>{const x=settings();x.sound=$('soundToggle').checked;saveSettings(x);if(x.sound){playSound();toast('تم تشغيل صوت الإشعارات')}};$('autoToggle').onchange=()=>{const x=settings();x.auto=$('autoToggle').checked;saveSettings(x);startTimer();toast(x.auto?'تم تشغيل التحديث التلقائي':'تم إيقاف التحديث التلقائي')};$('pushToggle').onchange=async()=>{const x=settings();if($('pushToggle').checked){const ok=await requestPush();x.push=ok;saveSettings(x)}else{x.push=false;saveSettings(x);toast('تم إيقاف إشعارات الجهاز')}};$('testSound').onclick=()=>{playSound();toast('🔊 تم تشغيل نغمة التجربة')};const note=('Notification'in window)?(Notification.permission==='denied'?'إشعارات الجهاز محظورة من إعدادات المتصفح. يمكنك السماح بها من إعدادات الموقع.':'يمكن تفعيل إشعارات الجهاز بعد إعطاء المتصفح الإذن.'):'هذا المتصفح لا يدعم إشعارات الجهاز.';$('permissionNote').textContent=note}
+async function load(){try{if(!currentUser){const {data:{user}}=await db.auth.getUser();currentUser=user}if(!currentUser){location.href='login.html';return}const {data,error}=await db.from('notifications').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false}).limit(100);if(error){$('status').className='error';$('status').textContent='❌ تعذر تحميل الإشعارات: '+error.message;return}const list=data||[];const ids=new Set(list.map(n=>n.id));if(!firstLoad){const fresh=list.filter(n=>!lastIds.has(n.id)&&!n.is_read);if(fresh.length){const s=settings();if(s.sound){playSound();$('bellIcon').animate([{transform:'rotate(0)'},{transform:'rotate(-15deg)'},{transform:'rotate(15deg)'},{transform:'rotate(0)'}],{duration:450});}if(s.push)fresh.slice(0,3).forEach(showSystem);toast('🔔 وصل '+fresh.length+' إشعار جديد');}}lastIds=ids;firstLoad=false;const unread=list.filter(n=>!n.is_read).length;$('count').innerHTML=unread?`<span class="newdot"></span>${unread} إشعار غير مقروء`:`لا توجد إشعارات غير مقروءة`;$('allRead').disabled=unread===0;$('lastUpdate').textContent=new Date().toLocaleTimeString('ar-PS',{hour:'2-digit',minute:'2-digit'});$('status').className='mini';$('status').textContent='تعمل الإشعارات بشكل طبيعي';if(!list.length){$('list').innerHTML='<div class="empty"><div class="big">🔔</div><strong>لا توجد إشعارات حاليًا</strong><div class="mini" style="margin-top:8px">ستظهر هنا الإشعارات الجديدة المتعلقة بحسابك وإعلاناتك.</div></div>';return}$('list').innerHTML=list.map(n=>`<article class="card ${n.is_read?'':'unread'}"><div class="row"><div class="icon">${iconFor(n)}</div><div style="flex:1;min-width:0"><div class="title">${esc(n.title)}${n.is_read?'':' <span style="font-size:11px;color:#b51f2a">جديد</span>'}</div><div class="message">${esc(n.message||'')}</div><div class="date">🕒 ${esc(dateText(n.created_at))}</div><div class="actions">${n.related_ad_id?`<a class="adlink" href="ad-details.html?id=${encodeURIComponent(n.related_ad_id)}">عرض الإعلان ←</a>`:''}${!n.is_read?`<button class="btn mark" onclick="readOne('${n.id}')">✓ تحديد كمقروء</button>`:''}</div></div></div></article>`).join('')}catch(e){$('status').className='error';$('status').textContent='❌ حدث خطأ غير متوقع أثناء تحميل الإشعارات';console.error(e)}}
+async function readOne(id){if(!currentUser)return;const {error}=await db.from('notifications').update({is_read:true}).eq('id',id).eq('user_id',currentUser.id);if(error){toast('تعذر تحديث الإشعار');return}await load()}
+$('allRead').onclick=async()=>{if(!currentUser)return;$('allRead').disabled=true;const {error}=await db.from('notifications').update({is_read:true}).eq('user_id',currentUser.id).eq('is_read',false);if(error){toast('تعذر تحديث الإشعارات');$('allRead').disabled=false;return}await load();toast('✓ تم تحديد كل الإشعارات كمقروءة')};
+function startTimer(){clearInterval(timer);if(settings().auto)timer=setInterval(load,20000)}
+(async()=>{bindSettings();await load();startTimer()})();
+</script><script src="app-ui.js" defer></script>
+</body></html>
