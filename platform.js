@@ -24,8 +24,12 @@ window.ppSetupHeader=async()=>{const u=await ppUser();const login=document.getEl
     oldIds.forEach(id=>{const el=document.getElementById(id);if(el){el.style.display='none';el.setAttribute('aria-hidden','true');}});
     const host=document.createElement('div'); host.id='ppProfileControl'; host.className='pp-profile-control';
     host.innerHTML='<button class="pp-profile-btn" id="ppProfileBtn" type="button" aria-expanded="false" aria-haspopup="menu" aria-label="حسابي"><span class="pp-profile-avatar" id="ppProfileAvatar"><span class="pp-profile-initial">م</span></span><span class="pp-profile-chevron">⌄</span></button><div class="pp-profile-menu" id="ppProfileMenu" role="menu" aria-hidden="true"></div>';
-    const account=header.querySelector('.account');
-    if(account){account.replaceChildren(host)}else{header.querySelector('.head,.headin')?.appendChild(host)}
+    const account=header.querySelector('.account,.account-area');
+    if(account){account.replaceChildren(host)}else{header.querySelector('.head,.headin,.header')?.appendChild(host); if(!host.parentElement) header.appendChild(host)}
+    // Remove legacy header navigation; the side drawer is the single navigation system.
+    header.querySelectorAll('nav, .header-nav, .top-nav, .headin > div:not(.logo), .header > div:not(.logo):not(.account-area):not(#ppProfileControl)').forEach(el=>{
+      if(!el.closest('#ppProfileControl')) el.remove();
+    });
     const btn=host.querySelector('#ppProfileBtn'), menu=host.querySelector('#ppProfileMenu');
     const close=()=>{menu.classList.remove('open');menu.setAttribute('aria-hidden','true');btn.setAttribute('aria-expanded','false')};
     const placeMenu=()=>{if(!menu.classList.contains('open'))return;const r=btn.getBoundingClientRect();const gap=8;const vw=window.innerWidth;const vh=window.innerHeight;const mw=Math.min(menu.offsetWidth||270,vw-16);const mh=menu.offsetHeight||180;let left=r.left;let top=r.bottom+gap;if(left+mw>vw-8)left=vw-mw-8;if(left<8)left=8;if(top+mh>vh-8){const above=r.top-gap-mh;if(above>=8)top=above;else top=8}menu.style.left=Math.round(left)+'px';menu.style.top=Math.round(top)+'px';menu.style.right='auto'};
@@ -65,7 +69,7 @@ window.ppSetupHeader=async()=>{const u=await ppUser();const login=document.getEl
     const drawer=document.createElement('aside');drawer.id='ppDrawer';drawer.className='pp-drawer';drawer.setAttribute('aria-label','القائمة الرئيسية');
     drawer.innerHTML='<div class="pp-drawer-head"><div class="pp-drawer-brand">فلسطين <span>بلاتفورم</span></div><button id="ppMenuClose" class="pp-drawer-close" aria-label="إغلاق">×</button></div>'+
       '<div id="ppMenuUser" class="pp-menu-user"><div class="initial">👤</div><div><b>مرحبًا بك</b><small>حسابك في فلسطين بلاتفورم</small></div></div>'+
-      '<div class="pp-menu-section pp-main-menu">'+link('index.html','🏠','الرئيسية')+link('ads.html','📢','الإعلانات')+link('reels.html','🎬','الريلز')+link('my-ads.html','📋','إعلاناتي')+link('favorites.html','❤️','المفضلة')+link('messages.html','💬','المحادثات')+link('notifications.html','🔔','الإشعارات')+link('orders.html','🛍️','طلباتي ومشترياتي')+link('service-center.html','⚡','مركز الخدمات')+'</div>'+
+      '<div class="pp-menu-section pp-main-menu">'+link('index.html','🏠','الرئيسية')+link('ads.html','📢','الإعلانات')+link('services.html','⚡','الخدمات')+link('map.html','🗺️','الخريطة والمواقع')+link('favorites.html','❤️','المفضلة')+link('messages.html','💬','المحادثات')+link('notifications.html','🔔','الإشعارات')+link('orders.html','🛍️','طلباتي ومشترياتي')+'</div>'+
       '<div id="ppMenuAdmin"></div>'+
       '<div class="pp-menu-divider"></div><div id="ppMenuAuth"></div>';
     document.body.appendChild(btn);document.body.appendChild(back);document.body.appendChild(drawer);
