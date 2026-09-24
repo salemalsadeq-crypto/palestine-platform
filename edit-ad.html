@@ -41,7 +41,7 @@ textarea{min-height:130px;resize:vertical}
 @media(max-width:700px){.row{grid-template-columns:1fr}.container{width:94%;margin:20px auto}.card{padding:18px}.page-title h1{font-size:25px}.buttons{flex-direction:column}.images-grid{grid-template-columns:repeat(2,1fr)}.logo{font-size:20px}}
 </style>
 <script src="platform.js"></script><link rel="stylesheet" href="app.css">
-<link rel="stylesheet" href="theme-v47.css"><link rel="stylesheet" href="theme-v48.css"></head>
+</head>
 <body>
 <header>
 <div class="logo">فلسطين بلاتفورم</div>
@@ -61,7 +61,7 @@ textarea{min-height:130px;resize:vertical}
 <div class="form-group"><label for="title">عنوان الإعلان</label><input type="text" id="title" required placeholder="مثال: شقة للبيع في نابلس"></div>
 <div class="row">
 <div class="form-group"><label for="category">التصنيف</label><select id="category" required>
-<option value="">اختر التصنيف</option><option value="عقارات">عقارات</option><option value="سيارات">سيارات</option><option value="وظائف">وظائف</option><option value="متاجر">متاجر</option><option value="مطاعم">مطاعم</option><option value="ترفيه">ترفيه</option><option value="أجهزة وإلكترونيات">أجهزة وإلكترونيات</option><option value="أثاث ومستلزمات">أثاث ومستلزمات</option><option value="مواشي وحيوانات">مواشي وحيوانات</option><option value="ملابس وأغراض شخصية">ملابس وأغراض شخصية</option><option value="بيع وشراء">بيع وشراء</option><option value="إعلانات أخرى">إعلانات أخرى</option>
+<option value="">اختر التصنيف</option><option value="عقارات">عقارات</option><option value="سيارات">سيارات</option><option value="وظائف">وظائف</option><option value="خدمات">خدمات</option><option value="محلات">محلات</option><option value="إعلانات عامة">إعلانات عامة</option><option value="أخرى">أخرى</option>
 </select></div>
 <div class="form-group"><label for="city">المدينة</label><input type="text" id="city" placeholder="مثال: نابلس"></div>
 </div>
@@ -160,7 +160,7 @@ saveBtn.disabled=true;saveBtn.textContent="⏳ جاري الحفظ...";
 try{
 const title=document.getElementById("title").value.trim(),category=document.getElementById("category").value,description=document.getElementById("description").value.trim(),priceValue=document.getElementById("price").value,city=document.getElementById("city").value.trim(),phone=document.getElementById("phone").value.trim();
 if(!title)throw new Error("يرجى كتابة عنوان الإعلان.");
-if(!category)throw new Error("يرجى اختيار التصنيف.");if(category==="خدمات")throw new Error("الخدمات لها قسم مستقل ولا تُنشر كإعلان.");
+if(!category)throw new Error("يرجى اختيار التصنيف.");
 showMessage("جاري رفع الصور وحفظ التعديلات...","success");
 const newUrls=await uploadNewImages(),finalImages=[...currentImages,...newUrls];let finalVideo=currentVideoUrl;if(newVideoInput.files[0]){if(finalVideo)await deleteVideoUrl(finalVideo);finalVideo=await uploadNewVideo()}else if(removeVideoFlag&&currentAd.video_url){await deleteVideoUrl(currentAd.video_url);finalVideo=null}
 const {error:updateError}=await supabaseClient.from("ads").update({title,category,description:description||null,price:priceValue===""?null:Number(priceValue),city:city||null,phone:phone||null,latitude:$("latitude").value===""?null:Number($("latitude").value),longitude:$("longitude").value===""?null:Number($("longitude").value),location_name:$("locationName").value.trim()||null,image_urls:finalImages,video_url:finalVideo,delivery_available:$("deliveryAvailable").checked,delivery_fee:Number($("deliveryFee").value||0),allow_cod:$("allowCod").checked,allow_online_payment:$("allowOnline").checked}).eq("id",currentAd.id).eq("user_id",currentUser.id);

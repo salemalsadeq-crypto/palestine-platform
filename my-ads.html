@@ -262,7 +262,7 @@ padding:8px 12px;
 </style>
 
 <link rel="stylesheet" href="app.css">
-<link rel="stylesheet" href="theme-v47.css"><link rel="stylesheet" href="theme-v48.css"></head>
+</head>
 
 <body>
 
@@ -394,7 +394,6 @@ await supabaseClient
 .from("ads")
 .select("*")
 .eq("user_id",user.id)
-.neq("category","خدمات")
 .order(
 "created_at",
 {

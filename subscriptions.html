@@ -1,78 +1,13 @@
-<!doctype html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>الاشتراكات - فلسطين بلاتفورم</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script>
-<style>
-:root{--blue:#173b68;--blue2:#2563a6;--green:#087443;--gold:#c58b18;--bg:#f4f7fb;--line:#e2e8f0;--red:#b51f2a}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#172b3f;font-family:Tahoma,"Segoe UI",Arial,sans-serif}.wrap{max-width:1080px;margin:auto;padding:0 14px}
-header{background:linear-gradient(135deg,#12365f,#2563a6);color:#fff;box-shadow:0 4px 18px #12365f25}.head{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:12px}.logo{color:#fff;text-decoration:none;font-size:21px;font-weight:900}.back{color:#fff;text-decoration:none;background:#ffffff18;padding:9px 12px;border-radius:10px}
-.hero{padding:30px 0 24px;background:#fff;border-bottom:1px solid var(--line)}.hero h1{margin:0 0 8px;color:var(--blue);font-size:30px}.hero p{margin:0;color:#6b7a8c;line-height:1.9;font-size:13px}
-.status{margin:18px 0;background:linear-gradient(135deg,#173b68,#2563a6);color:#fff;border-radius:18px;padding:20px;box-shadow:0 9px 25px #173b6825}.status-top{display:flex;justify-content:space-between;gap:10px;align-items:center}.status h2{margin:0;font-size:20px}.pill{display:inline-flex;padding:7px 11px;border-radius:999px;background:#ffffff20;font-size:12px;font-weight:900}.status-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:15px}.status-box{background:#ffffff14;border:1px solid #ffffff22;border-radius:12px;padding:12px}.status-box small{display:block;color:#dbeafe;font-size:11px;margin-bottom:5px}.status-box b{font-size:15px}.bar{height:7px;background:#ffffff20;border-radius:99px;overflow:hidden;margin-top:12px}.bar i{display:block;height:100%;background:#fff;border-radius:99px;width:0}
-section{padding:25px 0}.title h2{margin:0 0 6px;color:var(--blue)}.title p{margin:0;color:#718096;font-size:12px}.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:15px}.plan{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 5px 18px #0000000b;display:flex;flex-direction:column}.plan.featured{border:2px solid var(--gold);position:relative}.badge{position:absolute;top:-10px;left:15px;background:var(--gold);color:#fff;border-radius:999px;padding:5px 10px;font-size:10px;font-weight:900}.plan h3{margin:0 0 7px;color:var(--blue);font-size:18px}.price{font-size:29px;font-weight:900;color:var(--green)}.period{font-size:11px;color:#758398}.desc{font-size:12px;color:#6d7b8e;line-height:1.8;min-height:44px;margin:10px 0}.features{margin:0 0 15px;padding:0 18px;color:#425466;font-size:12px;line-height:2}.choose{margin-top:auto;border:0;border-radius:11px;padding:12px;background:var(--blue);color:#fff;font-weight:900;cursor:pointer}.choose:disabled{opacity:.55;cursor:not-allowed}.notice{display:none;margin-top:15px;padding:12px;border-radius:10px;font-size:12px}.ok{background:#e8f5e9;color:#246b2a}.err{background:#ffebee;color:#b71c1c}.orders{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}.order{padding:14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:center}.order:last-child{border-bottom:0}.order strong{color:var(--blue)}.muted{color:#718096;font-size:11px}.state{padding:5px 9px;border-radius:999px;background:#f1f5f9;font-size:11px;font-weight:900}.state.pending{background:#fff4d6;color:#8a6200}.state.paid{background:#e8f5e9;color:#287334}.state.failed,.state.cancelled{background:#ffebee;color:#b71c1c}.login{margin:20px 0;padding:20px;background:#fff;border:1px solid var(--line);border-radius:16px;text-align:center}.login a{display:inline-block;margin-top:10px;background:var(--blue);color:#fff;padding:10px 15px;border-radius:10px;text-decoration:none;font-weight:900}
-footer{text-align:center;color:#7a8795;font-size:11px;padding:25px}
-@media(max-width:800px){.plans{grid-template-columns:1fr 1fr}.status-grid{grid-template-columns:1fr 1fr}.status-box:last-child{grid-column:1/-1}}
-@media(max-width:520px){.plans{grid-template-columns:1fr}.status-grid{grid-template-columns:1fr}.status-box:last-child{grid-column:auto}.hero h1{font-size:25px}.head{min-height:62px}.logo{font-size:18px}}
-</style>
-</head>
-<body>
-<header><div class="wrap head"><a class="logo" href="index.html">فلسطين بلاتفورم</a><a class="back" href="account.html">← حسابي</a></div></header>
-<div class="hero"><div class="wrap"><h1>⭐ العضويات والاشتراكات</h1><p>اختر العضوية المناسبة لك، وتابع حالة اشتراكك ومدة بقائه من مكان واحد.</p></div></div>
-<main class="wrap">
-<div id="loginBox" class="login" style="display:none">يجب تسجيل الدخول لإدارة الاشتراك.<br><a href="login.html">تسجيل الدخول</a></div>
-<div id="app" style="display:none">
-<div class="status" id="statusCard"><div class="status-top"><h2 id="statusTitle">العضوية الحالية</h2><span class="pill" id="statusPill">عادي</span></div><div class="status-grid"><div class="status-box"><small>الخطة</small><b id="currentPlan">مستخدم عادي</b></div><div class="status-box"><small>تاريخ الانتهاء</small><b id="endDate">—</b></div><div class="status-box"><small>المتبقي</small><b id="daysLeft">—</b></div></div><div class="bar"><i id="progress"></i></div><div id="cancelWrap" style="display:none;margin-top:14px"><button id="cancelSub" style="border:0;border-radius:10px;padding:10px 14px;background:#b51f2a;color:#fff;font-weight:900;cursor:pointer">إلغاء الاشتراك</button><div class="muted" style="color:#dbeafe;margin-top:7px">سيؤدي الإلغاء إلى إيقاف الاشتراك الحالي ومزايا مقدم الخدمة.</div></div></div>
-<section><div class="title"><h2>اختر اشتراكك</h2><p>الأسعار الموجودة هنا مقترحة ويمكن تعديلها من قاعدة البيانات لاحقًا.</p></div><div class="plans" id="plans"></div><div id="notice" class="notice"></div></section>
-<section><div class="title"><h2>📋 طلبات الاشتراك</h2><p>آخر طلباتك وحالتها.</p></div><div class="orders" id="orders"><div class="order muted">جاري التحميل...</div></div></section>
-</div></main><footer>فلسطين بلاتفورم — الاشتراك والدفع الإلكتروني سيُربطان لاحقًا ببوابة دفع حقيقية.</footer>
-<script>
-const SUPABASE_URL='https://sesbumfedusbjevbsyzl.supabase.co';
-const SUPABASE_KEY='sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR';
-const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let user=null,plans=[];
-const $=id=>document.getElementById(id);
-function money(v,c){return Number(v).toLocaleString('ar-PS',{minimumFractionDigits:0,maximumFractionDigits:2})+' '+c}
-function fmtDate(v){return v?new Date(v).toLocaleDateString('ar-PS',{year:'numeric',month:'long',day:'numeric'}):'—'}
-function daysBetween(a,b){return Math.max(0,Math.ceil((new Date(b)-new Date(a))/86400000))}
-function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function showNotice(text,ok=false){$('notice').textContent=text;$('notice').className='notice '+(ok?'ok':'err');$('notice').style.display='block'}
-async function load(){
- const {data:{session}}=await client.auth.getSession();
- user=session?.user||null;
- if(!user){$('loginBox').style.display='block';return}
- $('app').style.display='block';
- const {data:p,error:pe}=await client.from('subscription_plans').select('*').eq('is_active',true).order('sort_order');
- if(pe){showNotice('تعذر تحميل خطط الاشتراك: '+pe.message);return} plans=p||[]; renderPlans(); await loadCurrent(); await loadOrders();
-}
-function renderPlans(){
- const box=$('plans');
- box.innerHTML=plans.map(p=>{const feats=Array.isArray(p.features)?p.features:[];const featured=p.billing_period==='yearly';return `<article class="plan ${featured?'featured':''}">${featured?'<span class="badge">سنوي</span>':''}<h3>${esc(p.name)}</h3><div class="price">${money(p.price,p.currency)}</div><div class="period">${p.billing_period==='monthly'?'شهريًا':'سنويًا'}</div><div class="desc">${esc(p.description||'')}</div><ul class="features">${feats.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><button class="choose" data-id="${esc(p.id)}">طلب الاشتراك</button></article>`}).join('');
- box.querySelectorAll('.choose').forEach(btn=>btn.addEventListener('click',()=>request(btn.dataset.id,btn)));
-}
-async function loadCurrent(){
- const {data,error}=await client.from('subscriptions').select('*,subscription_plans(name,audience,billing_period,duration_days)').eq('user_id',user.id).eq('status','active').gt('ends_at',new Date().toISOString()).order('ends_at',{ascending:false}).limit(1).maybeSingle();
- if(error)return;
- if(!data){$('statusPill').textContent='عادي';$('currentPlan').textContent='مستخدم عادي';$('endDate').textContent='لا يوجد اشتراك مدفوع';$('daysLeft').textContent='—';$('progress').style.width='0%';return}
- const days=daysBetween(new Date(),data.ends_at);const total=Number(data.subscription_plans?.duration_days||30);const pct=Math.min(100,Math.max(0,days/total*100));
- $('statusPill').textContent=data.subscription_plans?.name||'مشترك';$('currentPlan').textContent=data.subscription_plans?.name||'مشترك';$('endDate').textContent=fmtDate(data.ends_at);$('daysLeft').textContent=days+' يوم';$('progress').style.width=pct+'%';$('cancelWrap').style.display='block';
-}
-async function loadOrders(){
- const {data,error}=await client.from('subscription_orders').select('id,plan_id,amount,currency,status,created_at,subscription_plans(name)').eq('user_id',user.id).order('created_at',{ascending:false}).limit(15);
- if(error){$('orders').innerHTML='<div class="order err">تعذر تحميل الطلبات.</div>';return}
- if(!data?.length){$('orders').innerHTML='<div class="order muted">لا توجد طلبات اشتراك حتى الآن.</div>';return}
- $('orders').innerHTML=data.map(o=>`<div class="order"><div><strong>${esc(o.subscription_plans?.name||o.plan_id)}</strong><div class="muted">${fmtDate(o.created_at)} · ${money(o.amount,o.currency)}</div></div><span class="state ${o.status}">${o.status==='pending'?'بانتظار الدفع':o.status==='paid'?'مدفوع':o.status==='failed'?'فشل':'ملغى'}</span></div>`).join('');
-}
-async function cancelSubscription(){if(!confirm('هل أنت متأكد من إلغاء الاشتراك الحالي؟\nسيتم إيقاف الاشتراك ومزايا مقدم الخدمة.'))return;const {error}=await client.rpc('cancel_my_active_subscription');if(error){showNotice(error.message);return}showNotice('تم إلغاء الاشتراك بنجاح.',true);await loadCurrent();await loadOrders();}
-document.getElementById('cancelSub').addEventListener('click',cancelSubscription);
-async function request(planId,btn){
- btn.disabled=true;btn.textContent='جاري إنشاء الطلب...';
- const {data,error}=await client.rpc('request_subscription',{p_plan_id:planId});
- btn.disabled=false;btn.textContent='طلب الاشتراك';
- if(error){showNotice(error.message||'تعذر إنشاء طلب الاشتراك');return}
- showNotice('تم إنشاء طلب الاشتراك بنجاح. الخطوة التالية هي إتمام الدفع، ثم يمكن تفعيل الاشتراك.',true);await loadOrders();
-}
-load();
-</script>
-</body></html>
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>اشتراكاتي | فلسطين بلاتفورم</title><link rel="stylesheet" href="app.css"><style>
+:root{--p:#174f86;--p2:#2b79bd;--g:#0b986d;--bg:#f4f8fc;--line:#e2eaf2;--text:#172033;--muted:#6d7d90;--danger:#c62838}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Tahoma,sans-serif}.wrap{max-width:1050px;margin:auto;padding:0 14px}.top{padding:14px 0}.top a{color:var(--p);text-decoration:none;font-weight:900}.hero{background:linear-gradient(135deg,#123b68,#2878bc);color:#fff;padding:28px 0}.hero h1{margin:0 0 7px;font-size:26px}.hero p{margin:0;color:#dbeaf7}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 8px 28px #123b680b}.active{border-color:#bfe8d9;background:linear-gradient(145deg,#fff,#f1fbf7)}.price{font-size:27px;font-weight:900;color:var(--p);margin:12px 0}.muted{color:var(--muted);font-size:12px;line-height:1.8}.btn{border:0;border-radius:13px;padding:11px 15px;font:inherit;font-weight:900;cursor:pointer;background:var(--p);color:#fff}.btn.green{background:var(--g)}.btn.danger{background:var(--danger)}.btn.soft{background:#edf5fb;color:var(--p)}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.badge{display:inline-block;padding:6px 10px;border-radius:10px;background:#e9f8f2;color:#087957;font-weight:900;font-size:11px}.notice{padding:12px;border-radius:13px;margin:14px 0;font-size:13px}.ok{background:#e9f8f2;color:#087957}.err{background:#fff0f1;color:#a51f2b}.center{text-align:center}.history{display:grid;gap:9px}.row{border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;justify-content:space-between;gap:10px;align-items:center}@media(max-width:760px){.grid{grid-template-columns:1fr}.row{align-items:flex-start;flex-direction:column}}
+</style></head><body><div class="wrap top"><a href="account.html">← حسابي</a></div><section class="hero"><div class="wrap"><h1>💳 إدارة الاشتراكات</h1><p>تابع اشتراكك، التجديد، وطلبات الإلغاء من مكان واحد.</p></div></section><main class="wrap"><div id="notice"></div><section class="card" id="current"><h2>الاشتراك الحالي</h2><div id="currentBody">جاري التحميل...</div></section><h2>الباقات المتاحة</h2><section class="grid" id="plans"></section><section class="card"><h2>سجل الطلبات</h2><div id="history" class="history">جاري التحميل...</div></section></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script><script src="platform.js"></script><script>
+const db=ppClient,$=id=>document.getElementById(id),esc=ppEsc;let active=null,pendingCancel=false;function note(t,ok=false){$('notice').innerHTML='<div class="notice '+(ok?'ok':'err')+'">'+esc(t)+'</div>';setTimeout(()=>{$('notice').innerHTML=''},4500)}
+async function load(){const u=await ppUser();if(!u){location.href='login.html?next='+encodeURIComponent(location.href);return}const a=await db.rpc('get_my_active_subscription');if(a.error){$('currentBody').innerHTML='<div class="err notice">'+esc(a.error.message)+'</div>'}else{active=a.data?.[0]||null;renderCurrent()}const p=await db.from('subscription_plans').select('*').eq('is_active',true).order('price');if(p.error){$('plans').innerHTML='<div class="notice err">'+esc(p.error.message)+'</div>'}else renderPlans(p.data||[]);const h=await db.from('subscription_orders').select('id,plan_id,status,created_at,paid_at,subscription_plans(name,price,billing_period)').eq('user_id',u.id).order('created_at',{ascending:false}).limit(30);if(h.error)$('history').innerHTML='<div class="notice err">'+esc(h.error.message)+'</div>';else renderHistory(h.data||[]);const c=active?await db.from('subscription_cancellation_requests').select('id,status,reason,created_at').eq('subscription_id',active.subscription_id).order('created_at',{ascending:false}).limit(1):null;if(c?.data?.[0]?.status==='pending')pendingCancel=true;renderCurrent()}
+function renderCurrent(){if(!active){$('currentBody').innerHTML='<div class="muted">لا يوجد اشتراك فعال حاليًا.</div>';return}$('currentBody').innerHTML='<div><span class="badge">فعال</span><h3>'+esc(active.plan_name||active.plan_id)+'</h3><div class="muted">من '+new Date(active.starts_at).toLocaleDateString('ar-PS')+' إلى '+new Date(active.ends_at).toLocaleDateString('ar-PS')+' · متبقي '+active.days_left+' يوم</div></div><div class="actions"><a class="btn soft" href="profile.html?id='+encodeURIComponent((awaitUserId||''))+'">الملف</a><button class="btn danger" onclick="requestCancel()" '+(pendingCancel?'disabled':'')+'>'+ (pendingCancel?'طلب الإلغاء قيد المراجعة':'طلب إلغاء الاشتراك')+'</button></div>'}
+let awaitUserId='';async function requestCancel(){if(!active)return;const reason=prompt('سبب طلب الإلغاء (اختياري):')??'';const r=await db.rpc('request_subscription_cancellation',{p_subscription_id:active.subscription_id,p_reason:reason});if(r.error){note(r.error.message);return}pendingCancel=true;note('تم إرسال طلب الإلغاء إلى الإدارة. لن يتم إلغاء الاشتراك مباشرة.',true);renderCurrent()}
+function renderPlans(rows){$('plans').innerHTML=rows.map(p=>'<article class="card"><div class="muted">'+esc(p.audience||'premium')+'</div><h3>'+esc(p.name)+'</h3><div class="price">'+esc(p.price)+' ₪</div><div class="muted">'+(p.billing_period==='yearly'?'سنوي':'شهري')+'</div><button class="btn green" onclick="buy(\''+esc(p.id)+'\')">اختيار الباقة</button></article>').join('')||'<div class="muted">لا توجد باقات متاحة.</div>'}
+async function buy(id){const r=await db.rpc('request_subscription',{p_plan_id:id});if(r.error){note(r.error.message);return}note('تم إنشاء طلب الاشتراك. أكمل إجراءات الدفع/التفعيل مع الإدارة.',true);load()}
+function renderHistory(rows){$('history').innerHTML=rows.length?rows.map(x=>'<div class="row"><div><b>'+esc(x.subscription_plans?.name||x.plan_id)+'</b><div class="muted">'+new Date(x.created_at).toLocaleString('ar-PS')+'</div></div><span class="badge">'+esc(x.status||'')+'</span></div>').join(''):'<div class="muted">لا يوجد سجل حتى الآن.</div>'}
+async function boot(){const u=await ppUser();if(u)awaitUserId=u.id;await load()}boot();
+</script></body></html>

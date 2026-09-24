@@ -383,7 +383,7 @@ header{
 }
 </style>
 <link rel="stylesheet" href="app.css">
-<link rel="stylesheet" href="theme-v47.css"><link rel="stylesheet" href="theme-v48.css"></head>
+</head>
 
 <body>
 
@@ -442,8 +442,8 @@ header{
             ➕ أضف إعلان سيارة
         </a>
 
-        <a href="ads.html" class="all-btn">
-            ← تصنيفات الإعلانات
+        <a href="ads.html?category=سيارات" class="all-btn">
+            📢 جميع الإعلانات
         </a>
 
     </div>
@@ -950,7 +950,6 @@ async function loadAds(){
         .from("ads")
         .select("*")
         .eq("category","سيارات")
-        .eq("status","active")
         .order(
             "created_at",
             {
