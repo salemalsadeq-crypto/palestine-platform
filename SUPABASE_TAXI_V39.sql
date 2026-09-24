@@ -73,7 +73,7 @@ BEGIN
   IF v_uid IS NULL THEN RAISE EXCEPTION 'يجب تسجيل الدخول'; END IF;
   SELECT provider_id INTO v_provider FROM public.service_requests WHERE id=p_request_id AND type='taxi' AND status='pending' FOR UPDATE;
   IF v_provider IS NULL OR v_provider<>v_uid THEN RAISE EXCEPTION 'هذا الطلب غير مخصص لك أو لم يعد متاحاً'; END IF;
-  UPDATE public.service_requests SET status='accepted',updated_at=now() WHERE id=p_request_id AND ((p_status='in_progress' AND status='accepted') OR (p_status='completed' AND status='in_progress') OR (p_status='cancelled' AND status IN ('pending','accepted','in_progress'))) RETURNING id INTO v_id;
+  UPDATE public.service_requests SET status='accepted',updated_at=now() WHERE id=p_request_id AND status='pending' RETURNING id INTO v_id;
   INSERT INTO public.notifications(user_id,type,title,message,related_service_request_id)
   SELECT requester_id,'service','تم قبول طلب التاكسي 🚕','السائق قبل طلبك ويمكنك متابعة حالة الرحلة.',id
   FROM public.service_requests WHERE id=v_id;
@@ -87,13 +87,13 @@ DECLARE v_uid uuid:=auth.uid(); v_id uuid; v_requester uuid; v_provider uuid;
 BEGIN
   IF v_uid IS NULL THEN RAISE EXCEPTION 'يجب تسجيل الدخول'; END IF;
   IF p_status NOT IN ('in_progress','completed','cancelled') THEN RAISE EXCEPTION 'الحالة غير صالحة'; END IF;
-  SELECT requester_id,provider_id INTO v_requester,v_provider FROM public.service_requests WHERE id=p_request_id AND type='taxi';
-  IF v_provider<>v_uid THEN RAISE EXCEPTION 'غير مصرح لك بتعديل هذا الطلب'; END IF;
+  SELECT requester_id,provider_id INTO v_requester,v_provider FROM public.service_requests WHERE id=p_request_id;
+  IF v_provider IS NULL OR v_provider<>v_uid THEN RAISE EXCEPTION 'غير مصرح لك بتعديل هذا الطلب'; END IF;
   UPDATE public.service_requests SET status=p_status,provider_note=NULLIF(trim(coalesce(p_note,'')),''),updated_at=now() WHERE id=p_request_id AND ((p_status='in_progress' AND status='accepted') OR (p_status='completed' AND status='in_progress') OR (p_status='cancelled' AND status IN ('pending','accepted','in_progress'))) RETURNING id INTO v_id;
   INSERT INTO public.notifications(user_id,type,title,message,related_service_request_id)
   VALUES(v_requester,'service',
-    CASE p_status WHEN 'in_progress' THEN 'بدأت الرحلة 🚕' WHEN 'completed' THEN 'انتهت الرحلة ✅' ELSE 'تم إلغاء الرحلة' END,
-    CASE p_status WHEN 'in_progress' THEN 'السائق بدأ تنفيذ الرحلة.' WHEN 'completed' THEN 'اكتملت الرحلة. يمكنك تقييم السائق.' ELSE 'تم تحديث حالة الرحلة.' END,v_id);
+    CASE p_status WHEN 'in_progress' THEN 'بدأ تنفيذ طلبك 🚀' WHEN 'completed' THEN 'اكتمل طلبك ✅' ELSE 'تم إلغاء طلبك' END,
+    CASE p_status WHEN 'in_progress' THEN 'مقدم الخدمة بدأ تنفيذ طلبك.' WHEN 'completed' THEN 'اكتمل تنفيذ طلبك.' ELSE 'تم تحديث حالة طلبك.' END,v_id);
   RETURN v_id;
 END; $$;
 GRANT EXECUTE ON FUNCTION public.update_my_service_request(uuid,text,text) TO authenticated;

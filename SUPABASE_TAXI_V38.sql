@@ -87,8 +87,8 @@ DECLARE v_uid uuid:=auth.uid(); v_id uuid; v_requester uuid; v_provider uuid;
 BEGIN
   IF v_uid IS NULL THEN RAISE EXCEPTION 'يجب تسجيل الدخول'; END IF;
   IF p_status NOT IN ('in_progress','completed','cancelled') THEN RAISE EXCEPTION 'الحالة غير صالحة'; END IF;
-  SELECT requester_id,provider_id INTO v_requester,v_provider FROM public.service_requests WHERE id=p_request_id AND type='taxi';
-  IF v_provider<>v_uid THEN RAISE EXCEPTION 'غير مصرح لك بتعديل هذا الطلب'; END IF;
+  SELECT requester_id,provider_id INTO v_requester,v_provider FROM public.service_requests WHERE id=p_request_id;
+  IF v_provider IS NULL OR v_provider<>v_uid THEN RAISE EXCEPTION 'غير مصرح لك بتعديل هذا الطلب'; END IF;
   UPDATE public.service_requests SET status=p_status,provider_note=NULLIF(trim(coalesce(p_note,'')),''),updated_at=now() WHERE id=p_request_id RETURNING id INTO v_id;
   INSERT INTO public.notifications(user_id,type,title,message,related_service_request_id)
   VALUES(v_requester,'service',
