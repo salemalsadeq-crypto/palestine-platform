@@ -299,6 +299,8 @@ button{
 
 }
 
+
+.subscription-card{background:linear-gradient(135deg,#173b68,#287f88);color:#fff;border:0;overflow:hidden}.subscription-card h2{margin:0 0 7px}.subscription-card p{margin:0;color:#e4f0f7;font-size:12px;line-height:1.8}.subscription-grid{display:grid;grid-template-columns:1.3fr .8fr .8fr;gap:12px;margin-top:16px}.subscription-box{background:#ffffff18;border:1px solid #ffffff30;border-radius:13px;padding:12px}.subscription-box small{display:block;color:#d9e9f1;font-size:10px}.subscription-box b{display:block;margin-top:5px;font-size:18px}.subscription-btn{display:block;text-align:center;text-decoration:none;background:#fff;color:#173b68;border-radius:11px;padding:12px;font-weight:900;margin-top:15px}.subscription-btn:hover{transform:translateY(-1px)}@media(max-width:650px){.subscription-grid{grid-template-columns:1fr 1fr}.subscription-grid .subscription-box:first-child{grid-column:1/-1}}
 </style>
 
 <link rel="stylesheet" href="app.css">
@@ -527,6 +529,17 @@ class="message">
 
 <!-- الإعلانات -->
 
+<div class="card subscription-card" id="subscriptionCard">
+<h2>⭐ عضويتي</h2>
+<p>تابع نوع عضويتك وعدد الأيام المتبقية، أو اختر خطة جديدة.</p>
+<div class="subscription-grid">
+<div class="subscription-box"><small>الخطة الحالية</small><b id="accountPlan">عضو عادي</b></div>
+<div class="subscription-box"><small>المتبقي</small><b id="accountDays">—</b></div>
+<div class="subscription-box"><small>الانتهاء</small><b id="accountEnd" style="font-size:14px">—</b></div>
+</div>
+<a href="subscriptions.html" class="subscription-btn">إدارة العضوية والاشتراك →</a>
+</div>
+
 <div class="card">
 <div class="account-section-title"><h2>📌 الوصول السريع</h2><span class="section-note">كل وظائف الحساب من هنا</span></div>
 <div class="quick-links">
@@ -536,6 +549,7 @@ class="message">
 <a href="notifications.html" class="quick-link">🔔 الإشعارات</a>
 <a href="orders.html" class="quick-link">🛍️ طلباتي ومشترياتي</a>
 <a href="services.html" class="quick-link">⚡ الخدمات</a>
+<a href="subscriptions.html" class="quick-link">⭐ الاشتراكات</a>
 </div>
 </div>
 
@@ -1375,6 +1389,20 @@ document.getElementById(
 /* =========================
    الإحصائيات
 ========================= */
+async function loadAccountSubscription(){
+    if(!currentUser) return;
+    try{
+        const {data,error}=await supabaseClient.from('subscriptions').select('ends_at,plan_id,status,subscription_plans(name)').eq('user_id',currentUser.id).eq('status','active').order('ends_at',{ascending:false}).limit(1).maybeSingle();
+        if(error) throw error;
+        const plan=document.getElementById('accountPlan'), days=document.getElementById('accountDays'), end=document.getElementById('accountEnd');
+        if(!data){if(plan)plan.textContent='عضو عادي';if(days)days.textContent='—';if(end)end.textContent='لا يوجد';return;}
+        const dt=new Date(data.ends_at);const d=Math.max(0,Math.ceil((dt-Date.now())/86400000));
+        if(plan)plan.textContent=data.subscription_plans?.name||'اشتراك';
+        if(days)days.textContent=d+' يوم';
+        if(end)end.textContent=dt.toLocaleDateString('ar-PS');
+    }catch(e){console.warn('subscription summary',e)}
+}
+
 async function loadAccountStats(){
     if(!currentUser) return;
 
@@ -1404,7 +1432,7 @@ function startAccountRealtime(){
 }
 
 /* تشغيل الصفحة */
-loadAccount().then(()=>{loadAccountStats();startAccountRealtime();});
+loadAccount().then(()=>{loadAccountStats();loadAccountSubscription();startAccountRealtime();});
 
 </script>
 
