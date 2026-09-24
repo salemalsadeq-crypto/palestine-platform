@@ -35,6 +35,16 @@ CREATE POLICY "taxi reviews insert requester" ON public.taxi_reviews
 FOR INSERT TO authenticated WITH CHECK (requester_id=auth.uid());
 CREATE INDEX IF NOT EXISTS idx_taxi_reviews_provider ON public.taxi_reviews(provider_id,created_at DESC);
 
+-- إسقاط الإصدارات القديمة من الدوال أولاً (بعضها كان يرجع boolean وتغيّر إلى uuid،
+-- وPostgreSQL لا يسمح بـ CREATE OR REPLACE عند تغيير نوع القيمة المرجعة)
+DROP FUNCTION IF EXISTS public.create_taxi_request(uuid,text,text,text,text,integer,double precision,double precision,double precision,double precision);
+DROP FUNCTION IF EXISTS public.accept_taxi_service_request(uuid);
+DROP FUNCTION IF EXISTS public.accept_service_request(uuid);
+DROP FUNCTION IF EXISTS public.update_my_service_request(uuid,text,text);
+DROP FUNCTION IF EXISTS public.cancel_my_taxi_request(uuid);
+DROP FUNCTION IF EXISTS public.update_my_provider_location(double precision,double precision);
+DROP FUNCTION IF EXISTS public.add_taxi_review(uuid,integer,text);
+
 CREATE OR REPLACE FUNCTION public.create_taxi_request(
   p_provider_id uuid,
   p_city text,
@@ -81,6 +91,27 @@ BEGIN
 END; $$;
 GRANT EXECUTE ON FUNCTION public.accept_taxi_service_request(uuid) TO authenticated;
 
+-- استعادة دالة "قبول أي طلب خدمة عام" (توصيل/منزلية/طعام/نقل) بمنطقها الصحيح الأصلي،
+-- بعد ما كانت نسخ سابقة (V36 وV38) استبدلتها بالخطأ بمنطق خاص بالتاكسي فقط.
+CREATE OR REPLACE FUNCTION public.accept_service_request(p_request_id uuid) RETURNS boolean
+LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+DECLARE v_uid uuid:=auth.uid(); v_type text; v_status text;
+BEGIN
+  IF v_uid IS NULL THEN RAISE EXCEPTION 'يجب تسجيل الدخول'; END IF;
+  SELECT type,status INTO v_type,v_status FROM public.service_requests WHERE id=p_request_id FOR UPDATE;
+  IF v_type IS NULL THEN RAISE EXCEPTION 'الطلب غير موجود'; END IF;
+  IF v_type='taxi' THEN RAISE EXCEPTION 'استخدم قبول طلب التاكسي المخصص'; END IF;
+  IF v_status<>'pending' THEN RAISE EXCEPTION 'الطلب لم يعد متاحًا'; END IF;
+  IF EXISTS(SELECT 1 FROM public.service_requests WHERE id=p_request_id AND requester_id=v_uid) THEN RAISE EXCEPTION 'لا يمكنك قبول طلبك'; END IF;
+  IF NOT EXISTS(SELECT 1 FROM public.service_providers WHERE user_id=v_uid AND service_type=v_type AND is_active=true) THEN RAISE EXCEPTION 'فعّل نفسك كمقدم لهذه الخدمة أولًا'; END IF;
+  UPDATE public.service_requests SET provider_id=v_uid,status='accepted',updated_at=now() WHERE id=p_request_id AND status='pending';
+  IF NOT FOUND THEN RAISE EXCEPTION 'تم قبول الطلب من مقدم آخر'; END IF;
+  INSERT INTO public.notifications(user_id,type,title,message,related_service_request_id)
+  SELECT requester_id,'service','تم قبول طلب الخدمة ✅','تم قبول طلبك من مقدم خدمة ويمكنك متابعة حالته.',id FROM public.service_requests WHERE id=p_request_id;
+  RETURN true;
+END; $$;
+GRANT EXECUTE ON FUNCTION public.accept_service_request(uuid) TO authenticated;
+
 CREATE OR REPLACE FUNCTION public.update_my_service_request(p_request_id uuid,p_status text,p_note text DEFAULT NULL)
 RETURNS uuid LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
 DECLARE v_uid uuid:=auth.uid(); v_id uuid; v_requester uuid; v_provider uuid;
@@ -105,7 +136,7 @@ BEGIN
   IF v_uid IS NULL THEN RAISE EXCEPTION 'يجب تسجيل الدخول'; END IF;
   SELECT provider_id INTO v_provider FROM public.service_requests WHERE id=p_request_id AND requester_id=v_uid AND type='taxi' AND status IN ('pending','accepted');
   IF NOT FOUND THEN RAISE EXCEPTION 'لا يمكن إلغاء هذا الطلب الآن'; END IF;
-  UPDATE public.service_requests SET status='cancelled',updated_at=now() WHERE id=p_request_id AND ((p_status='in_progress' AND status='accepted') OR (p_status='completed' AND status='in_progress') OR (p_status='cancelled' AND status IN ('pending','accepted','in_progress'))) RETURNING id INTO v_id;
+  UPDATE public.service_requests SET status='cancelled',updated_at=now() WHERE id=p_request_id AND status IN ('pending','accepted') RETURNING id INTO v_id;
   IF v_provider IS NOT NULL THEN
     INSERT INTO public.notifications(user_id,type,title,message,related_service_request_id)
     VALUES(v_provider,'service','أُلغي طلب التاكسي','قام العميل بإلغاء الطلب.',v_id);
