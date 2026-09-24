@@ -23,7 +23,7 @@ footer{text-align:center;color:#7a8795;font-size:11px;padding:25px}
 <main class="wrap">
 <div id="loginBox" class="login" style="display:none">يجب تسجيل الدخول لإدارة الاشتراك.<br><a href="login.html">تسجيل الدخول</a></div>
 <div id="app" style="display:none">
-<div class="status" id="statusCard"><div class="status-top"><h2 id="statusTitle">العضوية الحالية</h2><span class="pill" id="statusPill">عادي</span></div><div class="status-grid"><div class="status-box"><small>الخطة</small><b id="currentPlan">مستخدم عادي</b></div><div class="status-box"><small>تاريخ الانتهاء</small><b id="endDate">—</b></div><div class="status-box"><small>المتبقي</small><b id="daysLeft">—</b></div></div><div class="bar"><i id="progress"></i></div></div>
+<div class="status" id="statusCard"><div class="status-top"><h2 id="statusTitle">العضوية الحالية</h2><span class="pill" id="statusPill">عادي</span></div><div class="status-grid"><div class="status-box"><small>الخطة</small><b id="currentPlan">مستخدم عادي</b></div><div class="status-box"><small>تاريخ الانتهاء</small><b id="endDate">—</b></div><div class="status-box"><small>المتبقي</small><b id="daysLeft">—</b></div></div><div class="bar"><i id="progress"></i></div><div id="cancelWrap" style="display:none;margin-top:14px"><button id="cancelSub" style="border:0;border-radius:10px;padding:10px 14px;background:#b51f2a;color:#fff;font-weight:900;cursor:pointer">إلغاء الاشتراك</button><div class="muted" style="color:#dbeafe;margin-top:7px">سيؤدي الإلغاء إلى إيقاف الاشتراك الحالي ومزايا مقدم الخدمة.</div></div></div>
 <section><div class="title"><h2>اختر اشتراكك</h2><p>الأسعار الموجودة هنا مقترحة ويمكن تعديلها من قاعدة البيانات لاحقًا.</p></div><div class="plans" id="plans"></div><div id="notice" class="notice"></div></section>
 <section><div class="title"><h2>📋 طلبات الاشتراك</h2><p>آخر طلباتك وحالتها.</p></div><div class="orders" id="orders"><div class="order muted">جاري التحميل...</div></div></section>
 </div></main><footer>فلسطين بلاتفورم — الاشتراك والدفع الإلكتروني سيُربطان لاحقًا ببوابة دفع حقيقية.</footer>
@@ -56,7 +56,7 @@ async function loadCurrent(){
  if(error)return;
  if(!data){$('statusPill').textContent='عادي';$('currentPlan').textContent='مستخدم عادي';$('endDate').textContent='لا يوجد اشتراك مدفوع';$('daysLeft').textContent='—';$('progress').style.width='0%';return}
  const days=daysBetween(new Date(),data.ends_at);const total=Number(data.subscription_plans?.duration_days||30);const pct=Math.min(100,Math.max(0,days/total*100));
- $('statusPill').textContent=data.subscription_plans?.name||'مشترك';$('currentPlan').textContent=data.subscription_plans?.name||'مشترك';$('endDate').textContent=fmtDate(data.ends_at);$('daysLeft').textContent=days+' يوم';$('progress').style.width=pct+'%';
+ $('statusPill').textContent=data.subscription_plans?.name||'مشترك';$('currentPlan').textContent=data.subscription_plans?.name||'مشترك';$('endDate').textContent=fmtDate(data.ends_at);$('daysLeft').textContent=days+' يوم';$('progress').style.width=pct+'%';$('cancelWrap').style.display='block';
 }
 async function loadOrders(){
  const {data,error}=await client.from('subscription_orders').select('id,plan_id,amount,currency,status,created_at,subscription_plans(name)').eq('user_id',user.id).order('created_at',{ascending:false}).limit(15);
@@ -64,6 +64,8 @@ async function loadOrders(){
  if(!data?.length){$('orders').innerHTML='<div class="order muted">لا توجد طلبات اشتراك حتى الآن.</div>';return}
  $('orders').innerHTML=data.map(o=>`<div class="order"><div><strong>${esc(o.subscription_plans?.name||o.plan_id)}</strong><div class="muted">${fmtDate(o.created_at)} · ${money(o.amount,o.currency)}</div></div><span class="state ${o.status}">${o.status==='pending'?'بانتظار الدفع':o.status==='paid'?'مدفوع':o.status==='failed'?'فشل':'ملغى'}</span></div>`).join('');
 }
+async function cancelSubscription(){if(!confirm('هل أنت متأكد من إلغاء الاشتراك الحالي؟\nسيتم إيقاف الاشتراك ومزايا مقدم الخدمة.'))return;const {error}=await client.rpc('cancel_my_active_subscription');if(error){showNotice(error.message);return}showNotice('تم إلغاء الاشتراك بنجاح.',true);await loadCurrent();await loadOrders();}
+document.getElementById('cancelSub').addEventListener('click',cancelSubscription);
 async function request(planId,btn){
  btn.disabled=true;btn.textContent='جاري إنشاء الطلب...';
  const {data,error}=await client.rpc('request_subscription',{p_plan_id:planId});
