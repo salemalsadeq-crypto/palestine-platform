@@ -29,7 +29,7 @@ window.ppSetupHeader=async()=>{const u=await ppUser();const login=document.getEl
     const account=accountHost;
     if(account){account.replaceChildren(host)}else{header.querySelector('.head,.headin,.header')?.appendChild(host); if(!host.parentElement) header.appendChild(host)}
     // Remove legacy header navigation; the side drawer is the single navigation system.
-    header.querySelectorAll('nav, .header-nav, .top-nav, .headin > div:not(.logo), .header > div:not(.logo):not(.account-area):not(#ppProfileControl)').forEach(el=>{
+    header.querySelectorAll('nav, .header-nav, .top-nav').forEach(el=>{
       if(!el.closest('#ppProfileControl')) el.remove();
     });
     const btn=host.querySelector('#ppProfileBtn'), menu=host.querySelector('#ppProfileMenu');
