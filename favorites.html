@@ -11,7 +11,7 @@ try{
 const {data:u,error:ue}=await db.auth.getUser();
 if(ue){$('content').innerHTML='<div class="error">❌ خطأ بجلسة الدخول: '+esc(ue.message)+'</div>';return}
 if(!u.user){location.href='login.html';return}
-const {data,error}=await db.from('favorites').select('id,ad_id,created_at,ads(id,title,category,description,price,city,image_urls,created_at)').eq('user_id',u.user.id).order('created_at',{ascending:false});
+const {data,error}=await db.from('favorites').select('id,ad_id,created_at,ads(id,title,category,description,price,city,image_urls,created_at,status)').eq('user_id',u.user.id).order('created_at',{ascending:false});
 if(error){$('content').innerHTML='<div class="error">❌ '+esc(error.message)+'</div>';return}
 if(!data?.length){$('content').innerHTML='<div class="empty">❤️ لا توجد إعلانات محفوظة حتى الآن.<br><br><a class="btn view" href="ads.html">تصفح الإعلانات</a></div>';return}
 $('content').innerHTML='<div class="grid">'+data.map(f=>{const a=f.ads||{},im=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:'';return `<article class="card">${im?`<img class="pic" src="${esc(im)}" alt="${esc(a.title)}">`:'<div class="nop">📦</div>'}<div class="body"><div class="title">${esc(a.title||'إعلان')}</div><div class="meta">${esc(a.category||'')} ${a.city?' • '+esc(a.city):''}</div><div class="price">${a.price!=null?Number(a.price).toLocaleString('ar-PS')+' شيكل':'السعر عند التواصل'}</div><div class="actions"><a class="btn view" href="ad-details.html?id=${encodeURIComponent(a.id)}">عرض الإعلان</a><button class="btn remove" onclick="removeFav('${f.id}')">حذف</button></div></div></article>`}).join('')+'</div>'
