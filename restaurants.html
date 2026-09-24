@@ -1,26 +1,58 @@
 <!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>المطاعم والمقاهي | فلسطين بلاتفورم</title><style>*{box-sizing:border-box}body{margin:0;background:#f5f7fa;color:#172033;font-family:Arial,Tahoma,sans-serif}a{text-decoration:none}header{background:#fff;padding:14px;box-shadow:0 2px 10px #0001}.head{max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:10px}.logo{font-size:22px;font-weight:bold;color:#173b68}.logo span{color:#b51f2a}.btn{padding:10px 13px;border-radius:9px;font-weight:bold;display:inline-block}.blue{background:#173b68;color:#fff}.red{background:#b51f2a;color:#fff}.hero{background:linear-gradient(135deg,#173b68,#255d8f);color:#fff;text-align:center;padding:38px 15px}.hero h1{margin:0 0 8px;font-size:31px}.container{max-width:1100px;margin:auto;padding:20px 15px}.tools{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px}.tools a{flex:1;min-width:150px;text-align:center}.filters{background:#fff;padding:15px;border-radius:14px;box-shadow:0 3px 15px #0000000d;margin-bottom:18px}.search{display:flex;gap:8px}input{flex:1;padding:12px;border:1px solid #ddd;border-radius:9px;font-size:15px}button{border:0;border-radius:9px;padding:0 20px;background:#b51f2a;color:#fff;font-weight:bold}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 3px 15px #0000000d}.pic,.empty{width:100%;height:190px}.pic{object-fit:cover}.empty{display:flex;align-items:center;justify-content:center;background:#eef1f5;font-size:55px}.body{padding:14px}.title{font-size:19px;font-weight:bold}.tag{display:inline-block;background:#edf2f8;color:#173b68;padding:5px 8px;border-radius:6px;font-size:12px;margin:7px 0}.desc{color:#687386;line-height:1.6;min-height:45px}.info{line-height:2;color:#4d5968;font-size:14px}.details{display:block;text-align:center;background:#173b68;color:#fff;padding:10px;border-radius:8px;margin-top:10px}.msg{background:#fff;padding:30px;text-align:center;border-radius:12px;grid-column:1/-1}@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:550px){.head{flex-direction:column;align-items:stretch}.grid{grid-template-columns:1fr}.search{flex-direction:column}button{height:45px}}</style><link rel="stylesheet" href="app.css">
-</head><body><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script><script src="platform.js"></script><header><div class="head"><div class="logo">فلسطين <span>بلاتفورم</span></div><a class="btn blue" href="index.html">الرئيسية</a></div></header><section class="hero"><h1>🍔 المطاعم والمقاهي</h1><p>اكتشف المطاعم والمقاهي في فلسطين</p></section><main class="container"><div class="tools"><a class="btn red" href="add-ad.html?category=مطاعم">➕ أضف مطعمك أو مقهاك</a><a class="btn blue" href="ads.html?category=مطاعم">📢 جميع الإعلانات</a><a class="btn blue" href="reels.html">🎬 الفيديوهات</a></div><div class="filters"><div class="search"><input id="q" placeholder="ابحث بالاسم أو المدينة أو الوصف"><button id="go">بحث</button></div></div><div id="grid" class="grid"><div class="msg">جاري التحميل...</div></div></main><script>
-const db=window.ppClient;
+</head><body><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script><script src="platform.js"></script><header><div class="head"><div class="logo">فلسطين <span>بلاتفورم</span></div><a class="btn blue" href="index.html">الرئيسية</a></div></header><section class="hero"><h1>🍔 المطاعم والمقاهي</h1><p>اكتشف المطاعم والمقاهي في فلسطين</p></section><main class="container"><div class="tools"><a class="btn red" href="add-ad.html?category=مطاعم">➕ أضف مطعمك أو مقهاك</a><a class="btn blue" href="ads.html?category=مطاعم">📢 جميع الإعلانات</a><a class="btn blue" href="reels.html">🎬 الفيديوهات</a></div><div class="filters"><div class="search"><input id="q" placeholder="ابحث بالاسم أو المدينة أو الوصف"><button id="go">بحث</button></div></div><div id="grid" class="grid"><div class="msg">جاري التحميل...</div></div></main>
+<script>
+(function(){
+'use strict';
+const CATEGORY='مطاعم', ICON='🍔', DETAIL='المطعم', PRICE_LABEL='السعر غير محدد';
 const $=id=>document.getElementById(id);
-const esc=x=>String(x??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));
-let all=[];
-function render(){
- const q=$("q").value.trim().toLowerCase();
- const data=all.filter(a=>!q||[a.title,a.description,a.city,a.phone].filter(Boolean).join(' ').toLowerCase().includes(q));
- if(!data.length){$("grid").innerHTML='<div class="msg">🍔 لا توجد مطاعم أو مقاهٍ مطابقة حاليًا.</div>';return}
- $("grid").innerHTML=data.map(a=>{
-   const im=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:null;
-   const phone=a.phone?'<div>📞 '+esc(a.phone)+'</div>':'';
-   const loc=a.city?'<div>📍 '+esc(a.city)+'</div>':'';
-   return '<article class="card">'+(im?'<img class="pic" src="'+esc(im)+'" alt="'+esc(a.title)+'">':'<div class="empty">🍔</div>')+'<div class="body"><div class="title">'+esc(a.title)+'</div><span class="tag">مطاعم</span><div class="desc">'+esc((a.description||'لا يوجد وصف').slice(0,130))+'</div><div class="info">'+loc+phone+'</div><a class="details" href="ad-details.html?id='+encodeURIComponent(a.id)+'">عرض التفاصيل</a></div></article>';
- }).join('');
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const db=window.ppClient, grid=$('grid'), count=$('count');
+let ads=[];
+function showError(e){const msg=e?.message||String(e||'خطأ غير متوقع');if(count)count.textContent='❌ خطأ';if(grid)grid.innerHTML='<div class="msg error">❌ '+esc(msg)+'</div>';}
+window.addEventListener('error',e=>showError(e.error||e.message));
+window.addEventListener('unhandledrejection',e=>showError(e.reason));
+function money(x){if(x==null||x==='')return PRICE_LABEL;const n=Number(x);return Number.isFinite(n)?n.toLocaleString('ar-PS')+' شيكل':PRICE_LABEL;}
+function date(x){if(!x)return '';try{return new Date(x).toLocaleDateString('ar-PS')}catch(e){return '';}}
+function render(list){
+ if(!grid)return;
+ if(count)count.textContent='عدد النتائج: '+list.length;
+ if(!list.length){grid.innerHTML='<div class="msg">'+ICON+' لا توجد نتائج مطابقة حاليًا.</div>';return;}
+ grid.innerHTML=list.map(a=>{const im=Array.isArray(a.image_urls)&&a.image_urls.length?a.image_urls[0]:null;const image=im?'<img class="pic" loading="lazy" src="'+esc(im)+'" alt="'+esc(a.title||'')+'">':'<div class="nop">'+ICON+'</div>';const desc=String(a.description||'لا يوجد وصف');return '<article class="card">'+image+'<div class="body"><div class="title">'+esc(a.title||'إعلان')+'</div><span class="tag">'+esc(CATEGORY)+'</span><div class="desc">'+esc(desc.slice(0,130))+'</div><div class="info">💰 '+esc(money(a.price))+(a.city?'<br>📍 '+esc(a.city):'')+'<br>📅 '+esc(date(a.created_at))+'</div><a class="details" href="ad-details.html?id='+encodeURIComponent(a.id)+'">👁️ عرض تفاصيل '+DETAIL+'</a></div></article>';}).join('');
+}
+function filter(){
+ const q=($('search')?.value||$('q')?.value||'').trim().toLowerCase();
+ const city=($('city')?.value||'').trim().toLowerCase();
+ const minEl=$('min'),maxEl=$('max');
+ const min=minEl&&minEl.value!==''?Number(minEl.value):null,max=maxEl&&maxEl.value!==''?Number(maxEl.value):null;
+ const type=($('type')?.value||$('jobType')?.value||'').trim().toLowerCase();
+ let list=ads.filter(a=>{const text=[a.title,a.description,a.city].filter(Boolean).join(' ').toLowerCase();return(!q||text.includes(q))&&(!city||String(a.city||'').toLowerCase()===city)&&(!type||text.includes(type))&&(min===null||Number(a.price)>=min)&&(max===null||Number(a.price)<=max);});
+ const sort=$('sort')?.value||'new';
+ list.sort((a,b)=>sort==='old'?new Date(a.created_at)-new Date(b.created_at):sort==='low'?(a.price==null?Infinity:Number(a.price))-(b.price==null?Infinity:Number(b.price)):sort==='high'?(b.price==null?-Infinity:Number(b.price))-(a.price==null?-Infinity:Number(a.price)):new Date(b.created_at)-new Date(a.created_at));
+ render(list);
 }
 async function load(){
- $("grid").innerHTML='<div class="msg">جاري تحميل المطاعم والمقاهي...</div>';
- const {data,error}=await db.from('ads').select('*').eq('category','مطاعم').eq('status','active').order('created_at',{ascending:false});
- if(error){$("grid").innerHTML='<div class="msg">❌ تعذر تحميل المطاعم: '+esc(error.message)+'</div>';return}
- all=data||[];render();
+ if(!db){showError('تعذر الاتصال بقاعدة البيانات');return;}
+ if(grid)grid.innerHTML='<div class="msg">⏳ جاري التحميل...</div>';
+ const r=await db.from('ads').select('*').eq('category',CATEGORY).eq('status','active').order('created_at',{ascending:false});
+ if(r.error)throw r.error;ads=r.data||[];filter();
 }
-$("go").onclick=render;$("q").onkeydown=e=>{if(e.key==='Enter')render()};load();
-</script></script><script src="app-ui.js" defer></script>
+async function setupUser(){
+ if(!db)return;
+ const r=await db.auth.getUser();const u=r.data?.user;if(!u)return;
+ const show=(id,display)=>{const el=$(id);if(el)el.style.display=display;};
+ show('login','none');show('account','inline-block');show('myads','inline-block');show('logout','inline-block');
+ const p=await db.from('profiles').select('full_name,avatar_url').eq('id',u.id).maybeSingle();
+ const name=p.data?.full_name||u.email?.split('@')[0]||'المستخدم';
+ const nameEl=$('name');if(nameEl)nameEl.textContent=name;
+ const initial=$('initial');if(initial)initial.textContent=name.trim()[0]||'م';
+ const avatar=$('avatar');if(avatar&&p.data?.avatar_url){avatar.src=p.data.avatar_url;avatar.style.display='block';if(initial)initial.style.display='none';}else if(initial)initial.style.display='flex';
+ const logout=$('logout');if(logout)logout.onclick=async()=>{await db.auth.signOut();location.reload();};
+}
+const bind=(id,evt)=>{const el=$(id);if(el)el.addEventListener(evt,filter);};
+bind('search','input');bind('q','input');bind('searchBtn','click');bind('go','click');['city','min','max','sort','type','jobType'].forEach(id=>bind(id,'change'));
+setupUser().catch(()=>{});load().catch(showError);
+})();
+</script>
+<script src="app-ui.js" defer></script>
+
 </body></html>

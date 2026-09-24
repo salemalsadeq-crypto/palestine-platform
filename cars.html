@@ -950,6 +950,7 @@ async function loadAds(){
         .from("ads")
         .select("*")
         .eq("category","سيارات")
+        .eq("status","active")
         .order(
             "created_at",
             {

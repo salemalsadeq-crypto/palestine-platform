@@ -61,7 +61,7 @@ textarea{min-height:130px;resize:vertical}
 <div class="form-group"><label for="title">عنوان الإعلان</label><input type="text" id="title" required placeholder="مثال: شقة للبيع في نابلس"></div>
 <div class="row">
 <div class="form-group"><label for="category">التصنيف</label><select id="category" required>
-<option value="">اختر التصنيف</option><option value="سيارات">سيارات</option><option value="عقارات">عقارات</option><option value="وظائف">وظائف</option><option value="متاجر">متاجر</option><option value="مطاعم">مطاعم</option><option value="ترفيه">ترفيه</option><option value="أجهزة وإلكترونيات">أجهزة وإلكترونيات</option><option value="أثاث ومستلزمات">أثاث ومستلزمات</option><option value="مواشي وحيوانات">مواشي وحيوانات</option><option value="ملابس وأغراض شخصية">ملابس وأغراض شخصية</option><option value="بيع وشراء">بيع وشراء</option><option value="إعلانات أخرى">إعلانات أخرى</option>
+<option value="">اختر التصنيف</option><option value="عقارات">عقارات</option><option value="سيارات">سيارات</option><option value="وظائف">وظائف</option><option value="متاجر">متاجر</option><option value="مطاعم">مطاعم</option><option value="ترفيه">ترفيه</option><option value="أجهزة وإلكترونيات">أجهزة وإلكترونيات</option><option value="أثاث ومستلزمات">أثاث ومستلزمات</option><option value="مواشي وحيوانات">مواشي وحيوانات</option><option value="ملابس وأغراض شخصية">ملابس وأغراض شخصية</option><option value="بيع وشراء">بيع وشراء</option><option value="إعلانات أخرى">إعلانات أخرى</option>
 </select></div>
 <div class="form-group"><label for="city">المدينة</label><input type="text" id="city" placeholder="مثال: نابلس"></div>
 </div>
@@ -160,8 +160,7 @@ saveBtn.disabled=true;saveBtn.textContent="⏳ جاري الحفظ...";
 try{
 const title=document.getElementById("title").value.trim(),category=document.getElementById("category").value,description=document.getElementById("description").value.trim(),priceValue=document.getElementById("price").value,city=document.getElementById("city").value.trim(),phone=document.getElementById("phone").value.trim();
 if(!title)throw new Error("يرجى كتابة عنوان الإعلان.");
-if(!category)throw new Error("يرجى اختيار التصنيف.");
-if(category==="خدمات")throw new Error("الخدمات لها قسم مستقل. لا يمكن تحويل إعلان إلى خدمة من هنا.");
+if(!category)throw new Error("يرجى اختيار التصنيف.");if(category==="خدمات")throw new Error("الخدمات لها قسم مستقل ولا تُنشر كإعلان.");
 showMessage("جاري رفع الصور وحفظ التعديلات...","success");
 const newUrls=await uploadNewImages(),finalImages=[...currentImages,...newUrls];let finalVideo=currentVideoUrl;if(newVideoInput.files[0]){if(finalVideo)await deleteVideoUrl(finalVideo);finalVideo=await uploadNewVideo()}else if(removeVideoFlag&&currentAd.video_url){await deleteVideoUrl(currentAd.video_url);finalVideo=null}
 const {error:updateError}=await supabaseClient.from("ads").update({title,category,description:description||null,price:priceValue===""?null:Number(priceValue),city:city||null,phone:phone||null,latitude:$("latitude").value===""?null:Number($("latitude").value),longitude:$("longitude").value===""?null:Number($("longitude").value),location_name:$("locationName").value.trim()||null,image_urls:finalImages,video_url:finalVideo,delivery_available:$("deliveryAvailable").checked,delivery_fee:Number($("deliveryFee").value||0),allow_cod:$("allowCod").checked,allow_online_payment:$("allowOnline").checked}).eq("id",currentAd.id).eq("user_id",currentUser.id);

@@ -243,8 +243,6 @@ async function load(){
     .from('ads')
     .select('id,title,category,description,price,city,image_urls,created_at,status')
     .eq('user_id',profileId)
-    .eq('status','active')
-    .neq('category','خدمات')
     .order('created_at',{ascending:false});
 
   if(adsError){
