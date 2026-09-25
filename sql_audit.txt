@@ -1,0 +1,384 @@
+/mnt/data/v55work/SUPABASE_ACCOUNT_V28.sql:24:CREATE POLICY "public read avatars"
+/mnt/data/v55work/SUPABASE_ACCOUNT_V28.sql:30:CREATE POLICY "users upload own avatar"
+/mnt/data/v55work/SUPABASE_ACCOUNT_V28.sql:40:CREATE POLICY "users update own avatar"
+/mnt/data/v55work/SUPABASE_ACCOUNT_V28.sql:54:CREATE POLICY "users delete own avatar"
+/mnt/data/v55work/SUPABASE_PROFILE_V31.sql:4:CREATE TABLE IF NOT EXISTS public.profile_follows (
+/mnt/data/v55work/SUPABASE_PROFILE_V31.sql:5:  follower_id uuid NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+/mnt/data/v55work/SUPABASE_PROFILE_V31.sql:6:  following_id uuid NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+/mnt/data/v55work/SUPABASE_PROFILE_V31.sql:12:ALTER TABLE public.profile_follows ENABLE ROW LEVEL SECURITY;
+/mnt/data/v55work/SUPABASE_PROFILE_V31.sql:15:CREATE POLICY "profile follows read"
+/mnt/data/v55work/SUPABASE_PROFILE_V31.sql:22:CREATE POLICY "profile follows insert own"
+/mnt/data/v55work/SUPABASE_PROFILE_V31.sql:29:CREATE POLICY "profile follows delete own"
+/mnt/data/v55work/SUPABASE_SERVICES.sql:4:CREATE TABLE IF NOT EXISTS public.service_providers (
+/mnt/data/v55work/SUPABASE_SERVICES.sql:14:CREATE TABLE IF NOT EXISTS public.service_requests (
+/mnt/data/v55work/SUPABASE_SERVICES.sql:34:ADD COLUMN IF NOT EXISTS related_service_request_id uuid REFERENCES public.service_requests(id) ON DELETE SET NULL;
+/mnt/data/v55work/SUPABASE_SERVICES.sql:36:CREATE INDEX IF NOT EXISTS service_requests_requester_idx ON public.service_requests(requester_id,created_at DESC);
+/mnt/data/v55work/SUPABASE_SERVICES.sql:37:CREATE INDEX IF NOT EXISTS service_requests_provider_idx ON public.service_requests(provider_id,created_at DESC);
+/mnt/data/v55work/SUPABASE_SERVICES.sql:38:CREATE INDEX IF NOT EXISTS service_requests_pending_idx ON public.service_requests(type,status,city,created_at DESC);
+/mnt/data/v55work/SUPABASE_SERVICES.sql:41:ALTER TABLE public.service_providers ENABLE ROW LEVEL SECURITY;
+/mnt/data/v55work/SUPABASE_SERVICES.sql:42:ALTER TABLE public.service_requests ENABLE ROW LEVEL SECURITY;
+/mnt/data/v55work/SUPABASE_SERVICES.sql:45:CREATE POLICY service_providers_read ON public.service_providers FOR SELECT TO authenticated USING (is_active=true OR user_id=auth.uid());
+/mnt/data/v55work/SUPABASE_SERVICES.sql:47:CREATE POLICY service_providers_insert_own ON public.service_providers FOR INSERT TO authenticated WITH CHECK (user_id=auth.uid());
+/mnt/data/v55work/SUPABASE_SERVICES.sql:49:CREATE POLICY service_providers_update_own ON public.service_providers FOR UPDATE TO authenticated USING (user_id=auth.uid()) WITH CHECK (user_id=auth.uid());
+/mnt/data/v55work/SUPABASE_SERVICES.sql:51:DROP POLICY IF EXISTS service_requests_read_own ON public.service_requests;
+/mnt/data/v55work/SUPABASE_SERVICES.sql:52:CREATE POLICY service_requests_read_own ON public.service_requests FOR SELECT TO authenticated USING (requester_id=auth.uid() OR provider_id=auth.uid() OR EXISTS (SELECT 1 FROM public.service_providers sp WHERE sp.user_id=auth.uid() AND sp.is_active=true AND sp.service_type=service_requests.type));
+/mnt/data/v55work/SUPABASE_SERVICES.sql:53:DROP POLICY IF EXISTS service_requests_insert_own ON public.service_requests;
+/mnt/data/v55work/SUPABASE_SERVICES.sql:54:CREATE POLICY service_requests_insert_own ON public.service_requests FOR INSERT TO authenticated WITH CHECK (requester_id=auth.uid());
+/mnt/data/v55work/SUPABASE_SERVICES.sql:55:DROP POLICY IF EXISTS service_requests_update_own ON public.service_requests;
+/mnt/data/v55work/SUPABASE_SERVICES.sql:56:CREATE POLICY service_requests_update_own ON public.service_requests FOR UPDATE TO authenticated USING (requester_id=auth.uid() OR provider_id=auth.uid()) WITH CHECK (requester_id=auth.uid() OR provider_id=auth.uid());
+/mnt/data/v55work/SUPABASE_SERVICES.sql:58:CREATE OR REPLACE FUNCTION public.set_service_updated_at() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN NEW.updated_at=now(); RETURN NEW; END; $$;
+/mnt/data/v55work/SUPABASE_SERVICES.sql:61:DROP TRIGGER IF EXISTS service_requests_updated_at ON public.service_requests;
+/mnt/data/v55work/SUPABASE_SERVICES.sql:62:CREATE TRIGGER service_requests_updated_at BEFORE UPDATE ON public.service_requests FOR EACH ROW EXECUTE FUNCTION public.set_service_updated_at();
+/mnt/data/v55work/SUPABASE_SERVICES.sql:64:CREATE OR REPLACE FUNCTION public.create_service_request(
+/mnt/data/v55work/SUPABASE_SERVICES.sql:75:LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_SERVICES.sql:83:  INSERT INTO public.service_requests(requester_id,type,city,phone,from_location,to_location,details,budget,people_count,scheduled_at)
+/mnt/data/v55work/SUPABASE_SERVICES.sql:88:GRANT EXECUTE ON FUNCTION public.create_service_request(text,text,text,text,text,text,numeric,integer,timestamptz) TO authenticated;
+/mnt/data/v55work/SUPABASE_SERVICES.sql:90:CREATE OR REPLACE FUNCTION public.accept_service_request(p_request_id uuid) RETURNS boolean
+/mnt/data/v55work/SUPABASE_SERVICES.sql:91:LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_SERVICES.sql:95:  SELECT type,status INTO v_type,v_status FROM public.service_requests WHERE id=p_request_id FOR UPDATE;
+/mnt/data/v55work/SUPABASE_SERVICES.sql:98:  IF EXISTS(SELECT 1 FROM public.service_requests WHERE id=p_request_id AND requester_id=v_uid) THEN RAISE EXCEPTION 'لا يمكنك قبول طلبك'; END IF;
+/mnt/data/v55work/SUPABASE_SERVICES.sql:100:  UPDATE public.service_requests SET provider_id=v_uid,status='accepted',updated_at=now() WHERE id=p_request_id AND status='pending';
+/mnt/data/v55work/SUPABASE_SERVICES.sql:103:  SELECT requester_id,'service','تم قبول طلب الخدمة ✅','تم قبول طلبك من مقدم خدمة ويمكنك متابعة حالته.',id FROM public.service_requests WHERE id=p_request_id;
+/mnt/data/v55work/SUPABASE_SERVICES.sql:106:GRANT EXECUTE ON FUNCTION public.accept_service_request(uuid) TO authenticated;
+/mnt/data/v55work/SUPABASE_SERVICES.sql:108:CREATE OR REPLACE FUNCTION public.update_my_service_request(p_request_id uuid,p_status text,p_note text DEFAULT NULL) RETURNS boolean
+/mnt/data/v55work/SUPABASE_SERVICES.sql:109:LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_SERVICES.sql:114:  SELECT requester_id,provider_id INTO v_requester,v_provider FROM public.service_requests WHERE id=p_request_id;
+/mnt/data/v55work/SUPABASE_SERVICES.sql:117:  UPDATE public.service_requests SET status=p_status,provider_note=CASE WHEN p_note IS NULL THEN provider_note ELSE trim(p_note) END,updated_at=now() WHERE id=p_request_id;
+/mnt/data/v55work/SUPABASE_SERVICES.sql:122:GRANT EXECUTE ON FUNCTION public.update_my_service_request(uuid,text,text) TO authenticated;
+/mnt/data/v55work/SUPABASE_SERVICES.sql:124:CREATE OR REPLACE FUNCTION public.cancel_my_service_request(p_request_id uuid) RETURNS boolean
+/mnt/data/v55work/SUPABASE_SERVICES.sql:125:LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_SERVICES.sql:127:  UPDATE public.service_requests SET status='cancelled',updated_at=now() WHERE id=p_request_id AND requester_id=auth.uid() AND status IN ('pending','accepted');
+/mnt/data/v55work/SUPABASE_SERVICES.sql:130:GRANT EXECUTE ON FUNCTION public.cancel_my_service_request(uuid) TO authenticated;
+/mnt/data/v55work/SUPABASE_SERVICES.sql:133:CREATE OR REPLACE FUNCTION public.notify_new_service_request()
+/mnt/data/v55work/SUPABASE_SERVICES.sql:134:RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_SERVICES.sql:143:DROP TRIGGER IF EXISTS service_request_notify_trigger ON public.service_requests;
+/mnt/data/v55work/SUPABASE_SERVICES.sql:145:AFTER INSERT ON public.service_requests FOR EACH ROW EXECUTE FUNCTION public.notify_new_service_request();
+/mnt/data/v55work/SUPABASE_SERVICES_V25.sql:4:CREATE OR REPLACE FUNCTION public.create_direct_service_request(
+/mnt/data/v55work/SUPABASE_SERVICES_V25.sql:16:LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_SERVICES_V25.sql:27:  INSERT INTO public.service_requests(requester_id,provider_id,type,city,phone,from_location,to_location,details,budget,people_count,scheduled_at)
+/mnt/data/v55work/SUPABASE_SERVICES_V25.sql:32:GRANT EXECUTE ON FUNCTION public.create_direct_service_request(uuid,text,text,text,text,text,text,numeric,integer,timestamptz) TO authenticated;
+/mnt/data/v55work/SUPABASE_SERVICES_V25.sql:34:CREATE OR REPLACE FUNCTION public.notify_new_service_request()
+/mnt/data/v55work/SUPABASE_SERVICES_V25.sql:35:RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_SERVICES_V25.sql:49:DROP TRIGGER IF EXISTS service_request_notify_trigger ON public.service_requests;
+/mnt/data/v55work/SUPABASE_SERVICES_V25.sql:51:AFTER INSERT ON public.service_requests FOR EACH ROW EXECUTE FUNCTION public.notify_new_service_request();
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:5:CREATE TABLE IF NOT EXISTS public.subscription_plans (
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:21:CREATE TABLE IF NOT EXISTS public.subscription_orders (
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:35:CREATE TABLE IF NOT EXISTS public.subscriptions (
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:39:  order_id uuid REFERENCES public.subscription_orders(id) ON DELETE SET NULL,
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:48:CREATE TABLE IF NOT EXISTS public.subscription_payments (
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:50:  order_id uuid NOT NULL REFERENCES public.subscription_orders(id) ON DELETE CASCADE,
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:61:ALTER TABLE public.subscription_plans ENABLE ROW LEVEL SECURITY;
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:62:ALTER TABLE public.subscription_orders ENABLE ROW LEVEL SECURITY;
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:63:ALTER TABLE public.subscriptions ENABLE ROW LEVEL SECURITY;
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:64:ALTER TABLE public.subscription_payments ENABLE ROW LEVEL SECURITY;
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:67:CREATE POLICY "subscription plans public read" ON public.subscription_plans
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:70:DROP POLICY IF EXISTS "subscription orders own read" ON public.subscription_orders;
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:71:CREATE POLICY "subscription orders own read" ON public.subscription_orders
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:75:CREATE POLICY "subscriptions own read" ON public.subscriptions
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:79:CREATE POLICY "subscription payments own read" ON public.subscription_payments
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:84:CREATE POLICY "subscription plans admin all" ON public.subscription_plans
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:86:  EXISTS (SELECT 1 FROM public.profiles p WHERE p.id=auth.uid() AND p.status='active' AND p.role IN ('admin','manager'))
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:88:  EXISTS (SELECT 1 FROM public.profiles p WHERE p.id=auth.uid() AND p.status='active' AND p.role IN ('admin','manager'))
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:91:DROP POLICY IF EXISTS "subscription orders admin all" ON public.subscription_orders;
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:92:CREATE POLICY "subscription orders admin all" ON public.subscription_orders
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:94:  EXISTS (SELECT 1 FROM public.profiles p WHERE p.id=auth.uid() AND p.status='active' AND p.role IN ('admin','manager'))
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:96:  EXISTS (SELECT 1 FROM public.profiles p WHERE p.id=auth.uid() AND p.status='active' AND p.role IN ('admin','manager'))
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:100:CREATE POLICY "subscriptions admin all" ON public.subscriptions
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:102:  EXISTS (SELECT 1 FROM public.profiles p WHERE p.id=auth.uid() AND p.status='active' AND p.role IN ('admin','manager'))
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:104:  EXISTS (SELECT 1 FROM public.profiles p WHERE p.id=auth.uid() AND p.status='active' AND p.role IN ('admin','manager'))
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:108:CREATE POLICY "subscription payments admin all" ON public.subscription_payments
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:110:  EXISTS (SELECT 1 FROM public.profiles p WHERE p.id=auth.uid() AND p.status='active' AND p.role IN ('admin','manager'))
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:112:  EXISTS (SELECT 1 FROM public.profiles p WHERE p.id=auth.uid() AND p.status='active' AND p.role IN ('admin','manager'))
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:115:CREATE INDEX IF NOT EXISTS idx_subscription_orders_user_created
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:116:ON public.subscription_orders(user_id, created_at DESC);
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:117:CREATE INDEX IF NOT EXISTS idx_subscription_orders_status
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:118:ON public.subscription_orders(status, created_at DESC);
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:145:CREATE OR REPLACE FUNCTION public.request_subscription(p_plan_id text)
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:147:LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:165:  IF EXISTS (SELECT 1 FROM public.subscription_orders WHERE user_id=v_uid AND plan_id=p_plan_id AND status='pending') THEN
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:166:    SELECT id INTO v_order FROM public.subscription_orders WHERE user_id=v_uid AND plan_id=p_plan_id AND status='pending' ORDER BY created_at DESC LIMIT 1;
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:169:  INSERT INTO public.subscription_orders(user_id,plan_id,amount,currency,status)
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:173:GRANT EXECUTE ON FUNCTION public.request_subscription(text) TO authenticated;
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:175:CREATE OR REPLACE FUNCTION public.admin_activate_subscription(p_order_id uuid,p_payment_method text DEFAULT 'manual',p_gateway_reference text DEFAULT NULL)
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:177:LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:179:  v_order public.subscription_orders;
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:184:  SELECT EXISTS (SELECT 1 FROM public.profiles p WHERE p.id=auth.uid() AND p.status='active' AND p.role IN ('admin','manager')) INTO v_admin;
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:186:  SELECT * INTO v_order FROM public.subscription_orders WHERE id=p_order_id FOR UPDATE;
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:190:  UPDATE public.subscription_orders SET status='paid',payment_method=p_payment_method,gateway_reference=p_gateway_reference,updated_at=now() WHERE id=v_order.id;
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:200:GRANT EXECUTE ON FUNCTION public.admin_activate_subscription(uuid,text,text) TO authenticated;
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:207:GRANT SELECT ON public.subscription_plans TO anon, authenticated;
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V49.sql:208:GRANT SELECT ON public.subscription_orders,public.subscriptions,public.subscription_payments TO authenticated;
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V50.sql:4:CREATE OR REPLACE FUNCTION public.get_my_active_subscription()
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V50.sql:16:SECURITY DEFINER
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V50.sql:37:GRANT EXECUTE ON FUNCTION public.get_my_active_subscription()
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V50.sql:40:CREATE OR REPLACE FUNCTION public.has_active_service_subscription(
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V50.sql:45:SECURITY DEFINER
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V50.sql:62:GRANT EXECUTE ON FUNCTION public.has_active_service_subscription(text)
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V50.sql:65:CREATE OR REPLACE FUNCTION public.enforce_service_subscription()
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V50.sql:68:SECURITY DEFINER
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V52.sql:1:CREATE OR REPLACE FUNCTION public.cancel_my_active_subscription()
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V52.sql:2:RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V52.sql:12:GRANT EXECUTE ON FUNCTION public.cancel_my_active_subscription() TO authenticated;
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V52.sql:14:CREATE OR REPLACE FUNCTION public.admin_cancel_subscription(p_subscription_id uuid)
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V52.sql:15:RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V52.sql:18: SELECT role INTO v_role FROM public.profiles WHERE id=auth.uid() AND status='active';
+/mnt/data/v55work/SUPABASE_SUBSCRIPTIONS_V52.sql:24:GRANT EXECUTE ON FUNCTION public.admin_cancel_subscription(uuid) TO authenticated;
+/mnt/data/v55work/SUPABASE_TAXI_V36.sql:4:ALTER TABLE public.service_requests
+/mnt/data/v55work/SUPABASE_TAXI_V36.sql:7:ALTER TABLE public.service_requests
+/mnt/data/v55work/SUPABASE_TAXI_V36.sql:10:ALTER TABLE public.service_requests
+/mnt/data/v55work/SUPABASE_TAXI_V36.sql:13:ALTER TABLE public.service_requests
+/mnt/data/v55work/SUPABASE_TAXI_V36.sql:16:CREATE INDEX IF NOT EXISTS service_requests_taxi_provider_idx
+/mnt/data/v55work/SUPABASE_TAXI_V36.sql:17:ON public.service_requests(provider_id, type, status, created_at DESC);
+/mnt/data/v55work/SUPABASE_TAXI_V36.sql:19:CREATE OR REPLACE FUNCTION public.create_taxi_request(
+/mnt/data/v55work/SUPABASE_TAXI_V36.sql:33:SECURITY DEFINER
+/mnt/data/v55work/SUPABASE_TAXI_V36.sql:78:  INSERT INTO public.service_requests (
+/mnt/data/v55work/SUPABASE_TAXI_V36.sql:97:GRANT EXECUTE ON FUNCTION public.create_taxi_request(
+/mnt/data/v55work/SUPABASE_TAXI_V36.sql:103:CREATE OR REPLACE FUNCTION public.accept_service_request(p_request_id uuid)
+/mnt/data/v55work/SUPABASE_TAXI_V36.sql:106:SECURITY DEFINER
+/mnt/data/v55work/SUPABASE_TAXI_V36.sql:121:  FROM public.service_requests
+/mnt/data/v55work/SUPABASE_TAXI_V36.sql:130:  IF EXISTS (SELECT 1 FROM public.service_requests WHERE id=p_request_id AND requester_id=v_uid) THEN
+/mnt/data/v55work/SUPABASE_TAXI_V36.sql:140:  UPDATE public.service_requests
+/mnt/data/v55work/SUPABASE_TAXI_V36.sql:148:  FROM public.service_requests WHERE id=p_request_id;
+/mnt/data/v55work/SUPABASE_TAXI_V36.sql:154:GRANT EXECUTE ON FUNCTION public.accept_service_request(uuid) TO authenticated;
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:11:ALTER TABLE public.service_requests
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:17:CREATE INDEX IF NOT EXISTS idx_service_requests_provider_status
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:18:ON public.service_requests(provider_id,status,created_at DESC);
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:20:CREATE TABLE IF NOT EXISTS public.taxi_reviews (
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:22:  request_id uuid NOT NULL UNIQUE REFERENCES public.service_requests(id) ON DELETE CASCADE,
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:29:ALTER TABLE public.taxi_reviews ENABLE ROW LEVEL SECURITY;
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:31:CREATE POLICY "taxi reviews read authenticated" ON public.taxi_reviews
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:34:CREATE POLICY "taxi reviews insert requester" ON public.taxi_reviews
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:38:CREATE OR REPLACE FUNCTION public.create_taxi_request(
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:50:LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:62:  INSERT INTO public.service_requests(requester_id,provider_id,type,status,city,phone,from_location,to_location,details,people_count,from_lat,from_lng,to_lat,to_lng)
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:67:GRANT EXECUTE ON FUNCTION public.create_taxi_request(uuid,text,text,text,text,integer,double precision,double precision,double precision,double precision) TO authenticated;
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:69:CREATE OR REPLACE FUNCTION public.accept_service_request(p_request_id uuid)
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:70:RETURNS uuid LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:74:  SELECT provider_id INTO v_provider FROM public.service_requests WHERE id=p_request_id AND type='taxi' AND status='pending' FOR UPDATE;
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:76:  UPDATE public.service_requests SET status='accepted',updated_at=now() WHERE id=p_request_id RETURNING id INTO v_id;
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:79:  FROM public.service_requests WHERE id=v_id;
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:82:GRANT EXECUTE ON FUNCTION public.accept_service_request(uuid) TO authenticated;
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:84:CREATE OR REPLACE FUNCTION public.update_my_service_request(p_request_id uuid,p_status text,p_note text DEFAULT NULL)
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:85:RETURNS uuid LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:90:  SELECT requester_id,provider_id INTO v_requester,v_provider FROM public.service_requests WHERE id=p_request_id;
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:92:  UPDATE public.service_requests SET status=p_status,provider_note=NULLIF(trim(coalesce(p_note,'')),''),updated_at=now() WHERE id=p_request_id RETURNING id INTO v_id;
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:99:GRANT EXECUTE ON FUNCTION public.update_my_service_request(uuid,text,text) TO authenticated;
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:101:CREATE OR REPLACE FUNCTION public.cancel_my_taxi_request(p_request_id uuid)
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:102:RETURNS uuid LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:106:  SELECT provider_id INTO v_provider FROM public.service_requests WHERE id=p_request_id AND requester_id=v_uid AND type='taxi' AND status IN ('pending','accepted');
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:108:  UPDATE public.service_requests SET status='cancelled',updated_at=now() WHERE id=p_request_id RETURNING id INTO v_id;
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:115:GRANT EXECUTE ON FUNCTION public.cancel_my_taxi_request(uuid) TO authenticated;
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:117:CREATE OR REPLACE FUNCTION public.update_my_provider_location(p_lat double precision,p_lng double precision)
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:118:RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:127:GRANT EXECUTE ON FUNCTION public.update_my_provider_location(double precision,double precision) TO authenticated;
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:129:CREATE OR REPLACE FUNCTION public.add_taxi_review(p_request_id uuid,p_rating integer,p_comment text DEFAULT NULL)
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:130:RETURNS uuid LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:135:  SELECT provider_id INTO v_provider FROM public.service_requests WHERE id=p_request_id AND requester_id=v_uid AND type='taxi' AND status='completed';
+/mnt/data/v55work/SUPABASE_TAXI_V38.sql:141:GRANT EXECUTE ON FUNCTION public.add_taxi_review(uuid,integer,text) TO authenticated;
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:11:ALTER TABLE public.service_requests
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:17:CREATE INDEX IF NOT EXISTS idx_service_requests_provider_status
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:18:ON public.service_requests(provider_id,status,created_at DESC);
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:20:CREATE TABLE IF NOT EXISTS public.taxi_reviews (
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:22:  request_id uuid NOT NULL UNIQUE REFERENCES public.service_requests(id) ON DELETE CASCADE,
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:29:ALTER TABLE public.taxi_reviews ENABLE ROW LEVEL SECURITY;
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:31:CREATE POLICY "taxi reviews read authenticated" ON public.taxi_reviews
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:34:CREATE POLICY "taxi reviews insert requester" ON public.taxi_reviews
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:48:CREATE OR REPLACE FUNCTION public.create_taxi_request(
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:60:LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:72:  INSERT INTO public.service_requests(requester_id,provider_id,type,status,city,phone,from_location,to_location,details,people_count,from_lat,from_lng,to_lat,to_lng)
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:77:GRANT EXECUTE ON FUNCTION public.create_taxi_request(uuid,text,text,text,text,integer,double precision,double precision,double precision,double precision) TO authenticated;
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:79:CREATE OR REPLACE FUNCTION public.accept_taxi_service_request(p_request_id uuid)
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:80:RETURNS uuid LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:84:  SELECT provider_id INTO v_provider FROM public.service_requests WHERE id=p_request_id AND type='taxi' AND status='pending' FOR UPDATE;
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:86:  UPDATE public.service_requests SET status='accepted',updated_at=now() WHERE id=p_request_id AND status='pending' RETURNING id INTO v_id;
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:89:  FROM public.service_requests WHERE id=v_id;
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:92:GRANT EXECUTE ON FUNCTION public.accept_taxi_service_request(uuid) TO authenticated;
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:96:CREATE OR REPLACE FUNCTION public.accept_service_request(p_request_id uuid) RETURNS boolean
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:97:LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:101:  SELECT type,status INTO v_type,v_status FROM public.service_requests WHERE id=p_request_id FOR UPDATE;
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:105:  IF EXISTS(SELECT 1 FROM public.service_requests WHERE id=p_request_id AND requester_id=v_uid) THEN RAISE EXCEPTION 'لا يمكنك قبول طلبك'; END IF;
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:107:  UPDATE public.service_requests SET provider_id=v_uid,status='accepted',updated_at=now() WHERE id=p_request_id AND status='pending';
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:110:  SELECT requester_id,'service','تم قبول طلب الخدمة ✅','تم قبول طلبك من مقدم خدمة ويمكنك متابعة حالته.',id FROM public.service_requests WHERE id=p_request_id;
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:113:GRANT EXECUTE ON FUNCTION public.accept_service_request(uuid) TO authenticated;
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:115:CREATE OR REPLACE FUNCTION public.update_my_service_request(p_request_id uuid,p_status text,p_note text DEFAULT NULL)
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:116:RETURNS uuid LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:121:  SELECT requester_id,provider_id INTO v_requester,v_provider FROM public.service_requests WHERE id=p_request_id;
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:123:  UPDATE public.service_requests SET status=p_status,provider_note=NULLIF(trim(coalesce(p_note,'')),''),updated_at=now() WHERE id=p_request_id AND ((p_status='in_progress' AND status='accepted') OR (p_status='completed' AND status='in_progress') OR (p_status='cancelled' AND status IN ('pending','accepted','in_progress'))) RETURNING id INTO v_id;
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:130:GRANT EXECUTE ON FUNCTION public.update_my_service_request(uuid,text,text) TO authenticated;
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:132:CREATE OR REPLACE FUNCTION public.cancel_my_taxi_request(p_request_id uuid)
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:133:RETURNS uuid LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:137:  SELECT provider_id INTO v_provider FROM public.service_requests WHERE id=p_request_id AND requester_id=v_uid AND type='taxi' AND status IN ('pending','accepted');
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:139:  UPDATE public.service_requests SET status='cancelled',updated_at=now() WHERE id=p_request_id AND status IN ('pending','accepted') RETURNING id INTO v_id;
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:146:GRANT EXECUTE ON FUNCTION public.cancel_my_taxi_request(uuid) TO authenticated;
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:148:CREATE OR REPLACE FUNCTION public.update_my_provider_location(p_lat double precision,p_lng double precision)
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:149:RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:158:GRANT EXECUTE ON FUNCTION public.update_my_provider_location(double precision,double precision) TO authenticated;
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:160:CREATE OR REPLACE FUNCTION public.add_taxi_review(p_request_id uuid,p_rating integer,p_comment text DEFAULT NULL)
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:161:RETURNS uuid LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:166:  SELECT provider_id INTO v_provider FROM public.service_requests WHERE id=p_request_id AND requester_id=v_uid AND type='taxi' AND status='completed';
+/mnt/data/v55work/SUPABASE_TAXI_V39.sql:172:GRANT EXECUTE ON FUNCTION public.add_taxi_review(uuid,integer,text) TO authenticated;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:6:  ALTER TABLE public.profiles DROP CONSTRAINT IF EXISTS profiles_role_check;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:7:  ALTER TABLE public.profiles ADD CONSTRAINT profiles_role_check CHECK (role IN ('admin','manager','editor','moderator','places_manager','ads_manager','member','user'));
+/mnt/data/v55work/SUPABASE_UPDATE.sql:10:UPDATE public.profiles SET role='member' WHERE role IS NULL OR role='user';
+/mnt/data/v55work/SUPABASE_UPDATE.sql:12:CREATE TABLE IF NOT EXISTS public.platform_permissions (
+/mnt/data/v55work/SUPABASE_UPDATE.sql:17:('manage_users','إدارة المستخدمين'),('manage_roles','إدارة الصلاحيات'),('manage_ads','إدارة الإعلانات'),('publish_ads','نشر الإعلانات'),('moderate_ads','مراجعة الإعلانات'),('manage_places','إدارة الأماكن'),('publish_places','نشر الأماكن'),('manage_reports','إدارة البلاغات'),('manage_videos','إدارة الفيديوهات'),('view_stats','مشاهدة الإحصائيات')
+/mnt/data/v55work/SUPABASE_UPDATE.sql:20:CREATE TABLE IF NOT EXISTS public.platform_role_permissions (
+/mnt/data/v55work/SUPABASE_UPDATE.sql:30:('manager','manage_users'),('manager','manage_roles'),('manager','manage_ads'),('manager','publish_ads'),('manager','moderate_ads'),('manager','manage_places'),('manager','publish_places'),('manager','manage_reports'),('manager','manage_videos'),('manager','view_stats'),
+/mnt/data/v55work/SUPABASE_UPDATE.sql:31:('editor','publish_ads'),('editor','moderate_ads'),('editor','view_stats'),
+/mnt/data/v55work/SUPABASE_UPDATE.sql:32:('moderator','moderate_ads'),('moderator','manage_reports'),
+/mnt/data/v55work/SUPABASE_UPDATE.sql:34:('ads_manager','manage_ads'),('ads_manager','publish_ads'),('ads_manager','moderate_ads'),('ads_manager','manage_videos'),
+/mnt/data/v55work/SUPABASE_UPDATE.sql:35:('member','publish_ads') ON CONFLICT DO NOTHING;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:37:CREATE OR REPLACE FUNCTION public.has_permission(permission_code text)
+/mnt/data/v55work/SUPABASE_UPDATE.sql:38:RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_UPDATE.sql:40:    SELECT 1 FROM public.profiles p
+/mnt/data/v55work/SUPABASE_UPDATE.sql:46:CREATE OR REPLACE FUNCTION public.is_admin()
+/mnt/data/v55work/SUPABASE_UPDATE.sql:47:RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_UPDATE.sql:51:CREATE OR REPLACE FUNCTION public.admin_set_user_role(target_user_id uuid,new_role text)
+/mnt/data/v55work/SUPABASE_UPDATE.sql:52:RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_UPDATE.sql:55: IF new_role NOT IN ('admin','manager','editor','moderator','places_manager','ads_manager','member','user') THEN RAISE EXCEPTION 'دور غير صالح'; END IF;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:56: UPDATE public.profiles SET role=new_role WHERE id=target_user_id;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:60:CREATE OR REPLACE FUNCTION public.admin_set_user_status(target_user_id uuid,new_status text)
+/mnt/data/v55work/SUPABASE_UPDATE.sql:61:RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_UPDATE.sql:65: UPDATE public.profiles SET status=new_status WHERE id=target_user_id;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:69:GRANT EXECUTE ON FUNCTION public.has_permission(text) TO anon,authenticated;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:70:GRANT EXECUTE ON FUNCTION public.is_admin() TO anon,authenticated;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:71:GRANT EXECUTE ON FUNCTION public.admin_set_user_role(uuid,text) TO authenticated;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:72:GRANT EXECUTE ON FUNCTION public.admin_set_user_status(uuid,text) TO authenticated;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:75:CREATE TABLE IF NOT EXISTS public.places (
+/mnt/data/v55work/SUPABASE_UPDATE.sql:94:ALTER TABLE public.places ENABLE ROW LEVEL SECURITY;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:96:CREATE POLICY "places_public_read" ON public.places FOR SELECT USING (status='published' OR user_id=auth.uid() OR public.has_permission('manage_places'));
+/mnt/data/v55work/SUPABASE_UPDATE.sql:98:CREATE POLICY "places_insert_auth" ON public.places FOR INSERT TO authenticated WITH CHECK (user_id=auth.uid());
+/mnt/data/v55work/SUPABASE_UPDATE.sql:100:CREATE POLICY "places_update_owner_or_manager" ON public.places FOR UPDATE TO authenticated USING (user_id=auth.uid() OR public.has_permission('manage_places')) WITH CHECK (user_id=auth.uid() OR public.has_permission('manage_places'));
+/mnt/data/v55work/SUPABASE_UPDATE.sql:102:CREATE POLICY "places_delete_manager" ON public.places FOR DELETE TO authenticated USING (public.has_permission('manage_places'));
+/mnt/data/v55work/SUPABASE_UPDATE.sql:113:CREATE POLICY "public read ad videos" ON storage.objects FOR SELECT USING (bucket_id='ad-videos');
+/mnt/data/v55work/SUPABASE_UPDATE.sql:115:CREATE POLICY "auth upload ad videos" ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id='ad-videos' AND (storage.foldername(name))[1]=auth.uid()::text);
+/mnt/data/v55work/SUPABASE_UPDATE.sql:117:CREATE POLICY "owner delete ad videos" ON storage.objects FOR DELETE TO authenticated USING (bucket_id='ad-videos' AND (storage.foldername(name))[1]=auth.uid()::text);
+/mnt/data/v55work/SUPABASE_UPDATE.sql:120:CREATE POLICY "public read ad images" ON storage.objects FOR SELECT USING (bucket_id='ad-images');
+/mnt/data/v55work/SUPABASE_UPDATE.sql:122:CREATE POLICY "auth upload ad images" ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id='ad-images' AND (storage.foldername(name))[1]=auth.uid()::text);
+/mnt/data/v55work/SUPABASE_UPDATE.sql:124:CREATE POLICY "owner delete ad images" ON storage.objects FOR DELETE TO authenticated USING (bucket_id='ad-images' AND (storage.foldername(name))[1]=auth.uid()::text);
+/mnt/data/v55work/SUPABASE_UPDATE.sql:127:CREATE OR REPLACE FUNCTION public.set_places_updated_at() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN NEW.updated_at=now(); RETURN NEW; END; $$;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:132:-- UPDATE public.profiles SET role='admin' WHERE id='ضع-UUID-حسابك-هنا';
+/mnt/data/v55work/SUPABASE_UPDATE.sql:137:ALTER TABLE public.ads ADD COLUMN IF NOT EXISTS delivery_available boolean NOT NULL DEFAULT false;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:138:ALTER TABLE public.ads ADD COLUMN IF NOT EXISTS delivery_fee numeric(12,2) NOT NULL DEFAULT 0;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:139:ALTER TABLE public.ads ADD COLUMN IF NOT EXISTS allow_cod boolean NOT NULL DEFAULT true;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:140:ALTER TABLE public.ads ADD COLUMN IF NOT EXISTS allow_online_payment boolean NOT NULL DEFAULT false;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:142:CREATE TABLE IF NOT EXISTS public.orders (
+/mnt/data/v55work/SUPABASE_UPDATE.sql:144: ad_id uuid NOT NULL REFERENCES public.ads(id) ON DELETE RESTRICT,
+/mnt/data/v55work/SUPABASE_UPDATE.sql:165:CREATE INDEX IF NOT EXISTS orders_buyer_idx ON public.orders(buyer_id,created_at DESC);
+/mnt/data/v55work/SUPABASE_UPDATE.sql:166:CREATE INDEX IF NOT EXISTS orders_seller_idx ON public.orders(seller_id,created_at DESC);
+/mnt/data/v55work/SUPABASE_UPDATE.sql:167:CREATE INDEX IF NOT EXISTS orders_ad_idx ON public.orders(ad_id,created_at DESC);
+/mnt/data/v55work/SUPABASE_UPDATE.sql:168:CREATE INDEX IF NOT EXISTS orders_status_idx ON public.orders(order_status,payment_status);
+/mnt/data/v55work/SUPABASE_UPDATE.sql:169:ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:170:DROP POLICY IF EXISTS orders_buyer_read ON public.orders;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:171:CREATE POLICY orders_buyer_read ON public.orders FOR SELECT TO authenticated USING(buyer_id=auth.uid() OR seller_id=auth.uid() OR public.has_permission('manage_orders'));
+/mnt/data/v55work/SUPABASE_UPDATE.sql:172:DROP POLICY IF EXISTS orders_admin_update ON public.orders;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:173:CREATE POLICY orders_admin_update ON public.orders FOR UPDATE TO authenticated USING(public.has_permission('manage_orders')) WITH CHECK(public.has_permission('manage_orders'));
+/mnt/data/v55work/SUPABASE_UPDATE.sql:175:INSERT INTO public.platform_permissions(code,label) VALUES ('manage_orders','إدارة الطلبات والتوصيل') ON CONFLICT(code) DO NOTHING;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:176:INSERT INTO public.platform_role_permissions(role,permission_code) VALUES ('admin','manage_orders'),('manager','manage_orders') ON CONFLICT DO NOTHING;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:178:CREATE OR REPLACE FUNCTION public.create_order(
+/mnt/data/v55work/SUPABASE_UPDATE.sql:190:LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_UPDATE.sql:192: v_ad public.ads%ROWTYPE;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:200: SELECT * INTO v_ad FROM public.ads WHERE id=p_ad_id AND status='active' FOR SHARE;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:217: INSERT INTO public.orders(ad_id,buyer_id,seller_id,quantity,unit_price,delivery_fee,total_amount,delivery_method,payment_method,payment_provider,payment_status,order_status,customer_name,customer_phone,city,address,notes)
+/mnt/data/v55work/SUPABASE_UPDATE.sql:222:GRANT EXECUTE ON FUNCTION public.create_order(uuid,integer,text,text,text,text,text,text,text,text) TO authenticated;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:224:CREATE OR REPLACE FUNCTION public.cancel_my_order(p_order_id uuid) RETURNS boolean
+/mnt/data/v55work/SUPABASE_UPDATE.sql:225:LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_UPDATE.sql:227: UPDATE public.orders SET order_status='cancelled',payment_status=CASE WHEN payment_status='paid' THEN 'refunded' ELSE 'cancelled' END,updated_at=now()
+/mnt/data/v55work/SUPABASE_UPDATE.sql:231:GRANT EXECUTE ON FUNCTION public.cancel_my_order(uuid) TO authenticated;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:233:CREATE OR REPLACE FUNCTION public.seller_update_order_status(p_order_id uuid,p_status text) RETURNS boolean
+/mnt/data/v55work/SUPABASE_UPDATE.sql:234:LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_UPDATE.sql:237: UPDATE public.orders SET order_status=p_status,updated_at=now() WHERE id=p_order_id AND (seller_id=auth.uid() OR public.has_permission('manage_orders'));
+/mnt/data/v55work/SUPABASE_UPDATE.sql:240:GRANT EXECUTE ON FUNCTION public.seller_update_order_status(uuid,text) TO authenticated;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:242:CREATE OR REPLACE FUNCTION public.set_order_paid(p_order_id uuid,p_provider_reference text) RETURNS boolean
+/mnt/data/v55work/SUPABASE_UPDATE.sql:243:LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_UPDATE.sql:245: IF NOT public.has_permission('manage_orders') THEN RAISE EXCEPTION 'غير مصرح'; END IF;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:246: UPDATE public.orders SET payment_status='paid',provider_reference=NULLIF(trim(p_provider_reference),''),updated_at=now() WHERE id=p_order_id AND payment_method='online';
+/mnt/data/v55work/SUPABASE_UPDATE.sql:249:GRANT EXECUTE ON FUNCTION public.set_order_paid(uuid,text) TO authenticated;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:251:CREATE OR REPLACE FUNCTION public.set_orders_updated_at() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN NEW.updated_at=now(); RETURN NEW; END; $$;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:252:DROP TRIGGER IF EXISTS orders_updated_at ON public.orders;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:253:CREATE TRIGGER orders_updated_at BEFORE UPDATE ON public.orders FOR EACH ROW EXECUTE FUNCTION public.set_orders_updated_at();
+/mnt/data/v55work/SUPABASE_UPDATE.sql:260:CREATE TABLE IF NOT EXISTS public.notifications (
+/mnt/data/v55work/SUPABASE_UPDATE.sql:266:  related_ad_id uuid REFERENCES public.ads(id) ON DELETE SET NULL,
+/mnt/data/v55work/SUPABASE_UPDATE.sql:267:  related_order_id uuid REFERENCES public.orders(id) ON DELETE SET NULL,
+/mnt/data/v55work/SUPABASE_UPDATE.sql:268:  related_conversation_id uuid REFERENCES public.conversations(id) ON DELETE SET NULL,
+/mnt/data/v55work/SUPABASE_UPDATE.sql:279:ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:282:CREATE POLICY notifications_read_own
+/mnt/data/v55work/SUPABASE_UPDATE.sql:287:CREATE POLICY notifications_update_own
+/mnt/data/v55work/SUPABASE_UPDATE.sql:293:CREATE POLICY notifications_insert_system
+/mnt/data/v55work/SUPABASE_UPDATE.sql:297:CREATE OR REPLACE FUNCTION public.notify_order_event()
+/mnt/data/v55work/SUPABASE_UPDATE.sql:300:SECURITY DEFINER
+/mnt/data/v55work/SUPABASE_UPDATE.sql:340:DROP TRIGGER IF EXISTS orders_notify_trigger ON public.orders;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:341:CREATE TRIGGER orders_notify_trigger
+/mnt/data/v55work/SUPABASE_UPDATE.sql:342:AFTER INSERT OR UPDATE ON public.orders
+/mnt/data/v55work/SUPABASE_UPDATE.sql:345:CREATE OR REPLACE FUNCTION public.notify_new_message()
+/mnt/data/v55work/SUPABASE_UPDATE.sql:348:SECURITY DEFINER
+/mnt/data/v55work/SUPABASE_UPDATE.sql:357:  FROM public.conversations
+/mnt/data/v55work/SUPABASE_UPDATE.sql:368:DROP TRIGGER IF EXISTS messages_notify_trigger ON public.messages;
+/mnt/data/v55work/SUPABASE_UPDATE.sql:369:CREATE TRIGGER messages_notify_trigger
+/mnt/data/v55work/SUPABASE_UPDATE.sql:370:AFTER INSERT ON public.messages
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:5:CREATE TABLE IF NOT EXISTS public.subscription_cancellation_requests (
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:22:ALTER TABLE public.subscription_cancellation_requests ENABLE ROW LEVEL SECURITY;
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:25:CREATE POLICY subscription_cancel_read_own
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:30:CREATE POLICY subscription_cancel_insert_own
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:44:CREATE OR REPLACE FUNCTION public.request_subscription_cancellation(
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:49:LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:78:  FROM public.profiles p
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:83:GRANT EXECUTE ON FUNCTION public.request_subscription_cancellation(uuid,text) TO authenticated;
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:86:CREATE OR REPLACE FUNCTION public.admin_handle_subscription_cancellation(
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:92:LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:141:GRANT EXECUTE ON FUNCTION public.admin_handle_subscription_cancellation(uuid,text,text) TO authenticated;
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:165:CREATE OR REPLACE FUNCTION public.admin_list_subscription_cancellations()
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:170:LANGUAGE sql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:173:  LEFT JOIN public.profiles p ON p.id=r.user_id
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:178:GRANT EXECUTE ON FUNCTION public.admin_list_subscription_cancellations() TO authenticated;
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:180:CREATE OR REPLACE FUNCTION public.admin_list_active_subscriptions()
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:186:LANGUAGE sql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:190:  LEFT JOIN public.profiles pf ON pf.id=s.user_id
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:195:GRANT EXECUTE ON FUNCTION public.admin_list_active_subscriptions() TO authenticated;
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:197:CREATE OR REPLACE FUNCTION public.admin_list_subscription_orders()
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:202:LANGUAGE sql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:204:  FROM public.subscription_orders o
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:206:  LEFT JOIN public.profiles pf ON pf.id=o.user_id
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:210:GRANT EXECUTE ON FUNCTION public.admin_list_subscription_orders() TO authenticated;
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:212:CREATE OR REPLACE FUNCTION public.admin_cancel_active_subscription(p_subscription_id uuid)
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:214:LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_V53_RESTRUCTURE.sql:231:GRANT EXECUTE ON FUNCTION public.admin_cancel_active_subscription(uuid) TO authenticated;
+/mnt/data/v55work/SUPABASE_V54_SECURITY_CLEANUP.sql:5:CREATE OR REPLACE FUNCTION public.delete_my_conversation(p_conversation_id uuid)
+/mnt/data/v55work/SUPABASE_V54_SECURITY_CLEANUP.sql:7:LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_V54_SECURITY_CLEANUP.sql:11:  DELETE FROM public.conversations
+/mnt/data/v55work/SUPABASE_V54_SECURITY_CLEANUP.sql:16:GRANT EXECUTE ON FUNCTION public.delete_my_conversation(uuid) TO authenticated;
+/mnt/data/v55work/SUPABASE_V54_SECURITY_CLEANUP.sql:20:CREATE OR REPLACE FUNCTION public.protect_service_provider_fields()
+/mnt/data/v55work/SUPABASE_V54_SECURITY_CLEANUP.sql:21:RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+/mnt/data/v55work/SUPABASE_V54_SECURITY_CLEANUP.sql:37:UPDATE public.ads SET category='إعلانات أخرى' WHERE category='خدمات';
+/mnt/data/v55work/SUPABASE_V54_SECURITY_CLEANUP.sql:40:  ALTER TABLE public.ads DROP CONSTRAINT IF EXISTS ads_category_not_services;
+/mnt/data/v55work/SUPABASE_V54_SECURITY_CLEANUP.sql:41:  ALTER TABLE public.ads ADD CONSTRAINT ads_category_not_services CHECK (category <> 'خدمات');
+/mnt/data/v55work/SUPABASE_V54_SECURITY_CLEANUP.sql:45:CREATE INDEX IF NOT EXISTS ads_active_created_idx ON public.ads(status,created_at DESC);
+/mnt/data/v55work/SUPABASE_V54_SECURITY_CLEANUP.sql:46:CREATE INDEX IF NOT EXISTS messages_conversation_created_idx ON public.messages(conversation_id,created_at DESC);
+/mnt/data/v55work/SUPABASE_V54_SECURITY_CLEANUP.sql:47:CREATE INDEX IF NOT EXISTS conversations_participants_last_message_idx ON public.conversations(buyer_id,seller_id,last_message_at DESC);
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:3:-- هذا الملف للتوثيق والأرشفة فقط — الجداول موجودة بالفعل، لا تشغّل CREATE TABLE
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:7:-- profiles
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:9:CREATE TABLE IF NOT EXISTS public.profiles (
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:16:    CHECK (role IN ('admin','manager','editor','moderator','places_manager','ads_manager','member','user')),
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:23:-- ads
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:25:CREATE TABLE IF NOT EXISTS public.ads (
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:49:-- conversations
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:51:CREATE TABLE IF NOT EXISTS public.conversations (
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:53:  ad_id uuid REFERENCES public.ads(id) ON DELETE CASCADE,
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:58:  CONSTRAINT conversations_different_users CHECK (buyer_id <> seller_id)
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:62:-- messages
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:64:CREATE TABLE IF NOT EXISTS public.messages (
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:66:  conversation_id uuid NOT NULL REFERENCES public.conversations(id) ON DELETE CASCADE,
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:73:-- حذف صف بـ conversations يحذف رسائله تلقائيًا (CASCADE)، فحتى لو أضفنا سياسة
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:74:-- DELETE مباشرة على conversations لكانت الرسائل انحذفت تلقائيًا بدون داعٍ لحذفها
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:80:CREATE TABLE IF NOT EXISTS public.favorites (
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:83:  ad_id uuid NOT NULL REFERENCES public.ads(id) ON DELETE CASCADE,
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:91:CREATE TABLE IF NOT EXISTS public.ad_reviews (
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:93:  ad_id uuid NOT NULL REFERENCES public.ads(id) ON DELETE CASCADE,
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:106:CREATE TABLE IF NOT EXISTS public.ad_reports (
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:109:  ad_id uuid NOT NULL REFERENCES public.ads(id) ON DELETE CASCADE,
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:122:CREATE TABLE IF NOT EXISTS public.ad_video_likes (
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:124:  ad_id uuid NOT NULL REFERENCES public.ads(id) ON DELETE CASCADE,
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:133:CREATE TABLE IF NOT EXISTS public.ad_video_views (
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:135:  ad_id uuid NOT NULL REFERENCES public.ads(id) ON DELETE CASCADE,
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:143:CREATE TABLE IF NOT EXISTS public.ad_views (
+/mnt/data/v55work/UNTRACKED_TABLES_REAL_SCHEMA.sql:145:  ad_id uuid NOT NULL REFERENCES public.ads(id) ON DELETE CASCADE,

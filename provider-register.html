@@ -27,7 +27,7 @@ body{margin:0;background:#f5f8fc;color:#172033;font-family:Arial,Tahoma,sans-ser
 <label>عدد الركاب<input id="passenger_capacity" type="number" min="1" max="100" placeholder="مثال: 4"></label>
 <label>السعر الأساسي <span class="optional">(اختياري)</span><input id="base_price" type="number" min="0" step="0.01" placeholder="₪"></label>
 </div><div class="hint">بيانات المركبة تظهر للعميل في خدمات التكسي والنقل فقط.</div></div>
-<div class="card"><h2>4) التفعيل</h2><label>الحالة<select id="availability"><option value="true">🟢 متاح الآن</option><option value="false">⚪ غير متاح</option></select></label><div class="hint">يمكنك تغيير حالتك لاحقًا من لوحة مقدم الخدمة.</div>
+<div class="card"><h2>4) التفعيل</h2><label>الحالة<select id="availability"><option value="false" selected>⚪ غير متاح</option><option value="true">🟢 متاح الآن</option></select></label><div class="hint">يمكنك تغيير حالتك لاحقًا من لوحة مقدم الخدمة.</div>
 <div class="actions"><button class="btn" id="save" type="button">حفظ التسجيل</button><a class="btn alt" id="dashLink" href="service-provider.html" style="text-decoration:none">لوحة مقدم الخدمة</a></div><div id="msg" class="msg"></div></div></div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script><script src="platform.js"></script>
