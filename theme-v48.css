@@ -55,3 +55,11 @@ body{background:var(--v48-bg)!important;color:var(--v48-text)!important}
  .home-v48 .special .big{display:none}
  .home-v48 .title p{display:none}
 }
+
+/* Visual Refresh 56.3 compatibility */
+:root{--v48-navy:#0c5435;--v48-blue:#1c8a59;--v48-teal:#238e60;--v48-bg:#f7f5ef;--v48-text:#1d2822;--v48-muted:#6e756f;--v48-line:#e8e2d6;--v48-card:#fff}
+body{background:var(--v48-bg)!important;color:var(--v48-text)!important}
+.hero,.home-v48 .hero{background:linear-gradient(135deg,#0b4b31,#12633f 58%,#1d8c5a)!important}
+.main-card:nth-child(1),.main-card:nth-child(2),.main-card:nth-child(3),.main-card:nth-child(4){background:linear-gradient(135deg,#12633f,#238e60)!important}
+.home-v48 .main-card,.card,.box,.special{border-color:var(--v48-line)!important;box-shadow:0 12px 34px rgba(20,55,39,.09)!important}
+.home-v48 .main-card .go{color:#12633f!important}
