@@ -66,7 +66,28 @@ async function openDirectConversation(target){try{
 async function selectConversation(id){active=conversations.find(c=>c.id===id);if(!active)return;renderList();$('chatHead').innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><b>${esc(active.other?.full_name||'مستخدم')}</b><small>📌 ${esc(active.ad?.title||'إعلان')}</small></div><button onclick="deleteConversation()" style="border:0;background:#fff0f0;color:#b42318;border:1px solid #f2c5c5;border-radius:8px;padding:7px 10px;cursor:pointer">🗑️ حذف المحادثة</button></div>`;await loadMessages();await markRead()}
 async function loadMessages(){if(!active)return;try{const r=await safe(db.from('messages').select('id,conversation_id,sender_id,body,is_read,created_at').eq('conversation_id',active.id).order('created_at',{ascending:true}).limit(200));if(r.error)throw r.error;const list=r.data||[];$('msgs').innerHTML=list.length?list.map(m=>`<div class="msg ${m.sender_id===user.id?'mine':'theirs'}">${esc(m.body)}<div class="time">${date(m.created_at)}</div></div>`).join(''):'<div class="empty">لا توجد رسائل بعد. ابدأ المحادثة الآن.</div>';$('msgs').scrollTop=$('msgs').scrollHeight}catch(e){$('msgs').innerHTML='<div class="error">❌ '+esc(e.message||e)+'</div>'}}
 async function markRead(){if(!active)return;try{const r=await safe(db.rpc('mark_conversation_messages_read',{p_conversation_id:active.id}));if(r.error)throw r.error;const c=conversations.find(x=>x.id===active.id);if(c)c.unread=0;renderList()}catch(e){console.warn('markRead:',e.message||e)}}
-async function sendMessage(){if(!active)return;const body=$('text').value.trim();if(!body)return;const b=$('sendBtn');b.disabled=true;try{const r=await safe(db.from('messages').insert({conversation_id:active.id,sender_id:user.id,body,is_read:false}));if(r.error)throw r.error;$('text').value='';await loadMessages();await loadConversations()}catch(e){alert('تعذر إرسال الرسالة: '+(e.message||e))}finally{b.disabled=false}}
+async function sendMessage(){
+  const input=$('text'), b=$('sendBtn');
+  if(!active){ alert('اختر محادثة أولًا.'); return; }
+  if(!input){ alert('حقل الرسالة غير موجود. أعد تحميل الصفحة.'); return; }
+  const body=input.value.trim();
+  if(!body)return;
+  if(body.length>5000){alert('الرسالة طويلة جدًا. الحد الأقصى 5000 حرف.');return;}
+  b.disabled=true; b.textContent='جاري الإرسال...';
+  try{
+    const r=await safe(db.from('messages').insert({conversation_id:active.id,sender_id:user.id,body,is_read:false}).select('id').single(),12000);
+    if(r.error)throw r.error;
+    input.value='';
+    await loadMessages();
+    await loadConversations();
+  }catch(e){
+    console.error('sendMessage:',e);
+    alert('تعذر إرسال الرسالة: '+(e?.message||'خطأ غير معروف'));
+  }finally{
+    b.disabled=false; b.textContent='إرسال';
+  }
+}
+window.sendMessage=sendMessage;
 async function deleteConversation(){if(!active)return;if(!confirm('هل تريد حذف هذه المحادثة؟'))return;const id=active.id;try{const r=await safe(db.rpc('delete_my_conversation',{p_conversation_id:id}));if(r.error)throw r.error;active=null;await loadConversations();renderChatEmpty()}catch(e){alert('تعذر حذف المحادثة: '+(e.message||e))}}
 function renderChatEmpty(){const h=$('chatHead'),m=$('msgs');if(h)h.innerHTML='<b>اختر محادثة</b><small>اختر محادثة من القائمة للبدء</small>';if(m)m.innerHTML='<div class="empty">اختر محادثة من القائمة.</div>'}
 async function subscribe(){try{channel=db.channel('messages-page-'+user.id).on('postgres_changes',{event:'*',schema:'public',table:'messages'},async payload=>{if(active&&payload.new?.conversation_id===active.id)await loadMessages();await loadConversations()}).on('postgres_changes',{event:'*',schema:'public',table:'conversations'},async()=>{await loadConversations()}).subscribe()}catch(e){console.warn('Realtime:',e.message||e)}}
