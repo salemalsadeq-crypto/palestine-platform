@@ -7,6 +7,8 @@
 
 <title>تسجيل الدخول - فلسطين بلاتفورم</title>
 
+<link rel="stylesheet" href="app.css">
+
 <style>
 * {
     box-sizing: border-box;
@@ -100,8 +102,6 @@ button:disabled {
     text-decoration: underline;
 }
 </style>
-
-<link rel="stylesheet" href="app.css">
 </head>
 
 <body>
@@ -167,16 +167,217 @@ button:disabled {
 
 </div>
 
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0" crossorigin="anonymous"></script><script src="platform.js"></script>
-
-<script>
-const supabaseClient=window.ppClient;
-const form=document.getElementById('loginForm'),button=document.getElementById('loginButton'),message=document.getElementById('message');
-(async()=>{const {data}=await supabaseClient.auth.getSession();if(data?.session) location.replace('index.html')})();
-form.addEventListener('submit',async e=>{e.preventDefault();message.textContent='';button.disabled=true;button.textContent='جاري تسجيل الدخول...';try{const email=document.getElementById('email').value.trim();const password=document.getElementById('password').value;if(!email||!password)throw Error('أدخل البريد الإلكتروني وكلمة المرور.');const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});if(error)throw error;if(!data.session)throw Error('تم التحقق لكن لم يتم إنشاء جلسة. أعد المحاولة.');message.style.color='green';message.textContent='✅ تم تسجيل الدخول بنجاح';await new Promise(r=>setTimeout(r,250));location.replace('index.html')}catch(err){message.style.color='red';const m=(err.message||'').toLowerCase();message.textContent=m.includes('invalid login')?'❌ البريد الإلكتروني أو كلمة المرور غير صحيحة':m.includes('email not confirmed')?'❌ يجب تأكيد البريد الإلكتروني أولاً':'❌ '+(err.message||'حدث خطأ')}finally{button.disabled=false;button.textContent='تسجيل الدخول'}});
+<!-- Supabase يجب أن يأتي أولًا -->
+<script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"
+    crossorigin="anonymous">
 </script>
 
+<script>
+(function () {
+
+    'use strict';
+
+    const SUPABASE_URL =
+        "https://sesbumfedusbjevbsyzl.supabase.co";
+
+    const SUPABASE_KEY =
+        "sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
+
+    /*
+     * إنشاء عميل مستقل لتسجيل الدخول.
+     * لا نعتمد على platform.js هنا.
+     */
+    const supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY,
+            {
+                auth: {
+                    persistSession: true,
+                    autoRefreshToken: true,
+                    detectSessionInUrl: true
+                }
+            }
+        );
+
+    /*
+     * نجعل العميل متاحًا أيضًا لبقية المنصة.
+     */
+    window.ppClient = supabaseClient;
+
+    const form =
+        document.getElementById('loginForm');
+
+    const button =
+        document.getElementById('loginButton');
+
+    const message =
+        document.getElementById('message');
+
+    /*
+     * إذا كانت هناك جلسة بالفعل،
+     * لا نطلب تسجيل الدخول مرة أخرى.
+     */
+    (async function checkSession () {
+
+        try {
+
+            const result =
+                await supabaseClient.auth.getSession();
+
+            if (result?.data?.session) {
+                window.location.replace(
+                    'index.html'
+                );
+            }
+
+        } catch (error) {
+
+            console.warn(
+                'Session check failed:',
+                error
+            );
+
+        }
+
+    })();
+
+    /*
+     * تسجيل الدخول
+     */
+    form.addEventListener(
+        'submit',
+        async function (event) {
+
+            event.preventDefault();
+
+            message.textContent = '';
+
+            button.disabled = true;
+            button.textContent =
+                'جاري تسجيل الدخول...';
+
+            try {
+
+                const email =
+                    document
+                        .getElementById('email')
+                        .value
+                        .trim();
+
+                const password =
+                    document
+                        .getElementById('password')
+                        .value;
+
+                if (!email || !password) {
+                    throw new Error(
+                        'أدخل البريد الإلكتروني وكلمة المرور.'
+                    );
+                }
+
+                const result =
+                    await supabaseClient.auth
+                        .signInWithPassword({
+                            email: email,
+                            password: password
+                        });
+
+                if (result.error) {
+                    throw result.error;
+                }
+
+                if (!result.data?.session) {
+                    throw new Error(
+                        'تم التحقق لكن لم يتم إنشاء جلسة. أعد المحاولة.'
+                    );
+                }
+
+                message.style.color =
+                    'green';
+
+                message.textContent =
+                    '✅ تم تسجيل الدخول بنجاح';
+
+                /*
+                 * نعطي Supabase لحظة لحفظ الجلسة.
+                 */
+                await new Promise(
+                    function (resolve) {
+                        setTimeout(
+                            resolve,
+                            300
+                        );
+                    }
+                );
+
+                window.location.replace(
+                    'index.html'
+                );
+
+            } catch (error) {
+
+                console.error(
+                    'Login error:',
+                    error
+                );
+
+                message.style.color =
+                    'red';
+
+                const text =
+                    String(
+                        error?.message || ''
+                    ).toLowerCase();
+
+                if (
+                    text.includes(
+                        'invalid login'
+                    )
+                ) {
+
+                    message.textContent =
+                        '❌ البريد الإلكتروني أو كلمة المرور غير صحيحة';
+
+                } else if (
+                    text.includes(
+                        'email not confirmed'
+                    )
+                ) {
+
+                    message.textContent =
+                        '❌ يجب تأكيد البريد الإلكتروني أولاً';
+
+                } else {
+
+                    message.textContent =
+                        '❌ ' +
+                        (
+                            error?.message ||
+                            'حدث خطأ أثناء تسجيل الدخول'
+                        );
+                }
+
+            } finally {
+
+                button.disabled = false;
+
+                button.textContent =
+                    'تسجيل الدخول';
+
+            }
+
+        }
+    );
+
+})();
+</script>
+
+<!-- platform.js بعد إنشاء العميل -->
+<script src="platform.js"></script>
+
 <script src="app-ui.js" defer></script>
+
 </body>
-    </html>
+</html>
