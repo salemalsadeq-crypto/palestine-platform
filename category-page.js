@@ -11,6 +11,9 @@
   const grid = $('grid');
   const count = $('count');
   let ads = [];
+  let page = 0;
+  const PAGE_SIZE = 60;
+  let hasMore = false;
   let map = null;
   let markers = [];
 
@@ -54,14 +57,25 @@
     render(list);
   }
 
-  async function load(){
+  function ensureLoadMore(){
+    let b=$('loadMore');
+    if(!b && grid){ b=document.createElement('button'); b.id='loadMore'; b.type='button'; b.className='btn blue'; b.style.cssText='display:block;margin:18px auto;padding:10px 22px'; b.textContent='تحميل المزيد'; grid.parentElement?.appendChild(b); b.addEventListener('click',()=>load(true)); }
+    if(b) b.style.display=hasMore?'block':'none';
+  }
+
+  async function load(more=false){
     if(!db) throw new Error('تعذر الاتصال بقاعدة البيانات');
-    if(grid) grid.innerHTML='<div class="msg">⏳ جاري تحميل الإعلانات...</div>';
+    if(!more){ page=0; ads=[]; if(grid) grid.innerHTML='<div class="msg">⏳ جاري تحميل الإعلانات...</div>'; }
     const categories = cfg.aliases || [CATEGORY];
-    const r=await db.from('ads').select('id,title,category,description,price,city,created_at,image_urls,video_url,latitude,longitude,status').in('category',categories).eq('status','active').order('created_at',{ascending:false});
+    const from=page*PAGE_SIZE, to=from+PAGE_SIZE-1;
+    const r=await db.from('ads').select('id,title,category,description,price,city,created_at,image_urls,video_url,latitude,longitude,status').in('category',categories).eq('status','active').order('created_at',{ascending:false}).range(from,to);
     if(r.error) throw r.error;
-    ads=r.data||[];
+    const batch=r.data||[];
+    hasMore=batch.length===PAGE_SIZE;
+    ads=more?ads.concat(batch):batch;
+    page++;
     filter();
+    ensureLoadMore();
   }
 
   function updateMap(list){
