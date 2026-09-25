@@ -86,3 +86,30 @@ window.ppSetupHeader=async()=>{const u=await ppUser();const login=document.getEl
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{buildMenu();buildProfileControl()});else{buildMenu();buildProfileControl()}
 })();
+
+
+// V56.2: إشعارات فورية وصوتية اختيارية.
+window.ppNotificationListener=async()=>{
+  try{
+    const u=await ppUser();
+    if(!u)return;
+    const ch=ppClient.channel('pp-global-notifications-'+u.id)
+      .on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications',filter:'user_id=eq.'+u.id},payload=>{
+        try{
+          const enabled=localStorage.getItem('pp_notification_sound')==='1';
+          if(enabled && (window.AudioContext||window.webkitAudioContext)){
+            const C=window.AudioContext||window.webkitAudioContext;
+            const ctx=new C();
+            const o=ctx.createOscillator(), g=ctx.createGain();
+            o.frequency.value=880;
+            g.gain.value=.06;
+            o.connect(g); g.connect(ctx.destination);
+            o.start(); o.stop(ctx.currentTime+.15);
+          }
+        }catch(e){}
+      });
+    await ch.subscribe();
+  }catch(e){}
+};
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>setTimeout(window.ppNotificationListener,800));
+else setTimeout(window.ppNotificationListener,800);
