@@ -102,6 +102,7 @@ button:disabled {
     text-decoration: underline;
 }
 </style>
+
 </head>
 
 <body>
@@ -149,7 +150,10 @@ button:disabled {
 
     </form>
 
-    <div id="message" class="message"></div>
+    <div
+        id="message"
+        class="message"
+    ></div>
 
     <div class="links">
 
@@ -167,217 +171,414 @@ button:disabled {
 
 </div>
 
-<!-- Supabase يجب أن يأتي أولًا -->
+
+<!-- =========================================================
+     SUPABASE
+     ========================================================= -->
+
 <script
     src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"
     crossorigin="anonymous">
 </script>
 
+
+<!-- =========================================================
+     LOGIN
+     ========================================================= -->
+
 <script>
-(function () {
 
-    'use strict';
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
 
-    const SUPABASE_URL =
-        "https://sesbumfedusbjevbsyzl.supabase.co";
-
-    const SUPABASE_KEY =
-        "sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR";
-
-    /*
-     * إنشاء عميل مستقل لتسجيل الدخول.
-     * لا نعتمد على platform.js هنا.
-     */
-    const supabaseClient =
-        window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_KEY,
-            {
-                auth: {
-                    persistSession: true,
-                    autoRefreshToken: true,
-                    detectSessionInUrl: true
-                }
-            }
-        );
-
-    /*
-     * نجعل العميل متاحًا أيضًا لبقية المنصة.
-     */
-    window.ppClient = supabaseClient;
-
-    const form =
-        document.getElementById('loginForm');
-
-    const button =
-        document.getElementById('loginButton');
-
-    const message =
-        document.getElementById('message');
-
-    /*
-     * إذا كانت هناك جلسة بالفعل،
-     * لا نطلب تسجيل الدخول مرة أخرى.
-     */
-    (async function checkSession () {
-
-        try {
-
-            const result =
-                await supabaseClient.auth.getSession();
-
-            if (result?.data?.session) {
-                window.location.replace(
-                    'index.html'
-                );
-            }
-
-        } catch (error) {
-
-            console.warn(
-                'Session check failed:',
-                error
+        const form =
+            document.getElementById(
+                'loginForm'
             );
 
+        const button =
+            document.getElementById(
+                'loginButton'
+            );
+
+        const message =
+            document.getElementById(
+                'message'
+            );
+
+
+        /* -----------------------------------------
+           التأكد من وجود عناصر الصفحة
+           ----------------------------------------- */
+
+        if (
+            !form ||
+            !button ||
+            !message
+        ) {
+
+            console.error(
+                'Login elements not found'
+            );
+
+            return;
         }
 
-    })();
 
-    /*
-     * تسجيل الدخول
-     */
-    form.addEventListener(
-        'submit',
-        async function (event) {
+        /* -----------------------------------------
+           التأكد من تحميل Supabase
+           ----------------------------------------- */
 
-            event.preventDefault();
+        if (
+            !window.supabase ||
+            typeof window.supabase.createClient !==
+            'function'
+        ) {
 
-            message.textContent = '';
+            message.style.color =
+                'red';
 
-            button.disabled = true;
-            button.textContent =
-                'جاري تسجيل الدخول...';
+            message.textContent =
+                '❌ تعذر تحميل خدمة تسجيل الدخول. تحقق من اتصال الإنترنت ثم أعد المحاولة.';
 
-            try {
+            console.error(
+                'Supabase library not loaded'
+            );
 
-                const email =
-                    document
-                        .getElementById('email')
-                        .value
-                        .trim();
+            return;
+        }
 
-                const password =
-                    document
-                        .getElementById('password')
-                        .value;
 
-                if (!email || !password) {
-                    throw new Error(
-                        'أدخل البريد الإلكتروني وكلمة المرور.'
-                    );
-                }
+        /* -----------------------------------------
+           إنشاء Supabase Client
+           ----------------------------------------- */
 
-                const result =
-                    await supabaseClient.auth
-                        .signInWithPassword({
-                            email: email,
-                            password: password
-                        });
+        const client =
+            window.supabase.createClient(
 
-                if (result.error) {
-                    throw result.error;
-                }
+                'https://sesbumfedusbjevbsyzl.supabase.co',
 
-                if (!result.data?.session) {
-                    throw new Error(
-                        'تم التحقق لكن لم يتم إنشاء جلسة. أعد المحاولة.'
-                    );
-                }
+                'sb_publishable_0sJrbh73jLip3O5OtJkc_A_9F6OPWqR',
 
-                message.style.color =
-                    'green';
+                {
+                    auth: {
 
-                message.textContent =
-                    '✅ تم تسجيل الدخول بنجاح';
+                        persistSession: true,
 
-                /*
-                 * نعطي Supabase لحظة لحفظ الجلسة.
-                 */
-                await new Promise(
-                    function (resolve) {
-                        setTimeout(
-                            resolve,
-                            300
-                        );
+                        autoRefreshToken: true,
+
+                        detectSessionInUrl: true
+
                     }
+                }
+            );
+
+
+        /*
+         * إتاحة العميل لبقية المنصة
+         */
+
+        window.ppClient =
+            client;
+
+
+        /* -----------------------------------------
+           فحص الجلسة الحالية
+           ----------------------------------------- */
+
+        client.auth
+            .getSession()
+            .then(function (result) {
+
+                console.log(
+                    'SESSION:',
+                    result
                 );
 
-                window.location.replace(
-                    'index.html'
-                );
+                if (
+                    result &&
+                    result.data &&
+                    result.data.session
+                ) {
 
-            } catch (error) {
+                    window.location.href =
+                        'index.html';
+                }
+
+            })
+            .catch(function (error) {
 
                 console.error(
-                    'Login error:',
+                    'Session error:',
                     error
                 );
 
-                message.style.color =
-                    'red';
+            });
 
-                const text =
-                    String(
-                        error?.message || ''
-                    ).toLowerCase();
+
+        /* -----------------------------------------
+           تسجيل الدخول
+           ----------------------------------------- */
+
+        form.addEventListener(
+            'submit',
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const email =
+                    document
+                        .getElementById(
+                            'email'
+                        )
+                        .value
+                        .trim();
+
+
+                const password =
+                    document
+                        .getElementById(
+                            'password'
+                        )
+                        .value;
+
+
+                /* ---------------------------------
+                   التحقق من البيانات
+                   --------------------------------- */
 
                 if (
-                    text.includes(
-                        'invalid login'
-                    )
+                    !email ||
+                    !password
                 ) {
 
-                    message.textContent =
-                        '❌ البريد الإلكتروني أو كلمة المرور غير صحيحة';
-
-                } else if (
-                    text.includes(
-                        'email not confirmed'
-                    )
-                ) {
+                    message.style.color =
+                        'red';
 
                     message.textContent =
-                        '❌ يجب تأكيد البريد الإلكتروني أولاً';
+                        '❌ أدخل البريد الإلكتروني وكلمة المرور.';
 
-                } else {
-
-                    message.textContent =
-                        '❌ ' +
-                        (
-                            error?.message ||
-                            'حدث خطأ أثناء تسجيل الدخول'
-                        );
+                    return;
                 }
 
-            } finally {
 
-                button.disabled = false;
+                /* ---------------------------------
+                   حالة التحميل
+                   --------------------------------- */
+
+                button.disabled =
+                    true;
 
                 button.textContent =
-                    'تسجيل الدخول';
+                    'جاري تسجيل الدخول...';
+
+                message.textContent =
+                    '';
+
+
+                try {
+
+
+                    /* -----------------------------
+                       تنفيذ تسجيل الدخول
+                       ----------------------------- */
+
+                    const result =
+                        await client.auth
+                            .signInWithPassword({
+
+                                email:
+                                    email,
+
+                                password:
+                                    password
+
+                            });
+
+
+                    console.log(
+                        'LOGIN RESULT:',
+                        result
+                    );
+
+
+                    /* -----------------------------
+                       Supabase Error
+                       ----------------------------- */
+
+                    if (
+                        result &&
+                        result.error
+                    ) {
+
+                        throw result.error;
+                    }
+
+
+                    /* -----------------------------
+                       التأكد من وجود Session
+                       ----------------------------- */
+
+                    if (
+                        !result ||
+                        !result.data ||
+                        !result.data.session
+                    ) {
+
+                        throw new Error(
+                            'تم التحقق لكن لم يتم إنشاء جلسة تسجيل الدخول.'
+                        );
+                    }
+
+
+                    /* -----------------------------
+                       نجاح
+                       ----------------------------- */
+
+                    message.style.color =
+                        'green';
+
+                    message.textContent =
+                        '✅ تم تسجيل الدخول بنجاح';
+
+
+                    /*
+                     * إعطاء Supabase لحظة
+                     * لحفظ الجلسة
+                     */
+
+                    await new Promise(
+                        function (
+                            resolve
+                        ) {
+
+                            setTimeout(
+                                resolve,
+                                500
+                            );
+
+                        }
+                    );
+
+
+                    /*
+                     * الانتقال للرئيسية
+                     */
+
+                    window.location.href =
+                        'index.html';
+
+
+                } catch (error) {
+
+
+                    console.error(
+                        'LOGIN ERROR:',
+                        error
+                    );
+
+
+                    message.style.color =
+                        'red';
+
+
+                    const errorMessage =
+                        String(
+                            error &&
+                            error.message
+                                ? error.message
+                                : ''
+                        );
+
+
+                    const lower =
+                        errorMessage
+                            .toLowerCase();
+
+
+                    if (
+                        lower.includes(
+                            'invalid login'
+                        )
+                    ) {
+
+                        message.textContent =
+                            '❌ البريد الإلكتروني أو كلمة المرور غير صحيحة';
+
+                    }
+
+                    else if (
+                        lower.includes(
+                            'email not confirmed'
+                        )
+                    ) {
+
+                        message.textContent =
+                            '❌ يجب تأكيد البريد الإلكتروني أولاً';
+
+                    }
+
+                    else if (
+                        lower.includes(
+                            'failed to fetch'
+                        )
+                    ) {
+
+                        message.textContent =
+                            '❌ تعذر الاتصال بالخادم. تحقق من اتصال الإنترنت.';
+
+                    }
+
+                    else {
+
+                        message.textContent =
+                            '❌ ' +
+                            (
+                                errorMessage ||
+                                'حدث خطأ أثناء تسجيل الدخول'
+                            );
+
+                    }
+
+                }
+
+
+                finally {
+
+                    button.disabled =
+                        false;
+
+                    button.textContent =
+                        'تسجيل الدخول';
+
+                }
 
             }
+        );
 
-        }
-    );
+    }
+);
 
-})();
 </script>
 
-<!-- platform.js بعد إنشاء العميل -->
+
+<!-- =========================================================
+     PLATFORM
+     ========================================================= -->
+
 <script src="platform.js"></script>
 
-<script src="app-ui.js" defer></script>
+
+<!-- =========================================================
+     APP UI
+     ========================================================= -->
+
+<script
+    src="app-ui.js"
+    defer>
+</script>
 
 </body>
 </html>
