@@ -26,7 +26,7 @@ async function deleteConversation(){
   if(!active)return;
   if(!confirm('هل تريد حذف هذه المحادثة؟ سيتم حذف رسائلها أيضاً إذا سمحت صلاحيات قاعدة البيانات.'))return;
   const id=active.id;
-  const r=await db.from('conversations').delete().eq('id',id).or(`buyer_id.eq.${user.id},seller_id.eq.${user.id}`);
+  const r=await db.rpc('delete_my_conversation',{p_conversation_id:id});
   if(r.error){alert('تعذر حذف المحادثة: '+r.error.message);return}
   active=null;
   await loadConversations();
