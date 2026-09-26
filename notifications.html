@@ -7,7 +7,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:Arial,Tahoma,sans-serif;background:#f3f6fa;color:#172033}
-.wrap{max-width:850px;margin:auto;padding:18px}.top{background:linear-gradient(135deg,#173b68,#245789);color:#fff;border-radius:20px;padding:20px;display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:0 8px 25px #173b6830}.heading{display:flex;align-items:center;gap:12px}.bell{width:48px;height:48px;border-radius:50%;background:#ffffff20;display:grid;place-items:center;font-size:25px}.top h1{margin:0;font-size:25px}.count{margin-top:5px;font-size:13px;opacity:.9}.btn{border:0;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:bold}.readall{background:#b51f2a;color:#fff}.readall:disabled{opacity:.55;cursor:not-allowed}.back{display:inline-block;margin:16px 2px;color:#173b68;font-weight:bold;text-decoration:none}.toolbar{display:flex;justify-content:space-between;align-items:center;margin:4px 0 12px}.mini{font-size:13px;color:#6d7685}.card{background:#fff;margin:11px 0;padding:17px;border-radius:16px;box-shadow:0 3px 14px #0000000c;border:1px solid #e9edf2;border-right:5px solid #dfe5ec;transition:.15s}.card.unread{border-right-color:#b51f2a;background:#fffdfd}.card:hover{transform:translateY(-1px);box-shadow:0 6px 18px #00000012}.row{display:flex;align-items:flex-start;gap:12px}.icon{width:42px;height:42px;flex:0 0 42px;border-radius:12px;background:#eef3f8;display:grid;place-items:center;font-size:20px}.card.unread .icon{background:#fdebed}.title{font-size:17px;font-weight:bold;color:#173b68;margin-bottom:6px}.message{line-height:1.7;color:#374151}.date{font-size:12px;color:#7b8491;margin-top:9px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.adlink{display:inline-block;background:#173b68;color:#fff;text-decoration:none;border-radius:9px;padding:9px 12px;font-weight:bold;font-size:13px}.mark{background:#eef2f6;color:#173b68}.empty{text-align:center;background:#fff;padding:55px 20px;border-radius:16px;border:1px solid #e9edf2}.empty .big{font-size:45px;margin-bottom:8px}.status{text-align:center;color:#777;padding:12px}.error{color:#b51f2a;background:#fff1f2;border-radius:12px;padding:14px}.newdot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#b51f2a;margin-left:6px}.loading{opacity:.6}
+.wrap{max-width:850px;margin:auto;padding:18px}.top{background:linear-gradient(135deg,#173b68,#245789);color:#fff;border-radius:20px;padding:20px;display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:0 8px 25px #173b6830}.heading{display:flex;align-items:center;gap:12px}.bell{width:48px;height:48px;border-radius:50%;background:#ffffff20;display:grid;place-items:center;font-size:25px}.top h1{margin:0;font-size:25px}.count{margin-top:5px;font-size:13px;opacity:.9}.btn{border:0;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:bold}.readall{background:#b51f2a;color:#fff}.readall:disabled{opacity:.55;cursor:not-allowed}.back{display:inline-block;margin:16px 2px;color:#173b68;font-weight:bold;text-decoration:none}.toolbar{display:flex;justify-content:space-between;align-items:center;margin:4px 0 12px}.mini{font-size:13px;color:#6d7685}.card{background:#fff;margin:11px 0;padding:17px;border-radius:16px;box-shadow:0 3px 14px #0000000c;border:1px solid #e9edf2;border-right:5px solid #dfe5ec;transition:.15s}.card.unread{border-right-color:#b51f2a;background:#fffdfd}.card:hover{transform:translateY(-1px);box-shadow:0 6px 18px #00000012}.row{display:flex;align-items:flex-start;gap:12px}.icon{width:42px;height:42px;flex:0 0 42px;border-radius:12px;background:#eef3f8;display:grid;place-items:center;font-size:20px}.card.unread .icon{background:#fdebed}.title{font-size:17px;font-weight:bold;color:#173b68;margin-bottom:6px}.message{line-height:1.7;color:#374151}.date{font-size:12px;color:#7b8491;margin-top:9px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.adlink{display:inline-block;background:#173b68;color:#fff;text-decoration:none;border-radius:9px;padding:9px 12px;font-weight:bold;font-size:13px}.mark{background:#eef2f6;color:#173b68}.empty{text-align:center;background:#fff;padding:55px 20px;border-radius:16px;border:1px solid #e9edf2}.empty .big{font-size:45px;margin-bottom:8px}.status{text-align:center;color:#777;padding:12px}.error{color:#b51f2a;background:#fff1f2;border-radius:12px;padding:14px}.newdot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#b51f2a;margin-left:6px}.loading{opacity:.6}.filters{display:flex;gap:5px;flex-wrap:wrap}.filter{border:1px solid #dfe6ee;background:#fff;color:#526176;border-radius:999px;padding:6px 9px;font-size:10px;font-weight:900;cursor:pointer}.filter.active{background:#173b68;color:#fff;border-color:#173b68}
 @media(max-width:600px){.wrap{padding:12px}.top{padding:16px;border-radius:16px}.top h1{font-size:21px}.bell{width:42px;height:42px}.readall{padding:9px 10px;font-size:12px}.card{padding:14px}.title{font-size:16px}}
 </style>
 <script src="platform.js"></script><link rel="stylesheet" href="app.css">
@@ -20,13 +20,13 @@
   <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end"><button id="soundBtn" class="btn" style="background:#eef2f6;color:#173b68">🔇 تفعيل صوت الإشعارات</button><button id="browserBtn" class="btn" style="background:#eef2f6;color:#173b68">🔔 إشعارات الجهاز</button><button id="allRead" class="btn readall" disabled>تحديد الكل كمقروء</button></div>
 </section>
 <a class="back" href="index.html">← العودة للرئيسية</a>
-<div class="toolbar"><span id="status" class="mini">جاري تحميل الإشعارات...</span><span class="mini">تتحدث تلقائيًا</span></div>
+<div class="toolbar"><span id="status" class="mini">جاري تحميل الإشعارات...</span><div class="filters"><button class="filter active" data-filter="all">الكل</button><button class="filter" data-filter="unread">غير المقروء</button><button class="filter" data-filter="order">الطلبات</button><button class="filter" data-filter="message">الرسائل</button></div></div>
 <div id="list"></div>
 </main>
 <script>
 const db=window.ppClient;
 window.$=x=>document.getElementById(x);
-let currentUser=null, notificationChannel=null, lastNotificationAt=null;
+let currentUser=null, notificationChannel=null, lastNotificationAt=null, activeFilter='all';
 const SOUND_KEY='pp_notification_sound'; const BROWSER_KEY='pp_browser_notifications';
 let audioCtx=null;
 function soundEnabled(){return localStorage.getItem(SOUND_KEY)==='1'}
@@ -46,21 +46,22 @@ async function load(){
   const {data,error}=await db.from('notifications').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});
   $('status').classList.remove('loading');
   if(error){$('status').className='error';$('status').textContent='❌ تعذر تحميل الإشعارات: '+error.message;return}
-  const list=data||[], unread=list.filter(n=>!n.is_read).length;
+  const list=data||[], unread=list.filter(n=>!n.is_read).length; window.__notifications=list;
   $('count').innerHTML=unread?`<span class="newdot"></span>${unread} إشعار غير مقروء`:`لا توجد إشعارات غير مقروءة`;
   $('allRead').disabled=unread===0;
   if(!list.length){$('list').innerHTML='<div class="empty"><div class="big">🔔</div><strong>لا توجد إشعارات حاليًا</strong><div class="mini" style="margin-top:8px">ستظهر هنا الإشعارات الجديدة المتعلقة بحسابك وإعلاناتك.</div></div>';return}
-  $('list').innerHTML=list.map(n=>`<article class="card ${n.is_read?'':'unread'}">
+  const visible=list.filter(n=>activeFilter==='all'||(activeFilter==='unread'&&!n.is_read)||(activeFilter==='order'&&n.related_order_id)||(activeFilter==='message'&&n.type==='message'));
+  $('list').innerHTML=visible.length?visible.map(n=>`<article class="card ${n.is_read?'':'unread'}">
     <div class="row"><div class="icon">${iconFor(n)}</div><div style="flex:1;min-width:0">
       <div class="title">${esc(n.title)}${n.is_read?'':' <span style="font-size:11px;color:#b51f2a">جديد</span>'}</div>
       <div class="message">${esc(n.message||'')}</div>
       <div class="date">🕒 ${esc(dateText(n.created_at))}</div>
       <div class="actions">
-        ${n.related_ad_id?`<a class="adlink" href="ad-details.html?id=${encodeURIComponent(n.related_ad_id)}">عرض الإعلان ←</a>`:''}
+        ${n.related_ad_id?`<a class="adlink" href="ad-details.html?id=${encodeURIComponent(n.related_ad_id)}">عرض الإعلان ←</a>`:''}${n.related_order_id?`<a class="adlink" href="orders.html?id=${encodeURIComponent(n.related_order_id)}">عرض الطلب ←</a>`:''}${n.related_conversation_id?`<a class="adlink" href="messages.html?conversation=${encodeURIComponent(n.related_conversation_id)}">فتح المحادثة ←</a>`:''}
         ${!n.is_read?`<button class="btn mark" onclick="readOne('${n.id}')">✓ تحديد كمقروء</button>`:''}
       </div>
     </div></div>
-  </article>`).join('');
+  </article>`).join(''):'<div class="empty"><div class="big">🔎</div><strong>لا توجد إشعارات في هذا التصنيف</strong></div>';
 }
 async function readOne(id){
   if(!currentUser)return;
@@ -73,6 +74,7 @@ $('allRead').onclick=async()=>{
   const {error}=await db.from('notifications').update({is_read:true}).eq('user_id',currentUser.id).eq('is_read',false);
   if(error){alert('تعذر تحديث الإشعارات');$('allRead').disabled=false;return} await load();
 };
+document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{activeFilter=b.dataset.filter||'all';document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');const list=window.__notifications||[];const visible=list.filter(n=>activeFilter==='all'||(activeFilter==='unread'&&!n.is_read)||(activeFilter==='order'&&n.related_order_id)||(activeFilter==='message'&&n.type==='message'));if(!visible.length){$('list').innerHTML='<div class="empty"><div class="big">🔎</div><strong>لا توجد إشعارات في هذا التصنيف</strong></div>';return}load()});
 async function subscribeNotifications(){if(notificationChannel)await db.removeChannel(notificationChannel);notificationChannel=db.channel('notifications-page-'+currentUser.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications',filter:'user_id=eq.'+currentUser.id},payload=>{notifyIncoming(payload.new);load()}).subscribe()}
 (async()=>{await load();updateControls();await subscribeNotifications();setInterval(load,30000)})();
 </script>
