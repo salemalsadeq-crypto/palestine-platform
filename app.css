@@ -10,7 +10,7 @@
   --pp-font-head:'Cairo',Tahoma,sans-serif;--pp-font-body:'Tajawal',Tahoma,sans-serif;
 }
 html{scroll-behavior:smooth;text-rendering:optimizeLegibility;-webkit-tap-highlight-color:transparent}
-body{transition:opacity .18s ease;background-color:var(--pp-bg);color:var(--pp-ink);font-family:var(--pp-font-body)}
+body{transition:opacity .18s ease;background-color:var(--pp-bg);color:var(--pp-ink);font-family:var(--pp-font-body);line-height:1.75;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 body.pp-leaving{opacity:.72}
 ::selection{background:#dcecdf;color:var(--pp-primary)}
 *:focus-visible{outline:3px solid rgba(27,94,58,.28);outline-offset:2px}
@@ -23,7 +23,7 @@ input:focus,select:focus,textarea:focus{border-color:#5f9a76!important;box-shado
 .card,.ad,.tool,.cat,.feature,.box,.hero,.section>div,.wrap>section{contain:layout paint}
 img{max-width:100%;height:auto}
 img[loading="lazy"]{content-visibility:auto}
-h1,h2,h3,h4,.logo,.pp-drawer-brand,.pp-menu-user b{font-family:var(--pp-font-head)}
+h1,h2,h3,h4,.logo,.pp-drawer-brand,.pp-menu-user b{font-family:var(--pp-font-head);letter-spacing:0}
 
 .pp-surface{background:var(--pp-card);border:1px solid var(--pp-line);border-radius:var(--pp-radius);box-shadow:var(--pp-shadow)}
 .pp-progress{position:fixed;inset:0 0 auto 0;height:3px;background:linear-gradient(90deg,var(--pp-primary),var(--pp-gold));transform:scaleX(0);transform-origin:0 50%;z-index:2147483647;pointer-events:none;transition:transform .18s ease,opacity .2s ease}
