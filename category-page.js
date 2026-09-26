@@ -50,7 +50,7 @@
     const max=maxEl&&maxEl.value!==''?Number(maxEl.value):null;
     let list=ads.filter(a=>{
       const text=[a.title,a.description,a.city].filter(Boolean).join(' ').toLowerCase();
-      return (!q||text.includes(q)) && (!city||String(a.city||'').toLowerCase()===city) && (!type||text.includes(type)) && (min===null||Number(a.price)>=min) && (max===null||Number(a.price)<=max);
+      return (!q||text.includes(q)) && (!city||String(a.city||'').toLowerCase()===city) && (!type||text.includes(type)) && (min===null||(a.price!=null&&Number(a.price)>=min)) && (max===null||(a.price!=null&&Number(a.price)<=max));
     });
     const sort=$('sort')?.value||'new';
     list.sort((a,b)=>sort==='old'?new Date(a.created_at)-new Date(b.created_at):sort==='low'?(a.price==null?Infinity:Number(a.price))-(b.price==null?Infinity:Number(b.price)):sort==='high'?(b.price==null?-Infinity:Number(b.price))-(a.price==null?-Infinity:Number(a.price)):new Date(b.created_at)-new Date(a.created_at));
