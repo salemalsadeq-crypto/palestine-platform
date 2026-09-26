@@ -25,7 +25,7 @@
 </main>
 <script>
 const db=window.ppClient;
-const $=x=>document.getElementById(x);
+window.$=x=>document.getElementById(x);
 let currentUser=null, notificationChannel=null, lastNotificationAt=null;
 const SOUND_KEY='pp_notification_sound'; const BROWSER_KEY='pp_browser_notifications';
 let audioCtx=null;

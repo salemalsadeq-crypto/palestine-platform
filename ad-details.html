@@ -6,7 +6,7 @@ window.addEventListener('unhandledrejection',function(e){var a=document.getEleme
 if(typeof supabase==='undefined'){
 document.getElementById('app').innerHTML='<div class="error">❌ لم يتم تحميل مكتبة Supabase — تحقق من اتصال الإنترنت</div>';
 }else{
-const db=window.ppClient;const id=new URLSearchParams(location.search).get('id');let ad,user,favId=null;const $=x=>document.getElementById(x);function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+const db=window.ppClient;const id=new URLSearchParams(location.search).get('id');let ad,user,favId=null;window.$=x=>document.getElementById(x);function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 async function load(){
 try{
 if(!id){$('app').innerHTML='<div class="error">الإعلان غير موجود.</div>';return}

@@ -29,7 +29,7 @@ window.addEventListener('unhandledrejection',function(e){var c=document.getEleme
 if(typeof supabase==='undefined'){
 document.getElementById('count').textContent='❌ لم يتم تحميل مكتبة Supabase — تحقق من اتصال الإنترنت أو جرب شبكة/متصفح آخر';
 }else{
-const db=window.ppClient;let ads=[],user=null,favs=new Set();const $=x=>document.getElementById(x);function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}async function load(){
+const db=window.ppClient;let ads=[],user=null,favs=new Set();window.$=x=>document.getElementById(x);function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}async function load(){
 try{
 const u=await db.auth.getUser();
 if(u.error){$('count').textContent='❌ خطأ بجلسة الدخول';$('grid').innerHTML='<div class="empty">❌ '+esc(u.error.message)+'</div>';return}
