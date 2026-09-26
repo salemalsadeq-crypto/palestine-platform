@@ -321,6 +321,23 @@ header{background:linear-gradient(135deg,#12365f,#2563a6);border:0;box-shadow:0 
 @media(max-width:430px){.container{padding:0 10px}.stats{gap:8px}.stat{padding:13px 8px}.stat .num{font-size:24px}.quick-links{grid-template-columns:1fr}.page-title{border-radius:16px}}
 </style>
 <link rel="stylesheet" href="theme-v61.css">
+
+<style id="v74-account-polish">
+.account-section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.account-section-title h2{margin:0}
+.section-note{font-size:12px;color:#667085;background:#f4f7fb;padding:6px 10px;border-radius:999px}
+.profile-top{background:linear-gradient(145deg,#ffffff,#f5f9ff);border:1px solid #e3ebf5}
+.profile-actions{margin-top:16px}
+.profile-action,.quick-link,.ads-button,.add-ad-button,.image-btn,.save-btn{transition:transform .18s ease,box-shadow .18s ease,background .18s ease}
+.profile-action:hover,.quick-link:hover,.ads-button:hover,.add-ad-button:hover,.image-btn:hover,.save-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px #173b6818}
+.quick-links{grid-template-columns:repeat(3,1fr)}
+.quick-link{min-height:52px;display:flex;align-items:center;justify-content:center}
+.account-mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.account-mini{padding:13px;border:1px solid #e5ebf2;border-radius:12px;background:#fbfcfe;text-align:center;text-decoration:none;color:#173b68;font-weight:700}
+.account-mini span{display:block;font-size:12px;color:#667085;font-weight:500;margin-top:4px}
+@media(max-width:700px){.quick-links{grid-template-columns:1fr 1fr}.account-mini-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:430px){.quick-links{grid-template-columns:1fr}.account-mini-grid{grid-template-columns:1fr}.profile-actions{display:grid;grid-template-columns:1fr;width:100%}.profile-action{width:100%}}
+</style>
 </head>
 
 <body>
@@ -529,7 +546,7 @@ class="message">
 <!-- الإعلانات -->
 
 <div class="card">
-<div class="account-section-title"><h2>📌 الوصول السريع</h2><span class="section-note">كل وظائف الحساب من هنا</span></div>
+<div class="account-section-title"><h2>📌 الوصول السريع</h2><span class="section-note">أهم أقسام حسابك</span></div>
 <div class="quick-links">
 <a href="my-ads.html" class="quick-link primary">📢 إعلاناتي</a>
 <a href="favorites.html" class="quick-link">❤️ المفضلة</a>
@@ -537,6 +554,11 @@ class="message">
 <a href="notifications.html" class="quick-link">🔔 الإشعارات</a>
 <a href="orders.html" class="quick-link">🛍️ طلباتي ومشترياتي</a>
 <a href="services.html" class="quick-link">⚡ الخدمات</a>
+</div>
+<div class="account-mini-grid">
+<a class="account-mini" href="nearby.html">📍 حولي الآن<span>أماكن وخدمات قريبة</span></a>
+<a class="account-mini" href="places.html">🗺️ الأماكن<span>استكشف الأماكن</span></a>
+<a class="account-mini" href="subscriptions.html">⭐ الاشتراكات<span>إدارة اشتراكك</span></a>
 </div>
 </div>
 

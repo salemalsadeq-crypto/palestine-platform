@@ -54,6 +54,19 @@ nav a{color:#fff;text-decoration:none;padding:8px 11px;background:#234d7e;border
 </style>
 <script src="platform.js"></script><link rel="stylesheet" href="app.css">
 <link rel="stylesheet" href="theme-v61.css">
+
+<style id="v74-profile-polish">
+.profile-card{border:1px solid #e3ebf5;background:linear-gradient(145deg,#fff,#f7faff)}
+.profile-top{align-items:flex-start}
+.info{flex:1;min-width:220px}
+.name{font-size:27px;font-weight:900;color:#173b68;margin-bottom:8px}
+.actions .action{transition:transform .18s ease,box-shadow .18s ease}
+.actions .action:hover{transform:translateY(-1px);box-shadow:0 6px 15px #173b6818}
+.tabs{position:sticky;top:8px;z-index:3;background:#fff;padding:8px;border:1px solid #e5ebf2;border-radius:14px;box-shadow:0 4px 14px #0000000a}
+.card .view{display:inline-flex;align-items:center;justify-content:center;min-height:42px;margin-top:10px;border-radius:10px}
+@media(max-width:600px){.name{font-size:23px}.info{width:100%}.actions{display:grid;grid-template-columns:1fr 1fr}.actions .action{width:100%;text-align:center}.actions .follow{grid-column:1/-1}.profile-top{gap:14px}.tabs{top:4px}}
+@media(max-width:380px){.actions{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 <header>
