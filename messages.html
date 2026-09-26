@@ -81,6 +81,15 @@ function renderList(){
     el.addEventListener('click',open);
     el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
   });
+  const input=$('text');
+  if(input){
+    input.addEventListener('keydown',e=>{
+      if(e.key==='Enter'&&!e.shiftKey){
+        e.preventDefault();
+        if(!e.isComposing) sendMessage();
+      }
+    });
+  }
 }
 async function buildConversations(rows){const adIds=[...new Set(rows.map(x=>x.ad_id).filter(Boolean))],otherIds=[...new Set(rows.map(x=>x.buyer_id===user.id?x.seller_id:x.buyer_id))];let ads=[],profiles=[];if(adIds.length){const a=await db.from('ads').select('id,title').in('id',adIds);ads=a.data||[]}if(otherIds.length){const p=await db.from('profiles').select('id,full_name').in('id',otherIds);profiles=p.data||[]}conversations=rows.map(c=>({...c,ad:ads.find(a=>a.id===c.ad_id),other:profiles.find(p=>p.id===(c.buyer_id===user.id?c.seller_id:c.buyer_id)),last_message:c.last_message||'',last_message_at:c.last_message_at||c.created_at,unread:Number(c.unread_count||0)}));renderList();if(active){const still=conversations.find(c=>c.id===active.id);if(still){active=still;loadMessages().catch(console.error)}else{active=null}}}
 async function loadConversations(){const r=await db.rpc('get_my_conversations',{p_limit:50,p_offset:0});if(r.error){
