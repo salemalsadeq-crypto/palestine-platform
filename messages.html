@@ -105,33 +105,41 @@ async function selectConversation(id){active=conversations.find(c=>c.id===id);if
 async function loadMessages(){
   if(!active)return;
   const requestedId=active.id;
-  let r=await db.rpc('get_my_conversation_messages',{p_conversation_id:requestedId,p_limit:100});
-  let list=r.data||[];
-  if(r.error){
-    const q=await db.from('messages').select('id,conversation_id,sender_id,body,is_read,created_at').eq('conversation_id',requestedId).order('created_at',{ascending:true}).limit(200);
-    if(q.error){if(active&&active.id===requestedId)$('msgs').innerHTML='<div class="error">❌ تعذر فتح الرسائل: '+esc(q.error.message||r.error.message)+'</div>';return}
-    list=q.data||[];
+  try{
+    let r=await db.rpc('get_my_conversation_messages',{p_conversation_id:requestedId,p_limit:100});
+    let list=r.data||[];
+    if(r.error){
+      const q=await db.from('messages').select('id,conversation_id,sender_id,body,is_read,created_at').eq('conversation_id',requestedId).order('created_at',{ascending:true}).limit(200);
+      if(q.error){if(active&&active.id===requestedId)$('msgs').innerHTML='<div class="error">❌ تعذر فتح الرسائل: '+esc(q.error.message||r.error.message)+'</div>';return}
+      list=q.data||[];
+    }
+    if(!active||active.id!==requestedId)return;
+    $('msgs').innerHTML=list.length?list.map(m=>`<div class="msg ${m.sender_id===user.id?'mine':'theirs'}">${esc(m.body)}<div class="time">${date(m.created_at)}</div></div>`).join(''):'<div class="empty">لا توجد رسائل بعد. ابدأ المحادثة الآن.</div>';
+    $('msgs').scrollTop=$('msgs').scrollHeight;
+  }catch(e){
+    if(active&&active.id===requestedId)$('msgs').innerHTML='<div class="error">❌ تعذر فتح الرسائل: '+esc(e?.message||String(e))+'</div>';
   }
-  if(!active||active.id!==requestedId)return;
-  $('msgs').innerHTML=list.length?list.map(m=>`<div class="msg ${m.sender_id===user.id?'mine':'theirs'}">${esc(m.body)}<div class="time">${date(m.created_at)}</div></div>`).join(''):'<div class="empty">لا توجد رسائل بعد. ابدأ المحادثة الآن.</div>';
-  $('msgs').scrollTop=$('msgs').scrollHeight;
 }
 async function markRead(){
   if(!active)return;
   const requestedId=active.id;
-  const r=await db.rpc('mark_conversation_messages_read',{p_conversation_id:requestedId});
-  if(r.error){
-    // لا نكسر المحادثة إذا كانت دالة القراءة غير متاحة في schema cache.
-    const u=await db.from('messages').update({is_read:true}).eq('conversation_id',requestedId).neq('sender_id',user.id).eq('is_read',false);
-    if(u.error) console.warn('markRead fallback:',u.error.message);
+  try{
+    const r=await db.rpc('mark_conversation_messages_read',{p_conversation_id:requestedId});
+    if(r.error){
+      // لا نكسر المحادثة إذا كانت دالة القراءة غير متاحة في schema cache.
+      const u=await db.from('messages').update({is_read:true}).eq('conversation_id',requestedId).neq('sender_id',user.id).eq('is_read',false);
+      if(u.error) console.warn('markRead fallback:',u.error.message);
+    }
+    if(!active||active.id!==requestedId)return;
+    const c=conversations.find(x=>x.id===requestedId);
+    if(c)c.unread=0;
+    const badge=document.querySelector('.conv.active .unread');
+    if(badge)badge.remove();
+    const total=document.querySelector('.totalUnread');
+    if(total)total.textContent=conversations.reduce((n,x)=>n+Number(x.unread||0),0)+' غير مقروءة';
+  }catch(e){
+    console.warn('markRead:',e?.message||e);
   }
-  if(!active||active.id!==requestedId)return;
-  const c=conversations.find(x=>x.id===requestedId);
-  if(c)c.unread=0;
-  const badge=document.querySelector('.conv.active .unread');
-  if(badge)badge.remove();
-  const total=document.querySelector('.totalUnread');
-  if(total)total.textContent=conversations.reduce((n,x)=>n+Number(x.unread||0),0)+' غير مقروءة';
 }
 async function sendMessage(){if(!active)return;const body=$('text').value.trim();if(!body)return;const b=$('sendBtn');b.disabled=true;const r=await db.from('messages').insert({conversation_id:active.id,sender_id:user.id,body,is_read:false});b.disabled=false;if(r.error){alert('تعذر إرسال الرسالة: '+r.error.message);return}$('text').value='';await loadMessages();await loadConversations()}
 async function deleteConversation(){
