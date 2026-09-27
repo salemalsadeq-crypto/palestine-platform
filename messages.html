@@ -16,9 +16,17 @@ async function attachUnreadCounts(){
 
 async function openRequestedConversation(id){
   if(!id)return;
-  const c=conversations.find(x=>x.id===id);
+  let c=conversations.find(x=>x.id===id);
   if(c){await selectConversation(id);return}
-  const q=await db.from('conversations').select('id,ad_id,buyer_id,seller_id,created_at,last_message_at').eq('id',id).maybeSingle();
+  let q=await db.from('conversations').select('id,ad_id,buyer_id,seller_id,created_at,last_message_at').eq('id',id).maybeSingle();
+  if(!q.error&&!q.data){
+    // قد تكون المحادثة جديدة ولم تُحمّل بعد (تأخر بسيط عند الدخول من رابط إشعار) — نعيد المحاولة مرة واحدة
+    await new Promise(res=>setTimeout(res,700));
+    await loadConversations();
+    c=conversations.find(x=>x.id===id);
+    if(c){await selectConversation(id);return}
+    q=await db.from('conversations').select('id,ad_id,buyer_id,seller_id,created_at,last_message_at').eq('id',id).maybeSingle();
+  }
   if(q.error){console.warn(q.error);return}
   if(!q.data){alert('المحادثة غير موجودة.');return}
   const c2=q.data;
