@@ -37,7 +37,7 @@ async function openDirectConversation(target){try{const p=await db.from('profile
 
 function renderList(){
   const app=$('app');
-  const query=(window.messageSearch||'').trim().toLowerCase();
+  const query=(window.messageSearchQuery||'').trim().toLowerCase();
   const filtered=conversations.filter(c=>{
     if(!query)return true;
     const hay=[
@@ -54,7 +54,7 @@ function renderList(){
           <h2 style="margin:0;font-size:19px">💬 الرسائل</h2>
           <span class="totalUnread">${conversations.reduce((n,c)=>n+Number(c.unread||0),0)} غير مقروءة</span>
         </div>
-        <input id="messageSearch" class="searchBox" placeholder="🔎 ابحث في المحادثات..." value="${esc(window.messageSearch||'')}" oninput="window.messageSearch=this.value;renderList()">
+        <input id="messageSearch" class="searchBox" placeholder="🔎 ابحث في المحادثات..." value="${esc(window.messageSearchQuery||'')}" oninput="window.messageSearchQuery=this.value;renderList()">
       </div>
       <div>
         ${filtered.length ? filtered.map(c=>{
