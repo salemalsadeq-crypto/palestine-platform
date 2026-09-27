@@ -47,6 +47,10 @@ async function load(){
   $('status').classList.remove('loading');
   if(error){$('status').className='error';$('status').textContent='❌ تعذر تحميل الإشعارات: '+error.message;return}
   const list=data||[], unread=list.filter(n=>!n.is_read).length; window.__notifications=list;
+  const convIds=[...new Set(list.map(n=>n.related_conversation_id).filter(Boolean))];
+  let validConvIds=new Set();
+  if(convIds.length){const cq=await db.from('conversations').select('id').in('id',convIds);validConvIds=new Set((cq.data||[]).map(r=>r.id))}
+  window.__validConvIds=validConvIds;
   $('count').innerHTML=unread?`<span class="newdot"></span>${unread} إشعار غير مقروء`:`لا توجد إشعارات غير مقروءة`;
   $('allRead').disabled=unread===0;
   if(!list.length){$('list').innerHTML='<div class="empty"><div class="big">🔔</div><strong>لا توجد إشعارات حاليًا</strong><div class="mini" style="margin-top:8px">ستظهر هنا الإشعارات الجديدة المتعلقة بحسابك وإعلاناتك.</div></div>';return}
@@ -57,7 +61,7 @@ async function load(){
       <div class="message">${esc(n.message||'')}</div>
       <div class="date">🕒 ${esc(dateText(n.created_at))}</div>
       <div class="actions">
-        ${n.related_ad_id?`<a class="adlink" href="ad-details.html?id=${encodeURIComponent(n.related_ad_id)}">عرض الإعلان ←</a>`:''}${n.related_order_id?`<a class="adlink" href="orders.html?id=${encodeURIComponent(n.related_order_id)}">عرض الطلب ←</a>`:''}${n.related_conversation_id?`<a class="adlink" href="messages.html?conversation=${encodeURIComponent(n.related_conversation_id)}">فتح المحادثة ←</a>`:''}
+        ${n.related_ad_id?`<a class="adlink" href="ad-details.html?id=${encodeURIComponent(n.related_ad_id)}">عرض الإعلان ←</a>`:''}${n.related_order_id?`<a class="adlink" href="orders.html?id=${encodeURIComponent(n.related_order_id)}">عرض الطلب ←</a>`:''}${n.related_conversation_id?(validConvIds.has(n.related_conversation_id)?`<a class="adlink" href="messages.html?conversation=${encodeURIComponent(n.related_conversation_id)}">فتح المحادثة ←</a>`:`<span style="font-size:12px;color:#9aa3af">🚫 المحادثة لم تعد متاحة</span>`):''}
         ${!n.is_read?`<button class="btn mark" onclick="readOne('${n.id}')">✓ تحديد كمقروء</button>`:''}
       </div>
     </div></div>
