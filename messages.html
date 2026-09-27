@@ -27,6 +27,16 @@ async function openRequestedConversation(id){
     if(c){await selectConversation(id);return}
     q=await db.from('conversations').select('id,ad_id,buyer_id,seller_id,created_at,last_message_at').eq('id',id).maybeSingle();
   }
+  if(!q.error&&!q.data){
+    // احتياط: بعض إشعارات "رسالة جديدة" قد تحمل رقم الرسالة بدل رقم المحادثة — نحاول اشتقاق المحادثة من الرسالة
+    const mq=await db.from('messages').select('conversation_id').eq('id',id).maybeSingle();
+    if(!mq.error&&mq.data?.conversation_id){
+      const realId=mq.data.conversation_id;
+      c=conversations.find(x=>x.id===realId);
+      if(c){await selectConversation(realId);return}
+      q=await db.from('conversations').select('id,ad_id,buyer_id,seller_id,created_at,last_message_at').eq('id',realId).maybeSingle();
+    }
+  }
   if(q.error){console.warn(q.error);return}
   if(!q.data){alert('المحادثة غير موجودة.');return}
   const c2=q.data;
