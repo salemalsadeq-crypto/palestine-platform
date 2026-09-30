@@ -107,7 +107,7 @@ function render(profile,ads){
   const name=(profile?.full_name||'مستخدم').trim()||'مستخدم';
   const initial=esc(name.charAt(0)||'م');
   const city=profile?.city ? '📍 '+esc(profile.city) : '📍 المدينة غير محددة';
-  const phone=profile?.phone ? '📞 '+esc(profile.phone) : '';
+  const phone='';
   const userLink=`profile.html?id=${encodeURIComponent(profile.id)}`;
   const cards=ads.length ? ads.map(ad=>{
     const img=firstImage(ad);
@@ -138,7 +138,7 @@ function render(profile,ads){
           ${phone ? `<div class="meta">${phone}</div>` : ''}
           <div class="actions">
             <a class="action primary" href="messages.html?user=${encodeURIComponent(profile.id)}">💬 مراسلة</a>
-            ${phone ? `<a class="action success" href="tel:${encodeURIComponent(profile.phone)}">📞 اتصال</a>` : ''}
+            
             <button id="followBtn" class="action follow" type="button" onclick="toggleFollow()">➕ متابعة</button>
             <button class="action light" type="button" onclick="shareProfile()">🔗 مشاركة الملف</button>
           </div>
@@ -242,8 +242,8 @@ async function load(){
   }
 
   const {data:profile,error:profileError}=await db
-    .from('profiles')
-    .select('id,full_name,phone,city,avatar_url')
+    .from('public_profiles')
+    .select('id,full_name,city,avatar_url,is_verified')
     .eq('id',profileId)
     .maybeSingle();
 
