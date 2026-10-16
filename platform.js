@@ -91,22 +91,28 @@ window.ppSetupHeader=async()=>{const u=await ppUser();const login=document.getEl
 // V56.2: إشعارات فورية وصوتية اختيارية.
 window.ppNotificationListener=async()=>{
   try{
+    if((location.pathname.split('/').pop()||'').toLowerCase()==='notifications.html')return;
     const u=await ppUser();
     if(!u)return;
     const ch=ppClient.channel('pp-global-notifications-'+u.id)
       .on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications',filter:'user_id=eq.'+u.id},payload=>{
+        const n=payload?.new||{};
         try{
           const enabled=localStorage.getItem('pp_notification_sound')==='1';
           if(enabled && (window.AudioContext||window.webkitAudioContext)){
             const C=window.AudioContext||window.webkitAudioContext;
             const ctx=new C();
             const o=ctx.createOscillator(), g=ctx.createGain();
-            o.frequency.value=880;
-            g.gain.value=.06;
-            o.connect(g); g.connect(ctx.destination);
-            o.start(); o.stop(ctx.currentTime+.15);
+            o.type='sine';o.frequency.setValueAtTime(740,ctx.currentTime);o.frequency.exponentialRampToValueAtTime(990,ctx.currentTime+.12);
+            g.gain.setValueAtTime(.0001,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.045,ctx.currentTime+.025);g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.24);
+            o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+.25);
           }
         }catch(e){}
+        const title=String(n.title||'إشعار جديد'), body=String(n.message||'لديك تحديث جديد في حسابك.');
+        if(window.ppToast)window.ppToast(title+' — '+body,'info',5200);
+        if(localStorage.getItem('pp_browser_notifications')==='1'&&'Notification' in window&&Notification.permission==='granted'){
+          try{const notice=new Notification(title,{body,tag:n.id||'pp-notification'});notice.onclick=()=>{window.focus();location.href='notifications.html';notice.close()}}catch(e){}
+        }
       });
     await ch.subscribe();
   }catch(e){}

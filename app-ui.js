@@ -4,10 +4,16 @@
   const path=(location.pathname.split('/').pop()||'index.html').toLowerCase();
   const excludedDock=new Set(['login.html','register.html','reels.html']);
   const progress=document.createElement('div'); progress.className='pp-progress'; document.body.appendChild(progress);
-  const toastHost=document.createElement('div'); toastHost.className='pp-toast-host'; document.body.appendChild(toastHost);
-  window.ppToast=function(message,type='info',ms=2800){
-    const el=document.createElement('div'); el.className='pp-toast '+(type||''); el.textContent=message; toastHost.appendChild(el);
-    setTimeout(()=>{el.classList.add('hide');setTimeout(()=>el.remove(),220)},ms);
+  const toastHost=document.createElement('div'); toastHost.className='pp-toast-host'; toastHost.setAttribute('aria-live','polite'); toastHost.setAttribute('aria-atomic','false'); document.body.appendChild(toastHost);
+  window.ppToast=function(message,type='info',ms=3200){
+    const el=document.createElement('div'); el.className='pp-toast '+(type||'info'); el.setAttribute('role',type==='error'?'alert':'status');
+    const text=document.createElement('span'); text.textContent=String(message??''); text.style.display='block'; text.style.flex='1';
+    const close=document.createElement('button'); close.type='button'; close.className='pp-toast-close'; close.setAttribute('aria-label','إغلاق الإشعار'); close.textContent='×';
+    const remove=()=>{if(!el.isConnected)return;el.classList.add('hide');setTimeout(()=>el.remove(),220)};
+    close.addEventListener('click',remove); el.append(text,close); toastHost.appendChild(el);
+    while(toastHost.children.length>4)toastHost.firstElementChild.remove();
+    const timer=setTimeout(remove,Math.max(1200,Number(ms)||3200)); el.addEventListener('mouseenter',()=>clearTimeout(timer),{once:true});
+    return el;
   };
   window.ppLoading=function(on=true){progress.classList.toggle('show',!!on); if(!on){progress.classList.add('done');setTimeout(()=>progress.classList.remove('done'),220)}};
   window.addEventListener('load',()=>{ppLoading(false);document.body.classList.add('pp-ready')},{once:true});
