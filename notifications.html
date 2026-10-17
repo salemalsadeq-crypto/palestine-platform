@@ -61,7 +61,7 @@ async function load(){
       <div class="message">${esc(n.message||'')}</div>
       <div class="date">🕒 ${esc(dateText(n.created_at))}</div>
       <div class="actions">
-        ${n.related_ad_id?`<a class="adlink" href="ad-details.html?id=${encodeURIComponent(n.related_ad_id)}">عرض الإعلان ←</a>`:''}${n.related_order_id?`<a class="adlink" href="orders.html?id=${encodeURIComponent(n.related_order_id)}">عرض الطلب ←</a>`:''}${n.related_conversation_id?(validConvIds.has(n.related_conversation_id)?`<a class="adlink" href="messages.html?conversation=${encodeURIComponent(n.related_conversation_id)}">فتح المحادثة ←</a>`:`<span style="font-size:12px;color:#9aa3af">🚫 المحادثة لم تعد متاحة</span>`):''}
+        ${n.related_ad_id?`<a class="adlink" href="ad-details.html?id=${encodeURIComponent(n.related_ad_id)}">عرض الإعلان ←</a>`:''}${n.related_order_id?`<a class="adlink" href="orders.html?id=${encodeURIComponent(n.related_order_id)}">عرض الطلب ←</a>`:''}${(n.type==='taxi'&&n.related_service_request_id)?`<a class="adlink" href="taxi-trip.html?id=${encodeURIComponent(n.related_service_request_id)}">عرض الرحلة ←</a>`:''}${n.related_conversation_id?(validConvIds.has(n.related_conversation_id)?`<a class="adlink" href="messages.html?conversation=${encodeURIComponent(n.related_conversation_id)}">فتح المحادثة ←</a>`:`<span style="font-size:12px;color:#9aa3af">🚫 المحادثة لم تعد متاحة</span>`):''}
         ${!n.is_read?`<button class="btn mark" onclick="readOne('${n.id}')">✓ تحديد كمقروء</button>`:''}
       </div>
     </div></div>

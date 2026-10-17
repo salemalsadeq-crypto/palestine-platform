@@ -95,6 +95,7 @@ window.ppNotificationListener=async()=>{
     if(!u)return;
     const ch=ppClient.channel('pp-global-notifications-'+u.id)
       .on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications',filter:'user_id=eq.'+u.id},payload=>{
+        try{const n=payload&&payload.new;if(n&&window.ppToast)ppToast((n.title||'إشعار جديد')+(n.message?' — '+n.message:''),'info',5500)}catch(e){}
         try{
           const enabled=localStorage.getItem('pp_notification_sound')==='1';
           if(enabled && (window.AudioContext||window.webkitAudioContext)){
