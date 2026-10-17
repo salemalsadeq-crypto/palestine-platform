@@ -42,7 +42,7 @@ textarea{min-height:130px;resize:vertical}
 </style>
 <script src="platform.js"></script><link rel="stylesheet" href="app.css">
 <link rel="stylesheet" href="theme-v61.css">
-<link rel="stylesheet" href="ui-polish.css?v=82"></head>
+<link rel="stylesheet" href="ui-polish.css?v=83"></head>
 <body>
 <header>
 <div class="logo">فلسطين بلاتفورم</div>
@@ -175,7 +175,7 @@ console.error(error);showMessage("❌ "+(error.message||"حدث خطأ أثنا�
 $('locateBtn').onclick=()=>{if(!navigator.geolocation){alert('المتصفح لا يدعم تحديد الموقع');return}navigator.geolocation.getCurrentPosition(pos=>{$('latitude').value=pos.coords.latitude.toFixed(7);$('longitude').value=pos.coords.longitude.toFixed(7);if(!$('locationName').value)$('locationName').value='موقعي الحالي'},()=>alert('تعذر تحديد الموقع. تأكد من السماح بالموقع.'))};
 (async function(){const loggedIn=await loadUser();if(!loggedIn)return;await loadAd()})();
 </script>
-<script src="app-ui.js?v=82" defer></script>
+<script src="app-ui.js?v=83" defer></script>
 </body>
 </html>
 

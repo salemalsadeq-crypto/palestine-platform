@@ -39,3 +39,17 @@ header,.header{isolation:isolate}
 @media(max-width:700px){body.pp-has-dock{padding-bottom:calc(82px + env(safe-area-inset-bottom))!important}.pp-dock{display:grid!important}.pp-top{bottom:calc(86px + env(safe-area-inset-bottom))}.pp-toast-host{bottom:calc(86px + env(safe-area-inset-bottom))}.pp-drawer{width:min(360px,90vw)}}
 @media(min-width:701px){.pp-dock{display:none!important}body.pp-has-dock{padding-bottom:0}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
+
+
+/* V83: visible, shared design layer for every route */
+:root{--pp-ui-ink:#17283b;--pp-ui-muted:#65758a;--pp-ui-line:#dce5ef;--pp-ui-bg:#f3f6fa;--pp-ui-green:#116b4c;--pp-ui-radius:18px;--pp-ui-shadow:0 10px 30px rgba(22,46,74,.09)}
+body{background:var(--pp-ui-bg)!important;color:var(--pp-ui-ink)}
+header,.header{box-shadow:0 5px 22px rgba(18,45,75,.09)!important;backdrop-filter:saturate(140%)}
+main,.wrap{max-width:1160px}
+:where(.card,.box,.panel,.filters,.section-card,.ad-card,.service-card,.place-card,.live-panel,.near-home,.main-card){border-radius:18px}
+:where(input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea){min-height:44px;border:1px solid #d6e0eb;box-shadow:0 1px 2px rgba(20,40,65,.03);background-color:#fff}
+:where(button,input[type=submit],.btn,.button,[role=button]){min-height:42px;border-radius:12px;font-weight:800}
+:where(a,button){touch-action:manipulation}
+:where(.card,.box,.panel,.filters,.ad-card,.service-card,.place-card,.live-panel){box-shadow:0 8px 24px rgba(22,46,74,.06)}
+.pp-dock{display:none}
+@media(max-width:700px){body.pp-has-dock{padding-bottom:calc(88px + env(safe-area-inset-bottom))!important}.pp-dock{display:grid!important;position:fixed!important;z-index:2147482000!important;left:8px!important;right:8px!important;bottom:calc(8px + env(safe-area-inset-bottom))!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;background:rgba(255,255,255,.97)!important;border:1px solid #dce5ef!important;box-shadow:0 10px 34px rgba(15,35,58,.22)!important}.pp-dock a,.pp-dock button{min-height:52px!important;color:#52657b!important}.pp-dock a[aria-current=page]{background:#e4f3eb!important;color:#116b4c!important}.pp-dock .pp-dock-icon{font-size:21px!important}.wrap{width:100%;padding-inline:13px}.layout{grid-template-columns:1fr!important}.layout>*{min-width:0}}

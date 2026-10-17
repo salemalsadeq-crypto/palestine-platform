@@ -1,5 +1,5 @@
 <!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>طلباتي | فلسطين بلاتفورم</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script><script src="platform.js"></script><link rel="stylesheet" href="app.css"><link rel="stylesheet" href="theme-v61.css">
-<link rel="stylesheet" href="ui-polish.css?v=82"></head><body><header><div class="head"><div class="logo">🛍️ طلباتي ومشترياتي</div></div></header><main style="max-width:900px;margin:24px auto;padding:0 14px"><div id="app" class="pp-order-card">جاري تحميل الطلبات...</div></main><script>
+<link rel="stylesheet" href="ui-polish.css?v=83"></head><body><header><div class="head"><div class="logo">🛍️ طلباتي ومشترياتي</div></div></header><main style="max-width:900px;margin:24px auto;padding:0 14px"><div id="app" class="pp-order-card">جاري تحميل الطلبات...</div></main><script>
 const db=window.ppClient,$=id=>document.getElementById(id),esc=window.ppEsc;
 const labels={pending:'قيد المراجعة',confirmed:'تم تأكيد الطلب',preparing:'جاري التجهيز',out_for_delivery:'في الطريق',delivered:'تم التسليم',cancelled:'ملغي'};
 const payLabels={pending:'بانتظار الدفع',awaiting_gateway:'بانتظار بوابة الدفع',paid:'مدفوع',failed:'فشل الدفع',refunded:'مسترد',cancelled:'ملغي'};
@@ -24,4 +24,4 @@ function renderOrders(){
 async function load(){const u=await ppUser();if(!u){location.href='login.html?next='+encodeURIComponent(location.href);return}const r=await db.from('orders').select('id,ad_id,buyer_id,seller_id,quantity,unit_price,delivery_fee,total_amount,delivery_method,payment_method,payment_provider,payment_status,order_status,customer_name,customer_phone,city,address,notes,created_at,ads(title)').eq('buyer_id',u.id).order('created_at',{ascending:false}).limit(100);if(r.error){$('app').innerHTML='<div class="pp-pay-note">❌ '+esc(r.error.message)+'</div>';return}allOrders=r.data||[];renderOrders()}
 async function cancelOrder(id){if(!confirm('هل تريد إلغاء الطلب؟'))return;const r=await db.rpc('cancel_my_order',{p_order_id:id});if(r.error){alert(r.error.message);return}load()}
 load();setInterval(load,5000);
-</script><script src="app-ui.js?v=82" defer></script></body></html>
+</script><script src="app-ui.js?v=83" defer></script></body></html>
