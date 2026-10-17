@@ -1,0 +1,130 @@
+/* فلسطين بلاتفورم V60 — نظام بصري موحّد */
+:root{
+  --pp60-navy:#163f67;
+  --pp60-blue:#246a9d;
+  --pp60-green:#0d8a68;
+  --pp60-red:#b9272f;
+  --pp60-gold:#c79a4b;
+  --pp60-bg:#f5f8fc;
+  --pp60-card:#fff;
+  --pp60-line:#dfe8f0;
+  --pp60-text:#182536;
+  --pp60-muted:#6c7b8b;
+  --pp60-radius:18px;
+  --pp60-shadow:0 10px 30px rgba(20,55,85,.08);
+}
+
+/* الخطوط: قاعدة واحدة لكل المنصة */
+html,body{
+  font-family:'Tajawal',Tahoma,Arial,sans-serif!important;
+  background:var(--pp60-bg)!important;
+  color:var(--pp60-text)!important;
+}
+body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+h1,h2,h3,h4,h5,h6,.logo,.title,.section-title,.hero h1,.hero h2,.hero h3{
+  font-family:'Cairo',Tahoma,Arial,sans-serif!important;
+  letter-spacing:0!important;
+}
+button,input,select,textarea,a,.btn{font-family:'Tajawal',Tahoma,Arial,sans-serif!important}
+
+/* الهوية العامة */
+header,.header{
+  background:rgba(255,255,255,.98)!important;
+  border-bottom:1px solid var(--pp60-line)!important;
+  box-shadow:0 3px 18px rgba(20,55,85,.06)!important;
+}
+.logo{color:var(--pp60-navy)!important;font-weight:900!important}
+.logo span{color:var(--pp60-red)!important}
+
+button,.btn,.go,.details,.heart{
+  border-radius:12px!important;
+  font-weight:800!important;
+  transition:transform .16s ease,box-shadow .16s ease,filter .16s ease,background-color .16s ease!important;
+}
+button:hover,.btn:hover,.go:hover,.details:hover{
+  transform:translateY(-1px);
+  filter:brightness(1.02);
+  box-shadow:0 7px 18px rgba(20,55,85,.12);
+}
+button:disabled{opacity:.62!important;cursor:not-allowed!important;transform:none!important}
+input,select,textarea{
+  border-radius:12px!important;
+  border:1px solid var(--pp60-line)!important;
+  background:#fff!important;
+  min-height:44px;
+  font:inherit!important;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:#5b91bd!important;
+  box-shadow:0 0 0 4px rgba(31,95,147,.10)!important;
+  outline:none!important;
+}
+
+/* الصفحات المشتركة */
+.card,.panel,.filters,.box,.stat,.special,.empty,.ad,.feature,.tool{
+  border-radius:var(--pp60-radius)!important;
+  border-color:var(--pp60-line)!important;
+  box-shadow:var(--pp60-shadow)!important;
+}
+.hero{
+  background:linear-gradient(135deg,#12395e 0%,#21679c 65%,#9f2530 125%)!important;
+}
+.hero h1{line-height:1.35!important}
+.price{color:var(--pp60-red)!important}
+.card .title,.title{font-family:'Cairo',Tahoma,Arial,sans-serif!important}
+
+/* البطاقات والإعلانات */
+.grid .card .body,.card .body{font-family:'Tajawal',Tahoma,Arial,sans-serif!important}
+.grid .card .title{font-weight:800!important}
+.tag{border-radius:999px!important}
+.details{background:var(--pp60-navy)!important;color:#fff!important}
+
+/* الصفحة الرئيسية */
+.home-v60 .hero{margin:0!important;padding:30px 0 24px!important}
+.home-v60 .hero h1{font-size:clamp(27px,6vw,40px)!important;line-height:1.28!important}
+.home-v60 .hero p{font-size:13px!important;line-height:1.75!important}
+.home-v60 .search{max-width:760px!important;padding:5px!important;border-radius:15px!important;box-shadow:0 12px 32px rgba(3,27,49,.22)!important}
+.home-v60 .search input{height:45px!important;padding:10px 13px!important;font-size:13px!important}
+.home-v60 .search button{height:45px!important;min-width:78px!important;border-radius:11px!important;background:var(--pp60-red)!important}
+.home-v60 .main-grid{gap:12px!important}
+.home-v60 .main-card{border-radius:20px!important;box-shadow:0 14px 32px rgba(20,55,85,.13)!important}
+.home-v60 .main-card h3{font-size:clamp(20px,5vw,25px)!important}
+.home-v60 .main-card:nth-child(1){background:linear-gradient(135deg,#15527f,#2878a9)!important}
+.home-v60 .main-card:nth-child(2){background:linear-gradient(135deg,#087c64,#12a27f)!important}
+.home-v60 .main-card:nth-child(3){background:linear-gradient(135deg,#345f8c,#4381a9)!important}
+.home-v60 .main-card:nth-child(4){background:linear-gradient(135deg,#9a641f,#d49332)!important}
+
+/* مقدم الخدمة */
+.online{border:1px solid #d8e8e1!important;background:linear-gradient(135deg,#f6fffb,#eef8f5)!important;border-radius:18px!important}
+.switch{flex:0 0 auto!important}
+.switch .slider{box-shadow:inset 0 0 0 1px #bdd4c9!important}
+
+/* الجداول */
+table th{font-family:'Cairo',Tahoma,Arial,sans-serif!important;color:var(--pp60-navy)!important;background:#f7fafc!important}
+table td{font-size:13px}
+
+/* الحالات */
+.status-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:800;background:#edf2f7;color:#415365}
+.status-badge.ok{background:#e7f7f0;color:#08785c}
+.status-badge.warn{background:#fff5dc;color:#8a641b}
+.status-badge.bad{background:#fdebed;color:#a7252d}
+
+/* الحساب والقائمة */
+.pp-profile-avatar{border-color:#edf2f7!important;box-shadow:0 5px 16px rgba(20,55,85,.12)!important}
+.pp-menu-btn{border-color:var(--pp60-line)!important;box-shadow:0 5px 16px rgba(20,55,85,.09)!important}
+.pp-profile-menu{border:1px solid var(--pp60-line)}
+
+/* لا نسمح بعودة الخطوط القديمة داخل الصفحات */
+[style*="Arial"],[style*="Tahoma"]{font-family:'Tajawal',Tahoma,Arial,sans-serif!important}
+
+@media(max-width:650px){
+  .wrap{padding-left:13px!important;padding-right:13px!important}
+  .hero{padding:28px 0!important}
+  .hero h1{font-size:27px!important}
+  .hero p{font-size:13px!important}
+  .grid,.main-grid{gap:11px!important}
+  .card,.panel,.filters{padding:15px!important}
+  .title h2{font-size:21px!important}
+  .stat{padding:13px!important}
+  .stat b{font-size:22px!important}
+}

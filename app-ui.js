@@ -4,16 +4,10 @@
   const path=(location.pathname.split('/').pop()||'index.html').toLowerCase();
   const excludedDock=new Set(['login.html','register.html','reels.html']);
   const progress=document.createElement('div'); progress.className='pp-progress'; document.body.appendChild(progress);
-  const toastHost=document.createElement('div'); toastHost.className='pp-toast-host'; toastHost.setAttribute('aria-live','polite'); toastHost.setAttribute('aria-atomic','false'); document.body.appendChild(toastHost);
-  window.ppToast=function(message,type='info',ms=3200){
-    const el=document.createElement('div'); el.className='pp-toast '+(type||'info'); el.setAttribute('role',type==='error'?'alert':'status');
-    const text=document.createElement('span'); text.textContent=String(message??''); text.style.display='block'; text.style.flex='1';
-    const close=document.createElement('button'); close.type='button'; close.className='pp-toast-close'; close.setAttribute('aria-label','إغلاق الإشعار'); close.textContent='×';
-    const remove=()=>{if(!el.isConnected)return;el.classList.add('hide');setTimeout(()=>el.remove(),220)};
-    close.addEventListener('click',remove); el.append(text,close); toastHost.appendChild(el);
-    while(toastHost.children.length>4)toastHost.firstElementChild.remove();
-    const timer=setTimeout(remove,Math.max(1200,Number(ms)||3200)); el.addEventListener('mouseenter',()=>clearTimeout(timer),{once:true});
-    return el;
+  const toastHost=document.createElement('div'); toastHost.className='pp-toast-host'; document.body.appendChild(toastHost);
+  window.ppToast=function(message,type='info',ms=2800){
+    const el=document.createElement('div'); el.className='pp-toast '+(type||''); el.textContent=message; toastHost.appendChild(el);
+    setTimeout(()=>{el.classList.add('hide');setTimeout(()=>el.remove(),220)},ms);
   };
   window.ppLoading=function(on=true){progress.classList.toggle('show',!!on); if(!on){progress.classList.add('done');setTimeout(()=>progress.classList.remove('done'),220)}};
   window.addEventListener('load',()=>{ppLoading(false);document.body.classList.add('pp-ready')},{once:true});
@@ -34,36 +28,35 @@
   // Native select polish: add a small accessible label when a select has no visible label.
   document.querySelectorAll('select').forEach(s=>{s.setAttribute('aria-label',s.getAttribute('aria-label')||s.previousElementSibling?.textContent?.trim()||'اختيار');});
 
-  // V87: compact thumb-friendly mobile dock; desktop keeps the side drawer.
-  function buildMobileDock(){
-    if(excludedDock.has(path)||document.getElementById('ppMobileDock'))return;
-    const items=[
-      ['index.html','⌂','الرئيسية'],['ads.html','▦','الإعلانات'],['reels.html','▶','الريلز'],
-      ['add-ad.html','＋','إضافة'],['messages.html','✉','الرسائل'],['notifications.html','♧','الإشعارات']
-    ];
-    const dock=document.createElement('nav');dock.id='ppMobileDock';dock.className='pp-mobile-dock';dock.setAttribute('aria-label','التنقل السريع');
-    dock.innerHTML=items.map(([href,icon,label])=>{const active=path===href||(href==='ads.html'&&['search.html','ad-details.html','my-ads.html','favorites.html'].includes(path));return `<a class="pp-dock-item ${active?'active':''} ${href==='add-ad.html'?'pp-dock-add':''}" href="${href}" ${active?'aria-current="page"':''}><span class="pp-dock-icon" aria-hidden="true">${icon}</span><span class="pp-dock-label">${label}</span>${href==='messages.html'?'<span class="pp-dock-badge" id="ppDockMessages" hidden></span>':''}${href==='notifications.html'?'<span class="pp-dock-badge" id="ppDockNotifications" hidden></span>':''}</a>`}).join('');
-    document.body.appendChild(dock);document.body.classList.add('pp-has-mobile-dock');
-    const refreshBadges=async()=>{try{if(!window.ppClient)return;const {data:{user}}=await ppClient.auth.getUser();if(!user)return;const [n,m]=await Promise.all([ppClient.from('notifications').select('id',{count:'exact',head:true}).eq('user_id',user.id).eq('is_read',false),ppClient.from('messages').select('id',{count:'exact',head:true}).neq('sender_id',user.id).eq('is_read',false)]);const set=(id,count)=>{const el=document.getElementById(id);if(!el)return;const value=count||0;el.hidden=!value;el.textContent=value>99?'99+':String(value)};set('ppDockNotifications',n.error?0:n.count);set('ppDockMessages',m.error?0:m.count)}catch(_){}};
-    refreshBadges();window.addEventListener('pp:refresh-badges',refreshBadges);document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshBadges()});
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',buildMobileDock,{once:true});else buildMobileDock();
-
-  // Back/forward returns to the previous scroll position without restoring stale positions on normal navigation.
-  const scrollKey='pp:scroll:'+location.pathname+location.search;
-  window.addEventListener('pagehide',()=>{try{sessionStorage.setItem(scrollKey,String(window.scrollY))}catch(_){}});
-  window.addEventListener('pageshow',e=>{document.body.classList.remove('pp-leaving');ppLoading(false);const nav=performance.getEntriesByType?.('navigation')?.[0];if(e.persisted||nav?.type==='back_forward'){try{const y=Number(sessionStorage.getItem(scrollKey));if(Number.isFinite(y))requestAnimationFrame(()=>window.scrollTo(0,y))}catch(_){}}});
-
-  // Helpers for async actions: prevent double taps and restore the original button label.
-  window.ppWithBusyButton=async function(button,work,label='جارٍ التنفيذ...'){
-    if(!button||button.dataset.ppBusy==='1')return false;const old=button.innerHTML;button.dataset.ppBusy='1';button.disabled=true;button.setAttribute('aria-busy','true');if(label)button.textContent=label;
-    try{return await work()}finally{button.innerHTML=old;button.disabled=false;button.removeAttribute('aria-busy');delete button.dataset.ppBusy}
-  };
-  document.addEventListener('submit',e=>{const form=e.target;if(!(form instanceof HTMLFormElement)||form.dataset.ppBusy!=='true')return;const button=form.querySelector('button[type="submit"],button:not([type]) ,input[type="submit"]');if(!button||button.dataset.ppBusy==='1')return;button.dataset.ppBusy='1';button.disabled=true;button.setAttribute('aria-busy','true');const old=button.dataset.ppOldText||button.textContent;button.dataset.ppOldText=old;if(button.tagName==='BUTTON')button.textContent=form.dataset.ppBusyLabel||'جارٍ التنفيذ...';setTimeout(()=>{if(!button.isConnected)return;button.disabled=false;button.removeAttribute('aria-busy');delete button.dataset.ppBusy;button.textContent=old},20000)},true);
+  // v19: the side menu is the single navigation system; no generated bottom dock.
 
   const top=document.createElement('button'); top.className='pp-top'; top.type='button'; top.textContent='↑'; top.setAttribute('aria-label','العودة إلى الأعلى'); document.body.appendChild(top);
   const updateTop=()=>top.classList.toggle('show',scrollY>420); window.addEventListener('scroll',updateTop,{passive:true}); updateTop();
-  top.addEventListener('click',()=>scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}));
+  top.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+
+  // Compact mobile navigation. Full navigation remains in the side drawer.
+  const privatePages=new Set(['login.html','register.html','admin.html','orders-admin.html','subscriptions-admin.html','admin-subscriptions.html','moderation.html']);
+  if(!privatePages.has(path)&&!document.querySelector('.pp-dock')){
+    const dock=document.createElement('nav');dock.className='pp-dock';dock.setAttribute('aria-label','التنقل السريع');
+    const items=[
+      {href:'index.html',icon:'⌂',label:'الرئيسية',match:['index.html']},
+      {href:'ads.html',icon:'▤',label:'الإعلانات',match:['ads.html','search.html','my-ads.html','add-ad.html','edit-ad.html','ad-details.html','favorites.html']},
+      {href:'reels.html',icon:'▶',label:'الريلز',match:['reels.html']},
+      {href:'messages.html',icon:'✉',label:'الرسائل',match:['messages.html']}
+    ];
+    items.forEach(item=>{
+      const a=document.createElement('a');a.href=item.href;
+      const icon=document.createElement('span');icon.className='pp-dock-icon';icon.setAttribute('aria-hidden','true');icon.textContent=item.icon;
+      const label=document.createElement('span');label.textContent=item.label;a.append(icon,label);
+      if(item.match.includes(path)){a.setAttribute('aria-current','page');a.classList.add('active')}
+      dock.appendChild(a);
+    });
+    const menu=document.createElement('button');menu.type='button';menu.className='pp-dock-menu';menu.setAttribute('aria-label','فتح القائمة الكاملة');
+    const mi=document.createElement('span');mi.className='pp-dock-icon';mi.setAttribute('aria-hidden','true');mi.textContent='☰';
+    const ml=document.createElement('span');ml.textContent='المزيد';menu.append(mi,ml);
+    menu.addEventListener('click',()=>{const opener=document.getElementById('ppMenuBtn');if(opener)opener.click();else window.location.href='index.html'});
+    dock.appendChild(menu);document.body.appendChild(dock);document.body.classList.add('pp-has-dock');
+  }
 
   // Make image errors graceful instead of broken-image icons.
   document.addEventListener('error',e=>{const el=e.target;if(el&&el.tagName==='IMG'&&!el.dataset.ppHandled){el.dataset.ppHandled='1';el.style.opacity='.45';el.alt=el.alt||'صورة غير متاحة'}},true);

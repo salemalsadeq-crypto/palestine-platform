@@ -1,0 +1,41 @@
+/* Palestine Platform — unified interface layer V82
+   Loaded after page-level styles so the design stays consistent across routes. */
+:root{--pp-ui-ink:#182538;--pp-ui-muted:#68788d;--pp-ui-line:#e2e8f0;--pp-ui-bg:#f4f7fb;--pp-ui-green:#176b4d;--pp-ui-green2:#23825e;--pp-ui-red:#b32632;--pp-ui-radius:18px;--pp-ui-shadow:0 10px 28px rgba(21,48,79,.08)}
+html{scroll-padding-top:84px;scroll-behavior:smooth}
+body{color:var(--pp-ui-ink);background:var(--pp-ui-bg);font-family:var(--pp-font-body,system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif);-webkit-font-smoothing:antialiased}
+body.pp-has-dock{padding-bottom:calc(78px + env(safe-area-inset-bottom))}
+button,input,select,textarea{font:inherit}
+button,a,[role=button]{-webkit-tap-highlight-color:transparent}
+a{transition:color .16s ease,background-color .16s ease,border-color .16s ease,box-shadow .16s ease,transform .16s ease}
+button{cursor:pointer;transition:filter .16s ease,box-shadow .16s ease,transform .16s ease}
+button:hover:not(:disabled),input[type=submit]:hover:not(:disabled){filter:brightness(.98)}
+button:active:not(:disabled),a:active{transform:translateY(1px)}
+button:disabled,input:disabled,select:disabled,textarea:disabled{opacity:.62;cursor:not-allowed}
+input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea{max-width:100%;border-radius:12px}
+:where(input,select,textarea,button,a,[tabindex]):focus-visible{outline:3px solid rgba(35,130,94,.3);outline-offset:2px}
+:where(.wrap,main,.container){width:min(100% - 28px,1120px);margin-inline:auto}
+:where(.card,.box,.panel,.hero-card,.ad-card,.service-card,.place-card,.stat-card){border-radius:var(--pp-ui-radius)}
+:where(.card,.box,.panel,.ad-card,.service-card,.place-card){border-color:var(--pp-ui-line)}
+:where(.card,.box,.panel,.ad-card,.service-card,.place-card):not(.main-card){box-shadow:var(--pp-ui-shadow)}
+:where(.empty,.empty-state,.no-results){padding:28px 18px;border:1px dashed #cbd6e3;border-radius:18px;background:#fff;color:var(--pp-ui-muted);text-align:center}
+:where(.error,.alert-error){border-radius:14px}
+:where(.success,.alert-success){border-radius:14px}
+:where(table){width:100%;border-collapse:collapse}
+:where(th,td){padding:10px 12px;border-bottom:1px solid var(--pp-ui-line);text-align:right}
+:where(img,video,iframe){max-width:100%}
+header,.header{isolation:isolate}
+.pp-menu-btn{box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.pp-drawer{overscroll-behavior:contain;padding-bottom:calc(24px + env(safe-area-inset-bottom))}
+.pp-menu-link{min-height:48px}
+.pp-profile-menu{max-width:calc(100vw - 16px)}
+.pp-toast-host{bottom:calc(16px + env(safe-area-inset-bottom))}
+.pp-top{bottom:calc(82px + env(safe-area-inset-bottom))}
+/* Mobile navigation: a compact five-action dock, with the full menu still available. */
+.pp-dock{position:fixed;z-index:2147482000;inset:auto 10px calc(8px + env(safe-area-inset-bottom));display:none;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px;padding:7px 6px;border:1px solid rgba(219,228,238,.92);border-radius:20px;background:rgba(255,255,255,.94);box-shadow:0 12px 35px rgba(20,45,72,.18);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.pp-dock a,.pp-dock button{display:flex;min-width:0;min-height:52px;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:5px 2px;border:0;border-radius:13px;background:transparent;color:#66768a;text-decoration:none;font-size:10px;font-weight:800;line-height:1.3}
+.pp-dock .pp-dock-icon{font-size:20px;line-height:1.15}
+.pp-dock a[aria-current=page]{background:#e8f4ed;color:var(--pp-ui-green)}
+.pp-dock button:focus-visible,.pp-dock a:focus-visible{outline-offset:-2px}
+@media(max-width:700px){body.pp-has-dock{padding-bottom:calc(82px + env(safe-area-inset-bottom))!important}.pp-dock{display:grid!important}.pp-top{bottom:calc(86px + env(safe-area-inset-bottom))}.pp-toast-host{bottom:calc(86px + env(safe-area-inset-bottom))}.pp-drawer{width:min(360px,90vw)}}
+@media(min-width:701px){.pp-dock{display:none!important}body.pp-has-dock{padding-bottom:0}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}

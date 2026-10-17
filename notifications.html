@@ -11,8 +11,8 @@
 @media(max-width:600px){.wrap{padding:12px}.top{padding:16px;border-radius:16px}.top h1{font-size:21px}.bell{width:42px;height:42px}.readall{padding:9px 10px;font-size:12px}.card{padding:14px}.title{font-size:16px}}
 </style>
 <script src="platform.js"></script><link rel="stylesheet" href="app.css">
-<link rel="stylesheet" href="theme-v61.css"><link rel="stylesheet" href="theme-v87.css">
-</head>
+<link rel="stylesheet" href="theme-v61.css">
+<link rel="stylesheet" href="ui-polish.css?v=82"></head>
 <body>
 <main class="wrap">
 <section class="top">
@@ -29,11 +29,10 @@ window.$=x=>document.getElementById(x);
 let currentUser=null, notificationChannel=null, lastNotificationAt=null, activeFilter='all';
 const SOUND_KEY='pp_notification_sound'; const BROWSER_KEY='pp_browser_notifications';
 let audioCtx=null;
-function uiNotice(text,type='error'){if(window.ppToast)window.ppToast(text,type,3600);else alert(text)}
 function soundEnabled(){return localStorage.getItem(SOUND_KEY)==='1'}
-async function enableSound(){try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();await audioCtx.resume();localStorage.setItem(SOUND_KEY,'1');updateControls();playBeep()}catch(e){uiNotice('تعذر تفعيل الصوت في هذا المتصفح.','error')}}
+async function enableSound(){try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();await audioCtx.resume();localStorage.setItem(SOUND_KEY,'1');updateControls();playBeep()}catch(e){alert('تعذر تفعيل الصوت في هذا المتصفح.')}}
 function playBeep(){if(!soundEnabled()||!audioCtx)return;try{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.value=880;g.gain.setValueAtTime(0.0001,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(0.08,audioCtx.currentTime+0.02);g.gain.exponentialRampToValueAtTime(0.0001,audioCtx.currentTime+0.18);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+0.2)}catch(e){}}
-async function enableBrowser(){if(!('Notification' in window)){uiNotice('المتصفح لا يدعم إشعارات الجهاز.','error');return}const p=await Notification.requestPermission();if(p==='granted'){localStorage.setItem(BROWSER_KEY,'1');updateControls()}else uiNotice('لم يتم السماح بإشعارات الجهاز.','error')}
+async function enableBrowser(){if(!('Notification' in window)){alert('المتصفح لا يدعم إشعارات الجهاز.');return}const p=await Notification.requestPermission();if(p==='granted'){localStorage.setItem(BROWSER_KEY,'1');updateControls()}else alert('لم يتم السماح بإشعارات الجهاز.')}
 function updateControls(){const sb=$('soundBtn'),bb=$('browserBtn');if(sb){sb.textContent=soundEnabled()?'🔊 كتم صوت الإشعارات':'🔇 تفعيل صوت الإشعارات';sb.onclick=()=>{if(soundEnabled()){localStorage.removeItem(SOUND_KEY);updateControls()}else enableSound()}}if(bb){bb.textContent=(('Notification' in window)&&Notification.permission==='granted'&&localStorage.getItem(BROWSER_KEY)==='1')?'🔔 إشعارات الجهاز مفعلة':'🔔 تفعيل إشعارات الجهاز';bb.onclick=enableBrowser}}
 function notifyIncoming(n){playBeep();if(localStorage.getItem(BROWSER_KEY)==='1'&&'Notification' in window&&Notification.permission==='granted'){try{new Notification(n.title||'إشعار جديد',{body:n.message||''})}catch(e){}}}
 
@@ -46,7 +45,7 @@ async function load(){
   $('status').textContent='جاري التحديث...';$('status').classList.add('loading');
   const {data,error}=await db.from('notifications').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});
   $('status').classList.remove('loading');
-  if(error){$('status').className='error';$('status').textContent='❌ تعذر تحميل الإشعارات: '+error.message;uiNotice('تعذر تحميل الإشعارات. تحقق من الاتصال والصلاحيات.','error');return}
+  if(error){$('status').className='error';$('status').textContent='❌ تعذر تحميل الإشعارات: '+error.message;return}
   const list=data||[], unread=list.filter(n=>!n.is_read).length; window.__notifications=list;
   const convIds=[...new Set(list.map(n=>n.related_conversation_id).filter(Boolean))];
   let validConvIds=new Set();
@@ -71,18 +70,18 @@ async function load(){
 async function readOne(id){
   if(!currentUser)return;
   const {error}=await db.from('notifications').update({is_read:true}).eq('id',id).eq('user_id',currentUser.id);
-  if(error){uiNotice('تعذر تحديث الإشعار','error');return} uiNotice('تم تحديد الإشعار كمقروء ✓','success');await load();
+  if(error){alert('تعذر تحديث الإشعار');return} await load();
 }
 $('allRead').onclick=async()=>{
   if(!currentUser)return;
   $('allRead').disabled=true;
   const {error}=await db.from('notifications').update({is_read:true}).eq('user_id',currentUser.id).eq('is_read',false);
-  if(error){uiNotice('تعذر تحديث الإشعارات','error');$('allRead').disabled=false;return} uiNotice('تم تحديد جميع الإشعارات كمقروءة ✓','success');await load();
+  if(error){alert('تعذر تحديث الإشعارات');$('allRead').disabled=false;return} await load();
 };
 document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{activeFilter=b.dataset.filter||'all';document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');const list=window.__notifications||[];const visible=list.filter(n=>activeFilter==='all'||(activeFilter==='unread'&&!n.is_read)||(activeFilter==='order'&&n.related_order_id)||(activeFilter==='message'&&n.type==='message'));if(!visible.length){$('list').innerHTML='<div class="empty"><div class="big">🔎</div><strong>لا توجد إشعارات في هذا التصنيف</strong></div>';return}load()});
 async function subscribeNotifications(){if(notificationChannel)await db.removeChannel(notificationChannel);notificationChannel=db.channel('notifications-page-'+currentUser.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications',filter:'user_id=eq.'+currentUser.id},payload=>{notifyIncoming(payload.new);load()}).subscribe()}
 (async()=>{await load();updateControls();await subscribeNotifications();setInterval(load,30000)})();
 </script>
-<script src="app-ui.js" defer></script>
+<script src="app-ui.js?v=82" defer></script>
 </body>
 </html>
