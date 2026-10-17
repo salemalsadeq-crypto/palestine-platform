@@ -1,0 +1,27 @@
+/* فلسطين بلاتفورم V88 — تنسيق أدوات صفحة الطلبات (كانت الأصناف v72-* بلا أي CSS) */
+.v72-order-tools,.v72-tools{display:grid;gap:12px;margin:16px 0}
+.v72-order-tools input,.v72-tools input{
+  width:100%;padding:13px 16px;border:1px solid #d9e3ee;border-radius:14px;background:#fff;
+  font:inherit;font-size:15px;color:#172033;outline:none;
+  transition:border-color .15s,box-shadow .15s}
+.v72-order-tools input:focus,.v72-tools input:focus{border-color:#1e63a2;box-shadow:0 0 0 3px rgba(30,99,162,.15)}
+.v72-filters{
+  display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;margin:0 -2px;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.v72-filters::-webkit-scrollbar{display:none}
+.v72-filter{
+  flex:0 0 auto;appearance:none;-webkit-appearance:none;border:1px solid #d9e3ee;background:#fff;
+  color:#35506f;border-radius:999px;padding:9px 16px;font:inherit;font-size:14px;font-weight:700;
+  line-height:1.2;white-space:nowrap;cursor:pointer;
+  transition:background .15s,color .15s,border-color .15s,box-shadow .15s}
+.v72-filter:active{transform:scale(.97)}
+.v72-filter.active{background:#123b68;border-color:#123b68;color:#fff;box-shadow:0 4px 12px rgba(18,59,104,.25)}
+.v72-result{font-size:13px;color:#6b7c93;padding:0 4px}
+.v72-empty{
+  text-align:center;padding:36px 16px;color:#6b7c93;background:#fff;
+  border:1px dashed #d9e3ee;border-radius:16px}
+.v72-cancel{
+  appearance:none;-webkit-appearance:none;border:1px solid #f0c4c8;background:#fff5f5;color:#b51f2a;
+  border-radius:12px;padding:10px 16px;font:inherit;font-size:14px;font-weight:800;cursor:pointer}
+.v72-cancel:active{transform:scale(.97)}
+@media (prefers-reduced-motion:reduce){.v72-filter,.v72-cancel{transition:none}}
