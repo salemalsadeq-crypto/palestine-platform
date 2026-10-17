@@ -53,3 +53,44 @@ main,.wrap{max-width:1160px}
 :where(.card,.box,.panel,.filters,.ad-card,.service-card,.place-card,.live-panel){box-shadow:0 8px 24px rgba(22,46,74,.06)}
 .pp-dock{display:none}
 @media(max-width:700px){body.pp-has-dock{padding-bottom:calc(88px + env(safe-area-inset-bottom))!important}.pp-dock{display:grid!important;position:fixed!important;z-index:2147482000!important;left:8px!important;right:8px!important;bottom:calc(8px + env(safe-area-inset-bottom))!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;background:rgba(255,255,255,.97)!important;border:1px solid #dce5ef!important;box-shadow:0 10px 34px rgba(15,35,58,.22)!important}.pp-dock a,.pp-dock button{min-height:52px!important;color:#52657b!important}.pp-dock a[aria-current=page]{background:#e4f3eb!important;color:#116b4c!important}.pp-dock .pp-dock-icon{font-size:21px!important}.wrap{width:100%;padding-inline:13px}.layout{grid-template-columns:1fr!important}.layout>*{min-width:0}}
+
+
+/* V84 — stronger visible layout refinement, appended after every page style */
+:root{--pp-ui-ink:#14263b;--pp-ui-muted:#64758a;--pp-ui-line:#dbe4ee;--pp-ui-bg:#f3f6fa;--pp-ui-green:#087f5b;--pp-ui-green2:#0b9b6b;--pp-ui-radius:20px;--pp-ui-shadow:0 12px 32px rgba(18,43,71,.09)}
+html{background:#f3f6fa!important}body{background:#f3f6fa!important;color:#14263b!important;line-height:1.7}
+body>header,body>.header{position:sticky!important;top:0;z-index:1200!important;box-shadow:0 7px 24px rgba(18,43,71,.13)!important}
+main,.wrap{width:min(100% - 28px,1160px)!important;margin-inline:auto!important}
+section.section{padding-block:clamp(18px,3vw,32px)!important}
+.section>.title{display:flex;flex-direction:column;gap:3px;margin-bottom:18px!important}
+.section>.title h2{font-size:clamp(20px,3vw,27px)!important;letter-spacing:-.3px}
+.section>.title p{font-size:13px!important;color:#6c7d91!important}
+.main-grid,.discover-grid,.near-results,.live-grid,.recommend-grid,.recommendations-grid{gap:14px!important}
+.main-card{min-height:190px!important;border-radius:22px!important;padding:22px!important;box-shadow:0 12px 28px rgba(17,45,73,.14)!important;transition:transform .2s ease,box-shadow .2s ease!important}
+.main-card:hover{transform:translateY(-4px)!important;box-shadow:0 18px 34px rgba(17,45,73,.19)!important}
+.main-card .ico{display:inline-flex;align-items:center;justify-content:center;width:58px;height:58px;border-radius:18px;background:#ffffff22;font-size:31px!important}
+.main-card h3{font-size:clamp(19px,2.5vw,24px)!important;line-height:1.35}
+.main-card p{font-size:13px!important;line-height:1.8!important;max-width:48ch}
+.main-card .go{margin-top:5px;padding:9px 13px!important;border-radius:12px!important;font-size:12px!important}
+.hero{padding:clamp(34px,6vw,66px) 0!important;background:radial-gradient(circle at 12% 15%,#ffffff18 0 2px,transparent 3px),linear-gradient(125deg,#102b49 0%,#145d77 58%,#087f5b 100%)!important;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:280px;height:280px;border:1px solid #ffffff20;border-radius:50%;left:-95px;bottom:-155px;box-shadow:0 0 0 35px #ffffff08,0 0 0 70px #ffffff05;pointer-events:none}
+.hero h1{font-size:clamp(28px,5vw,46px)!important;max-width:760px;letter-spacing:-.5px}
+.hero p{font-size:clamp(13px,1.6vw,16px)!important;max-width:680px}
+.search{border:1px solid #ffffff85!important;border-radius:18px!important;padding:7px!important;box-shadow:0 20px 48px #071d303d!important;position:relative;z-index:1}
+.search input{min-height:48px!important;font-size:15px!important;padding-inline:14px!important}
+.search button,.near-btn,.special a,button[type=submit],input[type=submit]{min-height:44px;border-radius:13px!important;font-weight:800!important}
+.discover-grid a{min-height:112px;padding:17px!important;border-radius:18px!important;box-shadow:0 8px 24px rgba(18,43,71,.06)!important;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease!important}
+.discover-grid a:hover{transform:translateY(-3px)!important;border-color:#a9cbbd!important;box-shadow:0 14px 30px rgba(18,43,71,.1)!important}
+.near-home{border-radius:24px!important;box-shadow:0 16px 36px rgba(14,54,83,.17)!important}
+.near-btn.primary{background:#fff!important;color:#0e5c4b!important;box-shadow:0 5px 16px #001b3020!important}
+.near-btn.secondary{background:#ffffff18!important;color:#fff!important}
+.live-panel,.special,.near-card,.discover-grid a{border-radius:20px!important}
+.live-panel{padding:clamp(16px,3vw,24px)!important;box-shadow:0 12px 30px rgba(18,43,71,.06)!important}
+input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea{border:1px solid #d3deea!important;background:#fff;color:#14263b;min-height:44px;border-radius:12px!important;padding:10px 12px}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #27a57966!important;outline-offset:2px!important}
+.pp-dock{border-color:#dce6ee!important;background:#fffffff2!important;box-shadow:0 14px 36px rgba(16,41,66,.2)!important}
+.pp-dock a,.pp-dock button{font-size:10px!important;min-height:53px!important}
+.pp-dock a[aria-current=page]{background:#e0f3e9!important;color:#087f5b!important}
+.pp-toast{border-radius:15px!important;box-shadow:0 14px 36px #102b4933!important}
+.footer{margin-top:24px!important;padding:30px 16px!important}
+@media(max-width:700px){main,.wrap{width:min(100% - 22px,1160px)!important}.hero{padding-block:30px!important}.hero h1{font-size:29px!important}.main-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}.main-card{min-height:168px!important;padding:15px!important;border-radius:18px!important}.main-card .ico{width:46px;height:46px;font-size:25px!important;border-radius:14px}.main-card h3{font-size:17px!important}.main-card p{font-size:11px!important}.main-card .go{font-size:10px!important;padding:7px 9px!important}.discover-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}.discover-grid a{padding:13px!important;min-height:100px}.search{gap:5px}.search button{padding-inline:12px!important}.special{padding:16px!important}}
+@media(max-width:370px){.main-grid{grid-template-columns:1fr!important}.main-card{min-height:145px!important}.hero h1{font-size:26px!important}}

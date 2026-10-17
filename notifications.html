@@ -12,7 +12,7 @@
 </style>
 <script src="platform.js"></script><link rel="stylesheet" href="app.css">
 <link rel="stylesheet" href="theme-v61.css">
-<link rel="stylesheet" href="ui-polish.css?v=83"></head>
+<link rel="stylesheet" href="ui-polish.css?v=84"></head>
 <body>
 <main class="wrap">
 <section class="top">
@@ -82,6 +82,6 @@ document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{activeFilter=b.da
 async function subscribeNotifications(){if(notificationChannel)await db.removeChannel(notificationChannel);notificationChannel=db.channel('notifications-page-'+currentUser.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications',filter:'user_id=eq.'+currentUser.id},payload=>{notifyIncoming(payload.new);load()}).subscribe()}
 (async()=>{await load();updateControls();await subscribeNotifications();setInterval(load,30000)})();
 </script>
-<script src="app-ui.js?v=83" defer></script>
+<script src="app-ui.js?v=84" defer></script>
 </body>
 </html>
