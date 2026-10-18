@@ -143,3 +143,11 @@ html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 .pp-install{position:fixed;inset-inline:12px;bottom:calc(96px + env(safe-area-inset-bottom));z-index:9000;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:18px;background:#123b68;color:#fff;box-shadow:0 12px 30px rgba(18,59,104,.35);font-weight:800;font-size:14px}
 .pp-install span{flex:1}.pp-install .pp-sb{min-height:40px;background:#fff;color:#123b68}
 .pp-x{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:6px}
+
+/* ===== V88 — زر الإضافة العائم + الحالات الفارغة ===== */
+.pp-fab{position:fixed;inset-inline-start:16px;bottom:calc(92px + env(safe-area-inset-bottom));z-index:8500;display:flex;align-items:center;gap:8px;min-height:52px;padding:0 18px 0 14px;border-radius:999px;background:linear-gradient(135deg,#0a956d,#067a59);color:#fff;text-decoration:none;font-weight:800;font-size:15px;box-shadow:0 10px 24px rgba(10,149,109,.35);transition:padding .2s,transform .12s}
+.pp-fab:active{transform:scale(.96)}.pp-fab span{font-size:26px;line-height:1}
+.pp-fab b{max-width:140px;overflow:hidden;white-space:nowrap;transition:max-width .2s,opacity .2s}
+.pp-fab.mini{padding:0 14px}.pp-fab.mini b{max-width:0;opacity:0}
+.pp-empty{text-align:center;padding:38px 18px;background:#fff;border:1px dashed #d9e3ee;border-radius:18px;color:#6b7c93;display:grid;gap:8px;justify-items:center}
+.pp-empty-ic{font-size:44px}.pp-empty b{color:#172033;font-size:17px}.pp-empty p{margin:0 0 6px;font-size:14px;line-height:1.7}

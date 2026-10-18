@@ -112,3 +112,14 @@
   window.ppBusy=async(btn,fn)=>{if(btn){btn.disabled=true;btn.classList.add('is-busy')}try{return await fn()}finally{if(btn){btn.disabled=false;btn.classList.remove('is-busy')}}};
   document.addEventListener('click',e=>{const b=e.target.closest('.btn-primary,.abtn,.od-btn,.pp-sb,.cta,.tile,.sv-card');if(b&&!b.disabled&&navigator.vibrate)navigator.vibrate(8)},{passive:true});
 }catch(e){console.warn('ppui',e)}})();
+
+/* V88: زر "أضف إعلانًا" عائم (الرئيسية والإعلانات) + مساعد الحالات الفارغة */
+;(()=>{try{
+  const pg=location.pathname.split('/').pop()||'index.html';
+  if(['index.html','ads.html'].includes(pg)&&!document.querySelector('.pp-fab')){
+    const f=document.createElement('a');f.className='pp-fab';f.href='add-ad.html';f.setAttribute('aria-label','أضف إعلانًا');
+    f.innerHTML='<span>＋</span><b>أضف إعلانًا</b>';document.body.appendChild(f);
+    let last=0;addEventListener('scroll',()=>{const y=scrollY;f.classList.toggle('mini',y>160&&y>last);last=y},{passive:true});
+  }
+  window.ppEmpty=(icon,title,text,href,label)=>'<div class="pp-empty"><div class="pp-empty-ic">'+icon+'</div><b>'+title+'</b><p>'+(text||'')+'</p>'+(href?'<a class="btn btn-primary" href="'+href+'">'+label+'</a>':'')+'</div>';
+}catch(e){}})();
