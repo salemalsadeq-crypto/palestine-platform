@@ -1,29 +1,45 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>إدارة الاشتراكات | فلسطين بلاتفورم</title><link rel="stylesheet" href="app.css"><style>
-body{margin:0;background:#f3f7fb;color:#172033;font-family:Arial,Tahoma,sans-serif}.wrap{max-width:1180px;margin:auto;padding:0 14px}.head{background:linear-gradient(135deg,#123b68,#2878bc);color:#fff;padding:18px 0}.headin{display:flex;justify-content:space-between;gap:10px;align-items:center}.head a{color:#fff;text-decoration:none;background:#ffffff18;padding:9px 12px;border-radius:11px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.stat,.card{background:#fff;border:1px solid #e1e9f1;border-radius:18px;padding:16px;box-shadow:0 8px 25px #123b680b}.stat b{font-size:28px;display:block;margin-top:7px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}.toolbar button{border:0;border-radius:12px;padding:10px 14px;font-weight:900;cursor:pointer}.active{background:#173f69;color:#fff}.table{overflow:auto}table{width:100%;min-width:900px;border-collapse:collapse}th,td{padding:12px;border-bottom:1px solid #edf1f5;text-align:right;vertical-align:top}.badge{display:inline-block;padding:6px 9px;border-radius:10px;background:#eef5fb;color:#174f86;font-size:11px;font-weight:900}.pending{background:#fff7df;color:#916b00}.ok{background:#eaf8f2;color:#087957}.danger{background:#fff0f1;color:#a51f2b}.btn{border:0;border-radius:11px;padding:9px 12px;font-weight:900;cursor:pointer}.blue{background:#174f86;color:#fff}.green{background:#0b986d;color:#fff}.red{background:#c62838;color:#fff}.gray{background:#e9eef4}.actions{display:flex;gap:7px;flex-wrap:wrap}.muted{color:#6d7d90;font-size:12px;line-height:1.7}.notice{margin-top:15px;padding:12px;border-radius:12px}.err{background:#fff0f1;color:#a51f2b}.success{background:#eaf8f2;color:#087957}@media(max-width:650px){.stats{grid-template-columns:1fr}.headin{align-items:flex-start;flex-direction:column}}
-</style><link rel="stylesheet" href="theme-v61.css">
-
-<style>
-@media(max-width:700px){
- .table table,.table thead,.table tbody,.table th,.table td,.table tr{display:block!important;min-width:0!important;width:auto!important}
- .table thead{display:none!important}
- .table tr{background:#fff;border:1px solid #e1e9f1;border-radius:16px;margin:10px 0;padding:10px;box-shadow:0 8px 22px rgba(20,55,85,.06)}
- .table td{border:0!important;padding:7px 5px!important}
- .table td:before{display:block;color:#718096;font-size:10px;font-weight:800;margin-bottom:2px}
- .table td:nth-child(1):before{content:'المشترك'}
- .table td:nth-child(2):before{content:'الاشتراك / الباقة'}
- .table td:nth-child(3):before{content:'التفاصيل'}
- .table td:nth-child(4):before{content:'التاريخ / الانتهاء'}
- .table td:nth-child(5):before{content:'الإجراءات'}
- .actions .btn{flex:1;text-align:center}
-}
-</style><link rel="stylesheet" href="ui-polish.css?v=84"></head><body><header class="head"><div class="wrap headin"><b>👑 إدارة الاشتراكات</b><div><a href="admin.html">لوحة المدير</a> <a href="index.html">الرئيسية</a></div></div></header><main class="wrap"><div id="notice"></div><section class="stats"><div class="stat">⏳ طلبات الإلغاء<b id="pending">—</b></div><div class="stat">💳 اشتراكات فعالة<b id="active">—</b></div><div class="stat">📦 طلبات الاشتراك<b id="orders">—</b></div></section><section class="card"><div class="toolbar"><button class="active" data-filter="pending">طلبات الإلغاء</button><button data-filter="active">الاشتراكات الفعالة</button><button data-filter="orders">طلبات الاشتراك</button></div><div id="content">جاري التحميل...</div></section></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script><script src="platform.js"></script><script>
-const db=ppClient,$=id=>document.getElementById(id),esc=ppEsc;let filter='pending',cache={c:[],a:[],o:[]};
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>إدارة الاشتراكات | فلسطين بلاتفورم</title>
+<link rel="stylesheet" href="app.css"><link rel="stylesheet" href="admin-v88.css?v=88">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script><script src="platform.js"></script><script src="app-ui.js?v=84" defer></script></head>
+<body>
+<div class="adm-top"><div class="in"><div><b>👑 إدارة الاشتراكات</b><small>التفعيل والإلغاء والمراجعة</small></div><div class="lk"><a href="admin.html">لوحة المدير</a><a href="index.html">الرئيسية</a></div></div></div>
+<div class="adm-wrap"><div id="notice"></div>
+<div class="adm-stats"><div class="adm-stat">⏳ طلبات الإلغاء<b id="pending">—</b></div><div class="adm-stat">💳 اشتراكات فعالة<b id="active">—</b></div><div class="adm-stat">📦 طلبات الاشتراك<b id="orders">—</b></div></div>
+<div class="adm-panel"><div class="adm-tabs"><button data-filter="pending">طلبات الإلغاء</button><button data-filter="active">الاشتراكات الفعالة</button><button data-filter="orders">طلبات الاشتراك</button></div><div id="content">جاري التحميل...</div></div></div>
+<script>
+const db=ppClient,$=id=>document.getElementById(id),esc=ppEsc;
+let filter=new URLSearchParams(location.search).get('f')||'pending',cache={c:[],a:[],o:[]};
+if(!['pending','active','orders'].includes(filter))filter='pending';
+const OS={pending:'بانتظار التفعيل',paid:'مدفوع',active:'مفعّل',completed:'مكتمل',cancelled:'ملغي',failed:'فشل'};
+const bc=s=>({pending:'pending',paid:'active',active:'active',completed:'active',cancelled:'suspended',failed:'suspended'}[s]||'');
+const td=(l,v)=>'<td data-l="'+l+'">'+v+'</td>';
+const tbl=(h,rows)=>rows.length?'<div class="adm-table"><table><thead><tr>'+h.map(x=>'<th>'+x+'</th>').join('')+'</tr></thead><tbody>'+rows.join('')+'</tbody></table></div>':'<div class="adm-empty">لا توجد بيانات.</div>';
+const who=x=>'<b>'+esc(x.full_name||'مستخدم')+'</b><div class="adm-m">'+esc(x.phone||'')+'</div>';
+const dt=(d,t)=>d?(t?new Date(d).toLocaleString('ar-PS'):new Date(d).toLocaleDateString('ar-PS')):'—';
 function note(t,ok=false){$('notice').innerHTML='<div class="notice '+(ok?'success':'err')+'">'+esc(t)+'</div>';setTimeout(()=>{$('notice').innerHTML=''},4000)}
-async function guard(){return await ppRequire('manage_subscriptions')}
-async function load(){if(!(await guard()))return;const [c,a,o]=await Promise.all([db.rpc('admin_list_subscription_cancellations'),db.rpc('admin_list_active_subscriptions'),db.rpc('admin_list_subscription_orders')]);if(c.error||a.error||o.error){note(c.error?.message||a.error?.message||o.error?.message);return}cache={c:c.data||[],a:a.data||[],o:o.data||[]};$('pending').textContent=cache.c.filter(x=>x.status==='pending').length;$('active').textContent=cache.a.length;$('orders').textContent=cache.o.length;render()}
-function render(){const arr=filter==='pending'?cache.c.filter(x=>x.status==='pending'):filter==='active'?cache.a:cache.o;if(!arr.length){$('content').innerHTML='<div class="muted">لا توجد بيانات.</div>';return}if(filter==='pending'){$('content').innerHTML='<div class="table"><table><thead><tr><th>المشترك</th><th>الاشتراك</th><th>السبب</th><th>التاريخ</th><th>إجراءات</th></tr></thead><tbody>'+arr.map(x=>'<tr><td><b>'+esc(x.full_name||'مستخدم')+'</b><div class="muted">'+esc(x.phone||'')+'</div></td><td>'+esc(x.plan_id||'—')+'</td><td>'+esc(x.reason||'لم يذكر سببًا')+'</td><td>'+new Date(x.created_at).toLocaleString('ar-PS')+'</td><td><div class="actions"><a class="btn blue" href="profile.html?id='+encodeURIComponent(x.user_id)+'">💬 مراسلة</a><button class="btn green" onclick="handle(\''+x.id+'\',\'approve\')">موافقة وإلغاء</button><button class="btn red" onclick="handle(\''+x.id+'\',\'reject\')">رفض</button></div></td></tr>').join('')+'</tbody></table></div>'}else if(filter==='active'){$('content').innerHTML='<div class="table"><table><thead><tr><th>المشترك</th><th>الباقة</th><th>الانتهاء</th><th>إجراءات</th></tr></thead><tbody>'+arr.map(x=>'<tr><td><b>'+esc(x.full_name||'مستخدم')+'</b><div class="muted">'+esc(x.phone||'')+'</div></td><td>'+esc(x.plan_name||x.plan_id)+'</td><td>'+new Date(x.ends_at).toLocaleDateString('ar-PS')+'</td><td><div class="actions"><a class="btn blue" href="profile.html?id='+encodeURIComponent(x.user_id)+'">💬 مراسلة</a><button class="btn red" onclick="directCancel(\''+x.id+'\')">إلغاء إداري</button></div></td></tr>').join('')+'</tbody></table></div>'}else{$('content').innerHTML='<div class="table"><table><thead><tr><th>المشترك</th><th>الباقة</th><th>الحالة</th><th>التاريخ</th><th>إجراءات</th></tr></thead><tbody>'+arr.map(x=>'<tr><td>'+esc(x.full_name||'مستخدم')+'</td><td>'+esc(x.plan_name||x.plan_id)+'</td><td><span class="badge">'+esc(x.status||'')+'</span></td><td>'+new Date(x.created_at).toLocaleString('ar-PS')+'</td><td>'+(x.status==='pending'?'<div class="actions"><button class="btn green" onclick="activateOrder(\''+x.id+'\')">✅ تفعيل الاشتراك</button></div>':'—')+'</td></tr>').join('')+'</tbody></table></div>'}}
-async function activateOrder(id){if(!confirm('سيتم تفعيل هذا الاشتراك بعد التأكد من استلام الدفع. متابعة؟'))return;const r=await db.rpc('admin_activate_subscription',{p_order_id:id});if(r.error){note(r.error.message);return}note('تم تفعيل الاشتراك بنجاح.',true);load()}
-async function handle(id,action){const noteText=prompt(action==='approve'?'ملاحظة الإدارة (اختياري):':'سبب الرفض (اختياري):')??'';const r=await db.rpc('admin_handle_subscription_cancellation',{p_request_id:id,p_action:action,p_note:noteText});if(r.error){note(r.error.message);return}note(action==='approve'?'تم إلغاء الاشتراك وإيقاف مقدم الخدمة إن وجد.':'تم رفض طلب الإلغاء.',true);load()}
-async function directCancel(id){if(!confirm('سيتم إلغاء الاشتراك وإيقاف مقدم الخدمة إن وجد. متابعة؟'))return;const r=await db.rpc('admin_cancel_active_subscription',{p_subscription_id:id});if(r.error){note(r.error.message);return}note('تم إلغاء الاشتراك إداريًا.',true);load()}
-document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-filter]').forEach(x=>x.classList.remove('active'));b.classList.add('active');filter=b.dataset.filter;render()});load();
-</script><script src="app-ui.js?v=84" defer></script></body></html>
+async function load(){
+  if(!(await ppRequire('manage_subscriptions')))return;
+  const [c,a,o]=await Promise.all([db.rpc('admin_list_subscription_cancellations'),db.rpc('admin_list_active_subscriptions'),db.rpc('admin_list_subscription_orders')]);
+  if(c.error||a.error||o.error){note(c.error?.message||a.error?.message||o.error?.message);return}
+  cache={c:c.data||[],a:a.data||[],o:o.data||[]};
+  $('pending').textContent=cache.c.filter(x=>x.status==='pending').length;$('active').textContent=cache.a.length;$('orders').textContent=cache.o.length;render();
+}
+function render(){
+  document.querySelectorAll('[data-filter]').forEach(b=>b.classList.toggle('active',b.dataset.filter===filter));
+  const msg=x=>'<a class="adm-btn s" href="profile.html?id='+encodeURIComponent(x.user_id)+'">💬 مراسلة</a>';
+  if(filter==='pending')$('content').innerHTML=tbl(['المشترك','الاشتراك','السبب','التاريخ','إجراءات'],cache.c.filter(x=>x.status==='pending').map(x=>'<tr>'+td('المشترك',who(x))+td('الاشتراك',esc(x.plan_id||'—'))+td('السبب',esc(x.reason||'لم يذكر سببًا'))+td('التاريخ',dt(x.created_at,1))+td('إجراءات','<div class="adm-act">'+msg(x)+'<button class="adm-btn g" data-a="approve" data-id="'+esc(x.id)+'">موافقة وإلغاء</button><button class="adm-btn r" data-a="reject" data-id="'+esc(x.id)+'">رفض</button></div>')+'</tr>'));
+  else if(filter==='active')$('content').innerHTML=tbl(['المشترك','الباقة','الانتهاء','إجراءات'],cache.a.map(x=>'<tr>'+td('المشترك',who(x))+td('الباقة',esc(x.plan_name||x.plan_id))+td('الانتهاء',dt(x.ends_at))+td('إجراءات','<div class="adm-act">'+msg(x)+'<button class="adm-btn r" data-a="cancel" data-id="'+esc(x.id)+'">إلغاء إداري</button></div>')+'</tr>'));
+  else $('content').innerHTML=tbl(['المشترك','الباقة','الحالة','التاريخ','إجراءات'],cache.o.map(x=>'<tr>'+td('المشترك',esc(x.full_name||'مستخدم'))+td('الباقة',esc(x.plan_name||x.plan_id))+td('الحالة','<span class="adm-badge b-'+bc(x.status)+'">'+esc(OS[x.status]||x.status||'')+'</span>')+td('التاريخ',dt(x.created_at,1))+td('إجراءات',x.status==='pending'?'<div class="adm-act"><button class="adm-btn g" data-a="activate" data-id="'+esc(x.id)+'">✅ تفعيل الاشتراك</button></div>':'—')+'</tr>'));
+}
+async function run(rpc,args,okMsg){const r=await db.rpc(rpc,args);if(r.error){note(r.error.message);return}note(okMsg,true);load()}
+document.addEventListener('click',async e=>{
+  const f=e.target.closest('[data-filter]');if(f){filter=f.dataset.filter;render();return}
+  const b=e.target.closest('[data-a]');if(!b)return;const id=b.dataset.id,a=b.dataset.a;
+  if(a==='activate'){if(await ppConfirm('سيتم تفعيل هذا الاشتراك بعد التأكد من استلام الدفع. متابعة؟',{ok:'تفعيل'}))await ppBusy(b,()=>run('admin_activate_subscription',{p_order_id:id},'تم تفعيل الاشتراك بنجاح.'))}
+  else if(a==='cancel'){if(await ppConfirm('سيتم إلغاء الاشتراك وإيقاف مقدم الخدمة إن وجد. متابعة؟',{danger:true,ok:'إلغاء الاشتراك',cancel:'تراجع'}))await ppBusy(b,()=>run('admin_cancel_active_subscription',{p_subscription_id:id},'تم إلغاء الاشتراك إداريًا.'))}
+  else{const ap=a==='approve',n=await ppPrompt(ap?'ملاحظة الإدارة (اختياري)':'سبب الرفض (اختياري)',{multiline:true,ok:ap?'موافقة وإلغاء':'رفض الطلب'});if(n===null)return;
+    await ppBusy(b,()=>run('admin_handle_subscription_cancellation',{p_request_id:id,p_action:a,p_note:n},ap?'تم إلغاء الاشتراك وإيقاف مقدم الخدمة إن وجد.':'تم رفض طلب الإلغاء.'))}
+});
+load();
+</script></body></html>
