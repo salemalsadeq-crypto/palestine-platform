@@ -1,6 +1,77 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>إدارة الطلبات | فلسطين بلاتفورم</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script><script src="platform.js"></script><link rel="stylesheet" href="app.css"><link rel="stylesheet" href="theme-v61.css">
-<link rel="stylesheet" href="ui-polish.css?v=84"></head><body><header><div class="head"><div class="logo">👑 إدارة الطلبات والتوصيل</div></div></header><main style="max-width:1100px;margin:24px auto;padding:0 14px"><div id="app" class="pp-order-card">جاري التحميل...</div></main><script>
-const db=window.ppClient,$=id=>document.getElementById(id),esc=window.ppEsc;const labels={pending:'قيد المراجعة',confirmed:'تم التأكيد',preparing:'جاري التجهيز',out_for_delivery:'في الطريق',delivered:'تم التسليم',cancelled:'ملغي'};
-async function load(){const u=await ppRequire('manage_orders');if(!u)return;const r=await db.from('orders').select('id,ad_id,buyer_id,seller_id,quantity,total_amount,delivery_method,payment_method,payment_provider,payment_status,order_status,customer_name,customer_phone,city,address,created_at,ads(title)').order('created_at',{ascending:false}).limit(200);if(r.error){$('app').textContent='❌ '+r.error.message;return}const rows=r.data||[];$('app').innerHTML='<h1 style="margin-top:0">الطلبات</h1>'+(rows.length?rows.map(o=>'<article class="pp-order-card" style="margin:12px 0"><div><b>'+esc(o.ads?.title||'طلب')+'</b> · '+Number(o.total_amount).toLocaleString('ar-PS')+' ₪</div><div class="meta">'+esc(o.customer_name)+' · '+esc(o.customer_phone)+(o.city?' · '+esc(o.city):'')+(o.address?'<br>📍 '+esc(o.address):'')+'<br>الدفع: '+esc(o.payment_status)+' · التوصيل: '+(o.delivery_method==='delivery'?'توصيل':'استلام')+'</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><select data-id="'+o.id+'" class="order-status" style="padding:10px;border:1px solid #d8e1eb;border-radius:10px">'+Object.entries(labels).map(([k,v])=>'<option value="'+k+'" '+(o.order_status===k?'selected':'')+'>'+v+'</option>').join('')+'</select><button class="btn primary save-order" data-id="'+o.id+'">حفظ الحالة</button>'+(o.payment_method==='online'&&o.payment_status!=='paid'?'<button class="btn green mark-paid" data-id="'+o.id+'">تأكيد الدفع</button>':'')+'</div></article>').join(''):'<div style="padding:30px;text-align:center">لا توجد طلبات.</div>');document.querySelectorAll('.save-order').forEach(b=>b.onclick=()=>save(b.dataset.id));document.querySelectorAll('.mark-paid').forEach(b=>b.onclick=()=>paid(b.dataset.id))}
-async function save(id){const s=document.querySelector('.order-status[data-id="'+id+'"]').value;const r=await db.rpc('seller_update_order_status',{p_order_id:id,p_status:s});if(r.error)alert(r.error.message);else load()}async function paid(id){const ref=prompt('رقم العملية من بوابة الدفع (اختياري):')||'';const r=await db.rpc('set_order_paid',{p_order_id:id,p_provider_reference:ref});if(r.error)alert(r.error.message);else load()}load();
-</script><script src="app-ui.js?v=84" defer></script></body></html>
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>إدارة الطلبات | فلسطين بلاتفورم</title>
+<link rel="stylesheet" href="app.css">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f7fb;color:#172033;font-family:Tajawal,Tahoma,Arial,sans-serif}
+.od-top{background:linear-gradient(135deg,#123b68,#2878bc);color:#fff}.od-top .in{max-width:900px;margin:auto;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.od-top b{font-size:18px}.od-top a{color:#fff;background:#ffffff22;padding:9px 14px;border-radius:12px;text-decoration:none;font-weight:800;font-size:14px}
+.od-wrap{max-width:900px;margin:0 auto;padding:16px 16px 100px;display:grid;gap:12px}
+.od-alert{padding:12px 14px;border-radius:14px;background:#fff4de;color:#7a4e00;font-weight:800;font-size:14px}.od-ok{background:#e6f6ef;color:#087957}
+.od-tools{display:grid;gap:10px}.od-tools input{height:44px;padding:0 14px;border:1px solid #d9e3ee;border-radius:12px;font:inherit;background:#fff}
+.od-fl{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}.od-fl::-webkit-scrollbar{display:none}
+.od-fl button{flex:0 0 auto;border:1px solid #d9e3ee;background:#fff;color:#35506f;border-radius:999px;padding:9px 16px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.od-fl button.on{background:#123b68;border-color:#123b68;color:#fff}
+.od-card{background:#fff;border:1px solid #e1e9f1;border-radius:16px;padding:14px;display:grid;gap:8px;box-shadow:0 6px 18px #123b680a}
+.od-card.flag{border-color:#f0c97a}.od-card.disp{border-color:#e9a3aa}
+.od-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.od-head b{font-size:15px}
+.od-m{color:#52667d;font-size:13px;line-height:1.7}
+.od-b{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:800;background:#eef2f7;color:#52667d}
+.od-b.g{background:#e6f6ef;color:#087957}.od-b.y{background:#fff4de;color:#9a6200}.od-b.r{background:#fdecee;color:#b51f2a}
+.od-act{display:flex;gap:8px;flex-wrap:wrap}.od-act select{flex:1 1 140px;padding:10px;border:1px solid #d9e3ee;border-radius:10px;font:inherit;background:#fff}
+.od-btn{border:0;border-radius:10px;padding:10px 14px;font:inherit;font-weight:800;font-size:14px;cursor:pointer;color:#fff;background:#174f86}.od-btn.g{background:#0a956d}.od-btn.r{background:#c62838}.od-btn.s{background:#eaf1f9;color:#123b68}
+.od-disp{background:#fff5f5;border:1px solid #f0c4c8;border-radius:12px;padding:10px;font-size:13px;line-height:1.7}
+.od-empty{text-align:center;color:#718096;padding:28px 0}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script><script src="platform.js"></script><script src="app-ui.js?v=84" defer></script></head>
+<body>
+<div class="od-top"><div class="in"><b>👑 إدارة الطلبات</b><a href="admin.html">لوحة المدير</a></div></div>
+<div class="od-wrap"><div id="alert"></div>
+<div class="od-tools"><input id="q" placeholder="🔎 ابحث بالمنتج أو العميل أو الهاتف..." autocomplete="off"><div class="od-fl" id="fl"></div></div>
+<div id="list">جاري التحميل...</div></div>
+<script>
+const db=window.ppClient,$=id=>document.getElementById(id),esc=window.ppEsc;
+const L={pending:'قيد المراجعة',confirmed:'تم التأكيد',preparing:'جاري التجهيز',out_for_delivery:'في الطريق',delivered:'تم التسليم',cancelled:'ملغي'};
+const PAY={pending:'بانتظار الدفع',awaiting_gateway:'بانتظار البوابة',paid:'مدفوع',failed:'فشل',refunded:'مسترد',cancelled:'ملغي'};
+const DS={open:'اعتراض مفتوح',resolved:'تم حله',rejected:'مرفوض'};
+let orders=[],dis={},filter='all',q='';const H=3600e3,age=d=>Date.now()-new Date(d);
+function flag(o){const d=dis[o.id];if(d&&d.status==='open')return 'dispute';
+ if(o.order_status==='pending'&&age(o.created_at)>48*H)return 'stuck';
+ if(['confirmed','preparing','out_for_delivery'].includes(o.order_status)&&age(o.updated_at||o.created_at)>72*H)return 'stuck';return ''}
+async function load(){
+  const u=await ppRequire('manage_orders');if(!u)return;
+  const [r,d]=await Promise.all([
+    db.from('orders').select('id,buyer_id,seller_id,quantity,total_amount,delivery_method,payment_method,payment_status,order_status,customer_name,customer_phone,city,address,created_at,updated_at,ads(title)').order('created_at',{ascending:false}).limit(200),
+    db.from('order_disputes').select('id,order_id,reason,status,resolution_note,created_at')]);
+  if(r.error){$('list').textContent='❌ '+r.error.message;return}
+  orders=r.data||[];dis={};(d.data||[]).forEach(x=>dis[x.order_id]=x);render();
+}
+function render(){
+  const fl=orders.map(flag),nd=fl.filter(x=>x==='dispute').length,ns=fl.filter(x=>x==='stuck').length;
+  $('alert').innerHTML=(nd+ns)?'<div class="od-alert">⚠️ '+(nd?nd+' اعتراض مفتوح':'')+(nd&&ns?' · ':'')+(ns?ns+' طلب عالق (أكثر من 48 ساعة دون حركة)':'')+'</div>':'<div class="od-alert od-ok">✅ لا توجد طلبات تحتاج تدخلًا الآن.</div>';
+  const F=[['all','الكل'],['attn','⚠️ تحتاج انتباهًا'],['dispute','اعتراضات']].concat(Object.entries(L));
+  $('fl').innerHTML=F.map(x=>'<button data-f="'+x[0]+'" class="'+(filter===x[0]?'on':'')+'">'+x[1]+'</button>').join('');
+  const t=q.toLowerCase();
+  const rows=orders.filter(o=>{const f=flag(o);
+    const ok=filter==='all'||(filter==='attn'&&f)||(filter==='dispute'&&f==='dispute')||o.order_status===filter;
+    return ok&&(!t||((o.ads?.title||'')+' '+(o.customer_name||'')+' '+(o.customer_phone||'')+' '+(o.city||'')).toLowerCase().includes(t))});
+  $('list').innerHTML=rows.length?rows.map(card).join(''):'<div class="od-empty">لا توجد طلبات.</div>';
+}
+function card(o){
+  const f=flag(o),d=dis[o.id],pb=o.payment_status==='paid'?'g':o.payment_status==='failed'?'r':'y';
+  return '<div class="od-card '+(f==='dispute'?'disp':f?'flag':'')+'"><div class="od-head"><div><b>'+esc(o.ads?.title||'طلب')+'</b><div class="od-m">'+Number(o.total_amount).toLocaleString('ar-PS')+' ₪ · '+esc(new Date(o.created_at).toLocaleDateString('ar-PS'))+'</div></div><span class="od-b '+pb+'">💳 '+esc(PAY[o.payment_status]||o.payment_status)+'</span></div>'
+  +'<div class="od-m">'+esc(o.customer_name||'')+' · '+esc(o.customer_phone||'')+(o.city?' · '+esc(o.city):'')+(o.address?'<br>📍 '+esc(o.address):'')+'<br>'+(o.delivery_method==='delivery'?'توصيل':'استلام')+' · '+(o.payment_method==='online'?'دفع إلكتروني':'دفع عند الاستلام')+(f==='stuck'?'<br><span class="od-b y">⏳ عالق منذ مدة</span>':'')+'</div>'
+  +(d?'<div class="od-disp"><b>⚠️ '+esc(DS[d.status]||d.status)+'</b><br>السبب: '+esc(d.reason)+(d.resolution_note?'<br>القرار: '+esc(d.resolution_note):'')+(d.status==='open'?'<div class="od-act" style="margin-top:8px"><button class="od-btn g" data-a="res" data-id="'+d.id+'" data-s="resolved">✅ قبول الاعتراض</button><button class="od-btn r" data-a="res" data-id="'+d.id+'" data-s="rejected">رفض الاعتراض</button></div>':'')+'</div>':'')
+  +'<div class="od-act"><select data-sel="'+o.id+'">'+Object.entries(L).map(([k,v])=>'<option value="'+k+'" '+(o.order_status===k?'selected':'')+'>'+v+'</option>').join('')+'</select><button class="od-btn" data-a="save" data-id="'+o.id+'">حفظ الحالة</button>'+(o.payment_method==='online'&&o.payment_status!=='paid'?'<button class="od-btn g" data-a="paid" data-id="'+o.id+'">تأكيد الدفع</button>':'')+'</div></div>';
+}
+document.addEventListener('click',async e=>{
+  const fb=e.target.closest('[data-f]');if(fb){filter=fb.dataset.f;render();return}
+  const b=e.target.closest('[data-a]');if(!b)return;const id=b.dataset.id;b.disabled=true;let r;
+  if(b.dataset.a==='save'){r=await db.rpc('seller_update_order_status',{p_order_id:id,p_status:document.querySelector('[data-sel="'+id+'"]').value})}
+  else if(b.dataset.a==='paid'){const ref=prompt('رقم العملية من بوابة الدفع (اختياري):');if(ref===null){b.disabled=false;return}r=await db.rpc('set_order_paid',{p_order_id:id,p_provider_reference:ref||''})}
+  else if(b.dataset.a==='res'){const n=prompt('ملاحظة القرار (تظهر للمشتري والبائع):','');if(n===null){b.disabled=false;return}r=await db.rpc('admin_resolve_order_dispute',{p_dispute_id:id,p_status:b.dataset.s,p_note:n})}
+  if(r&&r.error){alert(r.error.message);b.disabled=false;return}
+  await load();
+});
+$('q').oninput=e=>{q=e.target.value.trim();render()};
+load();
+</script></body></html>
