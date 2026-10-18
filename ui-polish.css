@@ -94,3 +94,21 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .footer{margin-top:24px!important;padding:30px 16px!important}
 @media(max-width:700px){main,.wrap{width:min(100% - 22px,1160px)!important}.hero{padding-block:30px!important}.hero h1{font-size:29px!important}.main-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}.main-card{min-height:168px!important;padding:15px!important;border-radius:18px!important}.main-card .ico{width:46px;height:46px;font-size:25px!important;border-radius:14px}.main-card h3{font-size:17px!important}.main-card p{font-size:11px!important}.main-card .go{font-size:10px!important;padding:7px 9px!important}.discover-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}.discover-grid a{padding:13px!important;min-height:100px}.search{gap:5px}.search button{padding-inline:12px!important}.special{padding:16px!important}}
 @media(max-width:370px){.main-grid{grid-template-columns:1fr!important}.main-card{min-height:145px!important}.hero h1{font-size:26px!important}}
+
+
+/* ===== V88 — طبقة عامة لكل الصفحات (أولوية منخفضة :where، فأي تنسيق خاص بالصفحة يبقى كما هو) ===== */
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@view-transition{navigation:auto}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.18s}
+*{-webkit-tap-highlight-color:transparent}
+:where(a,button,input,select,textarea,label,[role=button]){touch-action:manipulation}
+:where(button){font:inherit;cursor:pointer;line-height:1.2;padding:0 18px;border:1px solid #d9e3ee;background:#fff;color:#123b68}
+:where(button:disabled,.btn:disabled,.btn[aria-disabled=true]){opacity:.55;cursor:not-allowed;transform:none}
+:where(input:not([type=checkbox]):not([type=radio]),select,textarea){font:inherit;border-radius:12px;border:1px solid #d9e3ee;background:#fff;padding:10px 14px}
+:where(input,select,textarea):focus{border-color:#1e63a2;box-shadow:0 0 0 3px rgba(30,99,162,.15);outline:none}
+.btn-primary{background:linear-gradient(135deg,#123b68,#1e63a2)!important;color:#fff!important;border-color:transparent!important;box-shadow:0 8px 20px rgba(18,59,104,.22)}
+.btn-soft{background:#eaf1f9!important;color:#123b68!important;border-color:transparent!important}
+.btn-danger{background:#fff5f5!important;color:#b51f2a!important;border-color:#f0c4c8!important}
+.sk{height:64px;border-radius:16px;background:linear-gradient(90deg,#eef2f7 25%,#e3eaf2 37%,#eef2f7 63%);background-size:400% 100%;animation:ppsk 1.2s infinite}
+@keyframes ppsk{0%{background-position:100% 0}100%{background-position:0 0}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation-duration:.01ms!important;transition-duration:.01ms!important}@view-transition{navigation:none}}

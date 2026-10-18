@@ -61,3 +61,18 @@
   // Make image errors graceful instead of broken-image icons.
   document.addEventListener('error',e=>{const el=e.target;if(el&&el.tagName==='IMG'&&!el.dataset.ppHandled){el.dataset.ppHandled='1';el.style.opacity='.45';el.alt=el.alt||'صورة غير متاحة'}},true);
 })();
+
+/* V88: سرعة عامة — تحميل كسول للصور + تحميل مسبق للصفحات عند اللمس */
+;(()=>{try{
+  const lazy=r=>r.querySelectorAll&&r.querySelectorAll('img:not([loading])').forEach(i=>{i.loading='lazy';i.decoding='async'});
+  lazy(document);
+  new MutationObserver(ms=>ms.forEach(m=>m.addedNodes.forEach(n=>{
+    if(n.nodeType!==1)return;
+    if(n.tagName==='IMG'&&!n.hasAttribute('loading')){n.loading='lazy';n.decoding='async'}else lazy(n);
+  }))).observe(document.documentElement,{childList:true,subtree:true});
+  if(window.HTMLScriptElement&&HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules')&&!document.querySelector('script[type=speculationrules]')){
+    const s=document.createElement('script');s.type='speculationrules';
+    s.textContent=JSON.stringify({prefetch:[{where:{href_matches:'/*'},eagerness:'moderate'}]});
+    document.head.appendChild(s);
+  }
+}catch(e){}})();
