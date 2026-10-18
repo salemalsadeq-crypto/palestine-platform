@@ -678,11 +678,9 @@ adsList.appendChild(card);
 async function deleteAd(ad){
 
 const confirmed =
-confirm(
-'هل أنت متأكد من حذف الإعلان:\n\n' +
+await ppConfirm('هل أنت متأكد من حذف الإعلان:\n\n' +
 ad.title +
-'\n\nلا يمكن التراجع عن هذا الإجراء.'
-);
+'\n\nلا يمكن التراجع عن هذا الإجراء.',{danger:true,ok:'حذف الإعلان',cancel:'تراجع'});
 
 
 if(!confirmed){

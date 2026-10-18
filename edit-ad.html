@@ -121,7 +121,7 @@ box.appendChild(img);box.appendChild(btn);currentImagesContainer.appendChild(box
 })
 }
 async function deleteCurrentImage(index){
-if(!confirm("هل تريد حذف هذه الصورة؟"))return;
+if(!await ppConfirm("هل تريد حذف هذه الصورة؟",{danger:true,ok:'حذف',cancel:'تراجع'}))return;
 const url=currentImages[index];
 try{
 
