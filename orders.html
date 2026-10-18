@@ -1,5 +1,5 @@
 <!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>طلباتي | فلسطين بلاتفورم</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script><script src="platform.js"></script><link rel="stylesheet" href="app.css"><link rel="stylesheet" href="theme-v61.css">
-<link rel="stylesheet" href="ui-polish.css?v=84">
+<link rel="stylesheet" href="ui-polish.css?v=90">
 <link rel="stylesheet" href="theme-v88.css?v=88"></head><body><header><div class="head"><div class="logo">🛍️ طلباتي ومشترياتي</div></div></header><main style="max-width:900px;margin:24px auto;padding:0 14px"><div id="app" class="pp-order-card">جاري تحميل الطلبات...</div></main><script>
 const db=window.ppClient,$=id=>document.getElementById(id),esc=window.ppEsc;
 const labels={pending:'قيد المراجعة',confirmed:'تم تأكيد الطلب',preparing:'جاري التجهيز',out_for_delivery:'في الطريق',delivered:'تم التسليم',cancelled:'ملغي'};
@@ -26,4 +26,4 @@ async function load(){const u=await ppUser();if(!u){location.href='login.html?ne
 async function cancelOrder(id){if(!await ppConfirm('هل تريد إلغاء الطلب؟',{danger:true,ok:'إلغاء الطلب',cancel:'تراجع'}))return;const r=await db.rpc('cancel_my_order',{p_order_id:id});if(r.error){alert(r.error.message);return}load()}
 async function openDispute(id){const why=await ppPrompt('ما سبب اعتراضك؟',{multiline:true,placeholder:'اكتب التفاصيل (5 أحرف على الأقل)',ok:'إرسال الاعتراض'});if(why===null)return;if(why.trim().length<5){alert('اكتب سببًا واضحًا من 5 أحرف على الأقل');return}const r=await db.rpc('open_order_dispute',{p_order_id:id,p_reason:why.trim()});if(r.error){alert(r.error.message);return}alert('تم إرسال اعتراضك، ستراجعه الإدارة.');load()}
 load();setInterval(()=>{if(!document.hidden)load()},20000);
-</script><script src="app-ui.js?v=84" defer></script></body></html>
+</script><script src="app-ui.js?v=90" defer></script></body></html>

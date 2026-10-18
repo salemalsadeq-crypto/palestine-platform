@@ -70,7 +70,7 @@ header .head,.header .head{max-width:1180px;width:100%;box-sizing:border-box}
 .pp-menu-btn{position:absolute;top:11px;right:12px;z-index:2147483000;width:46px;height:46px;border:0;border-radius:14px;background:#fff;color:var(--pp-primary);font-size:22px;font-weight:800;box-shadow:0 7px 22px rgba(0,0,0,.16);cursor:pointer}
 .pp-menu-btn:hover{background:var(--pp-gold-bg);transform:translateY(-1px)}
 .pp-menu-btn.is-hidden{opacity:0!important;pointer-events:none!important;transform:scale(.9)!important}
-@media(max-width:700px){body.pp-has-dock{padding-bottom:0!important}.pp-dock{display:none!important}.pp-add-menu{display:none!important}}
+@media(max-width:700px){.pp-add-menu{display:none!important}}
 
 /* القائمة الجانبية (Drawer) */
 .pp-menu-backdrop{position:fixed;inset:0;background:rgba(20,26,20,.45);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:2147482990;opacity:0;pointer-events:none;transition:opacity .25s ease}

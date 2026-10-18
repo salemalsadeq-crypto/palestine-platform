@@ -28,7 +28,7 @@
   // Native select polish: add a small accessible label when a select has no visible label.
   document.querySelectorAll('select').forEach(s=>{s.setAttribute('aria-label',s.getAttribute('aria-label')||s.previousElementSibling?.textContent?.trim()||'اختيار');});
 
-  // v19: the side menu is the single navigation system; no generated bottom dock.
+  // Shared mobile navigation: compact bottom shortcuts plus the full side drawer.
 
   const top=document.createElement('button'); top.className='pp-top'; top.type='button'; top.textContent='↑'; top.setAttribute('aria-label','العودة إلى الأعلى'); document.body.appendChild(top);
   const updateTop=()=>top.classList.toggle('show',scrollY>420); window.addEventListener('scroll',updateTop,{passive:true}); updateTop();
