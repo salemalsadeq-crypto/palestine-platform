@@ -151,3 +151,6 @@ html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 .pp-fab.mini{padding:0 14px}.pp-fab.mini b{max-width:0;opacity:0}
 .pp-empty{text-align:center;padding:38px 18px;background:#fff;border:1px dashed #d9e3ee;border-radius:18px;color:#6b7c93;display:grid;gap:8px;justify-items:center}
 .pp-empty-ic{font-size:44px}.pp-empty b{color:#172033;font-size:17px}.pp-empty p{margin:0 0 6px;font-size:14px;line-height:1.7}
+
+/* ===== V88 — شعار الدبوس بجانب اسم المنصة في كل الترويسات ===== */
+.header .logo::before,header .logo::before{content:"";display:inline-block;width:26px;height:34px;margin-inline-end:8px;vertical-align:middle;background:url(logo-pin.png) center/contain no-repeat}

@@ -774,7 +774,7 @@ async function loadAccount(){
    عرض الحساب
 ========================= */
 
-function updateProfileDisplay(
+async function updateProfileDisplay(
     name,
     avatarUrl
 ){
@@ -1070,9 +1070,7 @@ document.getElementById(
 
 
         const confirmDelete =
-            confirm(
-                "هل تريد حذف الصورة الشخصية؟"
-            );
+            await ppConfirm("هل تريد حذف الصورة الشخصية؟",{danger:true,ok:'حذف',cancel:'تراجع'});
 
 
         if(!confirmDelete){

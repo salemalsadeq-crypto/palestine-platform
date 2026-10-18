@@ -28,7 +28,7 @@
   // Native select polish: add a small accessible label when a select has no visible label.
   document.querySelectorAll('select').forEach(s=>{s.setAttribute('aria-label',s.getAttribute('aria-label')||s.previousElementSibling?.textContent?.trim()||'اختيار');});
 
-  // Shared mobile navigation: compact bottom shortcuts plus the full side drawer.
+  // v19: the side menu is the single navigation system; no generated bottom dock.
 
   const top=document.createElement('button'); top.className='pp-top'; top.type='button'; top.textContent='↑'; top.setAttribute('aria-label','العودة إلى الأعلى'); document.body.appendChild(top);
   const updateTop=()=>top.classList.toggle('show',scrollY>420); window.addEventListener('scroll',updateTop,{passive:true}); updateTop();
@@ -123,3 +123,6 @@
   }
   window.ppEmpty=(icon,title,text,href,label)=>'<div class="pp-empty"><div class="pp-empty-ic">'+icon+'</div><b>'+title+'</b><p>'+(text||'')+'</p>'+(href?'<a class="btn btn-primary" href="'+href+'">'+label+'</a>':'')+'</div>';
 }catch(e){}})();
+
+/* V88: أيقونة الموقع (favicon) */
+;(()=>{try{if(!document.querySelector('link[rel~=icon]')){const l=document.createElement('link');l.rel='icon';l.type='image/png';l.href='favicon-64.png';document.head.appendChild(l)}}catch(e){}})();
