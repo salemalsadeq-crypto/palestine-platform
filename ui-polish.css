@@ -122,3 +122,24 @@ html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 .pp-drawer .pp-menu-link{min-height:46px;height:auto;padding:8px 12px;gap:10px;border-bottom:0;border-radius:14px;font-size:15px;font-weight:700;line-height:1.3}
 .pp-drawer .pp-menu-link+.pp-menu-link{margin-top:2px}
 .pp-drawer .pp-menu-icon{width:30px;font-size:19px}
+
+/* ===== V88 — نوافذ سفلية، حالة الانشغال، لافتة التثبيت ===== */
+.pp-sheet-ov{position:fixed;inset:0;z-index:99999;background:rgba(15,28,45,.45);display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .2s}
+.pp-sheet-ov.on{opacity:1}
+.pp-sheet{width:100%;max-width:520px;background:#fff;border-radius:22px 22px 0 0;padding:20px 18px calc(18px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .22s cubic-bezier(.2,.8,.2,1);box-shadow:0 -10px 40px rgba(0,0,0,.2)}
+.pp-sheet-ov.on .pp-sheet{transform:none}
+.pp-sheet::before{content:"";display:block;width:42px;height:4px;border-radius:4px;background:#d5dde6;margin:-8px auto 14px}
+.pp-sheet-msg{margin:0 0 14px;font-size:16px;font-weight:800;color:#172033;line-height:1.7}
+.pp-sheet-in{display:block;width:100%;border:1px solid #d9e3ee;border-radius:14px;padding:12px 14px;font:inherit;font-size:16px;margin-bottom:14px;background:#f8fafc;resize:none}
+.pp-sheet-act{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pp-sb{min-height:48px;border-radius:14px;border:1px solid #d9e3ee;background:#fff;color:#123b68;font:inherit;font-weight:800;font-size:15px;cursor:pointer;padding:0 14px}
+.pp-sb.primary{background:linear-gradient(135deg,#123b68,#1e63a2);color:#fff;border-color:transparent}
+.pp-sb.danger{background:#c62838;color:#fff;border-color:transparent}
+.is-busy{opacity:.75;pointer-events:none}
+.is-busy::after{content:"";display:inline-block;width:14px;height:14px;margin-inline-start:8px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:ppspin .7s linear infinite;vertical-align:-2px}
+@keyframes ppspin{to{transform:rotate(360deg)}}
+:where(.btn,.abtn,.od-btn,.pp-sb,.tile,.sv-card,.cta){transition:transform .12s,box-shadow .15s,opacity .15s}
+:where(.btn,.abtn,.od-btn,.pp-sb):active{transform:scale(.97)}
+.pp-install{position:fixed;inset-inline:12px;bottom:calc(96px + env(safe-area-inset-bottom));z-index:9000;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:18px;background:#123b68;color:#fff;box-shadow:0 12px 30px rgba(18,59,104,.35);font-weight:800;font-size:14px}
+.pp-install span{flex:1}.pp-install .pp-sb{min-height:40px;background:#fff;color:#123b68}
+.pp-x{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:6px}

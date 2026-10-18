@@ -76,3 +76,39 @@
     document.head.appendChild(s);
   }
 }catch(e){}})();
+
+/* V88: تطبيق PWA + نوافذ سفلية (ppConfirm / ppPrompt) + ppBusy + اهتزاز خفيف */
+;(()=>{try{
+  const h=document.head,E=x=>String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  if(!document.querySelector('link[rel=manifest]')){const l=document.createElement('link');l.rel='manifest';l.href='manifest.json';h.appendChild(l)}
+  if(!document.querySelector('meta[name=theme-color]')){const m=document.createElement('meta');m.name='theme-color';m.content='#123b68';h.appendChild(m)}
+  const ai=document.createElement('link');ai.rel='apple-touch-icon';ai.href='icon-192.png';h.appendChild(ai);
+  if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+  let dip=null;
+  addEventListener('beforeinstallprompt',e=>{e.preventDefault();dip=e;
+    const p=location.pathname;if(!(p.endsWith('/')||p.endsWith('index.html')))return;
+    try{if(Date.now()<Number(localStorage.getItem('pp_install_snooze')||0))return}catch(_){}
+    setTimeout(()=>{if(!dip)return;const b=document.createElement('div');b.className='pp-install';
+      b.innerHTML='<span>📲 ثبّت التطبيق على هاتفك</span><button class="pp-sb primary" id="ppIns">تثبيت</button><button class="pp-x" aria-label="إغلاق">✕</button>';
+      document.body.appendChild(b);
+      b.querySelector('#ppIns').onclick=async()=>{dip.prompt();await dip.userChoice;dip=null;b.remove()};
+      b.querySelector('.pp-x').onclick=()=>{try{localStorage.setItem('pp_install_snooze',String(Date.now()+7*864e5))}catch(_){}b.remove()};
+    },6000)});
+  addEventListener('appinstalled',()=>{const x=document.querySelector('.pp-install');if(x)x.remove()});
+  const sheet=html=>{const o=document.createElement('div');o.className='pp-sheet-ov';o.innerHTML='<div class="pp-sheet" role="dialog" aria-modal="true">'+html+'</div>';document.body.appendChild(o);requestAnimationFrame(()=>o.classList.add('on'));return o};
+  const shut=o=>{o.classList.remove('on');setTimeout(()=>o.remove(),220)};
+  window.ppConfirm=(msg,{ok='تأكيد',cancel='إلغاء',danger=false}={})=>new Promise(res=>{
+    const o=sheet('<p class="pp-sheet-msg">'+E(msg)+'</p><div class="pp-sheet-act"><button class="pp-sb '+(danger?'danger':'primary')+'" data-v="1">'+E(ok)+'</button><button class="pp-sb" data-v="0">'+E(cancel)+'</button></div>');
+    const done=v=>{shut(o);removeEventListener('keydown',kd);res(v)};
+    const kd=e=>{if(e.key==='Escape')done(false)};addEventListener('keydown',kd);
+    o.onclick=e=>{const b=e.target.closest('[data-v]');if(b)done(b.dataset.v==='1');else if(e.target===o)done(false)}});
+  window.ppPrompt=(msg,{placeholder='',value='',ok='إرسال',cancel='إلغاء',multiline=false,type='text'}={})=>new Promise(res=>{
+    const f=multiline?'<textarea class="pp-sheet-in" rows="3" placeholder="'+E(placeholder)+'">'+E(value)+'</textarea>':'<input class="pp-sheet-in" type="'+E(type)+'" inputmode="'+(type==='number'?'decimal':'text')+'" placeholder="'+E(placeholder)+'" value="'+E(value)+'">';
+    const o=sheet('<p class="pp-sheet-msg">'+E(msg)+'</p>'+f+'<div class="pp-sheet-act"><button class="pp-sb primary" data-v="1">'+E(ok)+'</button><button class="pp-sb" data-v="0">'+E(cancel)+'</button></div>');
+    const inp=o.querySelector('.pp-sheet-in');setTimeout(()=>inp.focus(),250);
+    const done=v=>{shut(o);removeEventListener('keydown',kd);res(v)};
+    const kd=e=>{if(e.key==='Escape')done(null);else if(e.key==='Enter'&&!multiline)done(inp.value)};addEventListener('keydown',kd);
+    o.onclick=e=>{const b=e.target.closest('[data-v]');if(b)done(b.dataset.v==='1'?inp.value:null);else if(e.target===o)done(null)}});
+  window.ppBusy=async(btn,fn)=>{if(btn){btn.disabled=true;btn.classList.add('is-busy')}try{return await fn()}finally{if(btn){btn.disabled=false;btn.classList.remove('is-busy')}}};
+  document.addEventListener('click',e=>{const b=e.target.closest('.btn-primary,.abtn,.od-btn,.pp-sb,.cta,.tile,.sv-card');if(b&&!b.disabled&&navigator.vibrate)navigator.vibrate(8)},{passive:true});
+}catch(e){console.warn('ppui',e)}})();

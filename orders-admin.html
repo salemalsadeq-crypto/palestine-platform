@@ -67,8 +67,8 @@ document.addEventListener('click',async e=>{
   const fb=e.target.closest('[data-f]');if(fb){filter=fb.dataset.f;render();return}
   const b=e.target.closest('[data-a]');if(!b)return;const id=b.dataset.id;b.disabled=true;let r;
   if(b.dataset.a==='save'){r=await db.rpc('seller_update_order_status',{p_order_id:id,p_status:document.querySelector('[data-sel="'+id+'"]').value})}
-  else if(b.dataset.a==='paid'){const ref=prompt('رقم العملية من بوابة الدفع (اختياري):');if(ref===null){b.disabled=false;return}r=await db.rpc('set_order_paid',{p_order_id:id,p_provider_reference:ref||''})}
-  else if(b.dataset.a==='res'){const n=prompt('ملاحظة القرار (تظهر للمشتري والبائع):','');if(n===null){b.disabled=false;return}r=await db.rpc('admin_resolve_order_dispute',{p_dispute_id:id,p_status:b.dataset.s,p_note:n})}
+  else if(b.dataset.a==='paid'){const ref=await ppPrompt('رقم العملية من بوابة الدفع (اختياري)',{placeholder:'رقم العملية',ok:'تأكيد الدفع'});if(ref===null){b.disabled=false;return}r=await db.rpc('set_order_paid',{p_order_id:id,p_provider_reference:ref||''})}
+  else if(b.dataset.a==='res'){const n=await ppPrompt('ملاحظة القرار (تظهر للمشتري والبائع)',{multiline:true,ok:'حفظ القرار'});if(n===null){b.disabled=false;return}r=await db.rpc('admin_resolve_order_dispute',{p_dispute_id:id,p_status:b.dataset.s,p_note:n})}
   if(r&&r.error){alert(r.error.message);b.disabled=false;return}
   await load();
 });
