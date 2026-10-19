@@ -124,9 +124,9 @@ html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 .pp-drawer .pp-menu-icon{width:30px;font-size:19px}
 
 /* ===== V88 — نوافذ سفلية، حالة الانشغال، لافتة التثبيت ===== */
-.pp-sheet-ov{position:fixed;inset:0;z-index:99999;background:rgba(15,28,45,.45);display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .2s}
+.pp-sheet-ov{position:fixed;inset:0;z-index:2147483600;background:rgba(15,28,45,.45);display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .2s}
 .pp-sheet-ov.on{opacity:1}
-.pp-sheet{width:100%;max-width:520px;background:#fff;border-radius:22px 22px 0 0;padding:20px 18px calc(18px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .22s cubic-bezier(.2,.8,.2,1);box-shadow:0 -10px 40px rgba(0,0,0,.2)}
+.pp-sheet{width:100%;max-width:520px;max-height:calc(100dvh - 18px - env(safe-area-inset-top));overflow-y:auto;overscroll-behavior:contain;background:#fff;border-radius:22px 22px 0 0;padding:20px 18px calc(18px + env(safe-area-inset-bottom));box-sizing:border-box;transform:translateY(100%);transition:transform .22s cubic-bezier(.2,.8,.2,1);box-shadow:0 -10px 40px rgba(0,0,0,.2)}
 .pp-sheet-ov.on .pp-sheet{transform:none}
 .pp-sheet::before{content:"";display:block;width:42px;height:4px;border-radius:4px;background:#d5dde6;margin:-8px auto 14px}
 .pp-sheet-msg{margin:0 0 14px;font-size:16px;font-weight:800;color:#172033;line-height:1.7}
