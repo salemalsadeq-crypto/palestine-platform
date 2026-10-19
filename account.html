@@ -338,7 +338,78 @@ header{background:linear-gradient(135deg,#12365f,#2563a6);border:0;box-shadow:0 
 @media(max-width:700px){.quick-links{grid-template-columns:1fr 1fr}.account-mini-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:430px){.quick-links{grid-template-columns:1fr}.account-mini-grid{grid-template-columns:1fr}.profile-actions{display:grid;grid-template-columns:1fr;width:100%}.profile-action{width:100%}}
 </style>
-<link rel="stylesheet" href="ui-polish.css?v=90"><link rel="stylesheet" href="ui-polish-v91.css?v=91">
+<link rel="stylesheet" href="ui-polish.css?v=93"><link rel="stylesheet" href="ui-polish-v91.css?v=93">
+
+<style id="v93-account-redesign">
+/* V93: compact, calmer account screen; navigation and account logic stay unchanged */
+body{background:#f4f7f8!important;color:#172638}
+header{padding:10px 16px!important;background:#123b5b!important}
+.header-container{max-width:940px;min-height:36px}
+.logo{font-size:18px!important;letter-spacing:-.2px}
+.back{font-size:13px;padding:7px 10px!important}
+.container{max-width:760px!important;margin:14px auto!important;padding-inline:12px!important}
+.page-title{padding:16px 18px!important;margin-bottom:12px!important;border-radius:16px!important;box-shadow:0 5px 16px #173b6818!important;text-align:right!important}
+.page-title h1{font-size:21px;margin-bottom:4px!important}
+.page-title p{font-size:13px!important}
+.stats{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;margin-bottom:12px!important}
+.stat{padding:10px 6px!important;border-radius:12px!important;box-shadow:none!important;background:#fff!important;border:1px solid #e5ebef!important;cursor:default!important}
+.stat .num{font-size:21px!important;margin-bottom:2px!important;color:#087f5b!important}
+.stat .label{font-size:11px!important;line-height:1.35}
+.card{padding:17px!important;margin-bottom:12px!important;border-radius:15px!important;box-shadow:0 3px 12px #173b6809!important;border:1px solid #e4eaee!important}
+.profile-top{display:grid;grid-template-columns:72px minmax(0,1fr);column-gap:14px;align-items:center;text-align:right!important;padding:16px!important}
+.profile-top .avatar{grid-column:1;grid-row:1 / span 4;width:68px!important;height:68px!important;margin:0!important;border-width:2px!important;font-size:25px!important}
+.profile-top #displayName{grid-column:2;margin:0 0 3px!important;font-size:19px!important;line-height:1.4}
+.profile-top .email{grid-column:2;font-size:12px!important;overflow-wrap:anywhere;margin:0!important}
+.profile-actions{grid-column:2;justify-content:flex-start!important;gap:6px!important;margin-top:7px!important}
+.profile-action{font-size:12px!important;padding:7px 10px!important;border-radius:9px!important;min-height:34px}
+.image-buttons{grid-column:1 / -1;justify-content:flex-start!important;margin-top:12px!important;gap:7px!important}
+.image-btn{padding:7px 10px!important;font-size:12px!important;border-radius:9px!important}
+.profile-top .help{grid-column:1 / -1;margin:7px 0 0!important;font-size:11px!important}
+.card h2{font-size:17px;margin:0 0 10px!important}
+.card h2+br{display:none}
+.form-group{margin-bottom:12px!important}
+label{font-size:13px;margin-bottom:5px!important}
+input{padding:10px 12px!important;border-radius:10px!important;font-size:14px!important}
+.save-btn{width:auto!important;min-width:125px;padding:10px 16px!important;font-size:13px!important}
+.account-section-title{margin-bottom:11px!important}
+.account-section-title h2{font-size:16px!important}
+.section-note{font-size:11px!important;padding:4px 8px!important}
+.account-primary-links{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;margin:0!important}
+.account-primary-links .quick-link{min-height:64px!important;padding:9px 5px!important;display:flex!important;flex-direction:column;gap:4px;border-radius:11px!important;font-size:12px!important;line-height:1.25;border:1px solid #e3e9ed!important;box-shadow:none!important}
+.account-primary-links .quick-link span:first-child{font-size:18px;line-height:1.1}
+.account-primary-links .quick-link.primary{background:#087f5b!important;color:white!important;border-color:#087f5b!important}
+.account-more-links{display:flex;flex-wrap:wrap;gap:7px 14px;margin-top:13px;padding-top:11px;border-top:1px solid #edf0f2}
+.account-more-links a{font-size:12px;color:#536578;text-decoration:none;padding:3px 0;white-space:nowrap}
+.account-more-links a:hover{color:#087f5b}
+.admin-card{border-width:1px!important}
+.admin-btn-account{display:inline-block;padding:9px 13px!important;font-size:13px!important}
+.logout{width:auto!important;min-width:125px;margin-top:0!important;padding:9px 15px!important;font-size:13px!important;background:#fff!important;color:#b32632!important;border:1px solid #f0c9cd!important}
+#accountContent>.card:last-child{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#accountContent>.card:last-child h2{margin:0!important;font-size:15px}
+#accountContent>.card:last-child p{margin:0;color:#68788b;font-size:12px;flex:1}
+@media(max-width:520px){
+ .container{padding-inline:9px!important;margin:10px auto!important}
+ .page-title{padding:13px 14px!important}
+ .page-title h1{font-size:19px}
+ .stats{gap:6px!important}
+ .stat{padding:9px 3px!important}
+ .stat .num{font-size:19px!important}
+ .stat .label{font-size:10px!important}
+ .card{padding:13px!important;margin-bottom:10px!important}
+ .profile-top{grid-template-columns:58px minmax(0,1fr);column-gap:10px;padding:13px!important}
+ .profile-top .avatar{width:56px!important;height:56px!important;font-size:22px!important}
+ .profile-top #displayName{font-size:17px!important}
+ .profile-actions{gap:5px!important;flex-wrap:wrap}
+ .profile-action{font-size:11px!important;padding:6px 8px!important}
+ .account-primary-links{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .account-primary-links .quick-link{min-height:53px!important;flex-direction:row;justify-content:flex-start!important;padding:10px!important;gap:8px!important;font-size:13px!important}
+ .account-primary-links .quick-link span:first-child{font-size:17px}
+ .account-more-links{gap:7px 12px}
+ #accountContent>.card:last-child{align-items:flex-start;flex-direction:column}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+
 </head>
 
 <body>
@@ -548,19 +619,19 @@ class="message">
 
 <div class="card">
 <div class="account-section-title"><h2>📌 الوصول السريع</h2><span class="section-note">أهم أقسام حسابك</span></div>
-<div class="quick-links">
-<a href="my-ads.html" class="quick-link primary">📢 إعلاناتي</a>
-<a href="add-ad.html" class="quick-link primary">➕ إضافة إعلان</a>
-<a href="favorites.html" class="quick-link">❤️ المفضلة</a>
-<a href="messages.html" class="quick-link">💬 الرسائل</a>
-<a href="notifications.html" class="quick-link">🔔 الإشعارات</a>
-<a href="orders.html" class="quick-link">🛍️ طلباتي ومشترياتي</a>
-<a href="services.html" class="quick-link">⚡ الخدمات</a>
+<div class="quick-links account-primary-links">
+<a href="my-ads.html" class="quick-link primary"><span>📢</span><span>إعلاناتي</span></a>
+<a href="add-ad.html" class="quick-link primary"><span>＋</span><span>إضافة إعلان</span></a>
+<a href="messages.html" class="quick-link"><span>💬</span><span>الرسائل</span></a>
+<a href="favorites.html" class="quick-link"><span>♡</span><span>المفضلة</span></a>
 </div>
-<div class="account-mini-grid">
-<a class="account-mini" href="nearby.html">📍 حولي الآن<span>أماكن وخدمات قريبة</span></a>
-<a class="account-mini" href="places.html">🗺️ الأماكن<span>استكشف الأماكن</span></a>
-<a class="account-mini" href="subscriptions.html">⭐ الاشتراكات<span>إدارة اشتراكك</span></a>
+<div class="account-more-links" aria-label="أقسام أخرى">
+<a href="notifications.html">🔔 الإشعارات</a>
+<a href="orders.html">🛍️ طلباتي</a>
+<a href="services.html">⚡ الخدمات</a>
+<a href="nearby.html">📍 حولي الآن</a>
+<a href="places.html">🗺️ الأماكن</a>
+<a href="subscriptions.html">⭐ الاشتراكات</a>
 </div>
 </div>
 
@@ -1405,7 +1476,7 @@ loadAccount().then(()=>{loadAccountStats();startAccountRealtime();});
 
 </script>
 
-<script src="app-ui.js?v=90" defer></script>
+<script src="app-ui.js?v=93" defer></script>
 </body>
 
     </html>
