@@ -1,0 +1,45 @@
+/* V97 — Shared visual system for all Palestine Platform pages */
+:root{
+ --pp-green:#07845f;--pp-green-dark:#05664c;--pp-green-soft:#e8f6ef;
+ --pp-navy:#173b5e;--pp-ink:#172b3d;--pp-muted:#718096;--pp-line:#dce6e9;
+ --pp-surface:#fff;--pp-bg:#f3f8f7;--pp-shadow:0 8px 24px rgba(24,58,75,.08);
+ --pp-radius:20px;--pp-radius-sm:14px;--pp-control-h:48px;
+}
+html{scroll-behavior:smooth}
+body{color:var(--pp-ink)}
+/* Consistent controls without changing their existing behavior or placement */
+button,.btn,input[type=button],input[type=submit],input[type=reset],a.btn{
+ transition:background-color .18s ease,color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease;
+}
+button,.btn,input[type=button],input[type=submit],input[type=reset]{font-weight:700;letter-spacing:0;}
+.btn,button.btn,a.btn{border-radius:14px;min-height:42px}
+.btn-primary,button.btn-primary,input[type=submit].btn-primary{background:var(--pp-green);border-color:var(--pp-green);color:#fff}
+.btn-primary:hover,button.btn-primary:hover,a.btn-primary:hover{background:var(--pp-green-dark);box-shadow:0 6px 16px rgba(7,132,95,.2)}
+button:focus-visible,.btn:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(7,132,95,.25);outline-offset:2px}
+input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]),select,textarea{
+ border-color:var(--pp-line);border-radius:var(--pp-radius-sm);max-width:100%;
+}
+input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]):focus,select:focus,textarea:focus{
+ border-color:var(--pp-green);box-shadow:0 0 0 3px rgba(7,132,95,.09);outline:none
+}
+/* Shared card language — only named card/container patterns are affected */
+.card,.ad-card,.service-card,.provider-card,.product-card,.listing-card,.review-card,.stat-card,.feature-card,.subscription-card,.order-card,.request-card,.message-card,.conversation-card,.profile-card,.settings-card,.admin-card,.panel,.content-card{
+ border-color:var(--pp-line);border-radius:var(--pp-radius);box-shadow:var(--pp-shadow);
+}
+.card,.panel,.content-card{background:var(--pp-surface)}
+/* Headers and section titles */
+.section-title,.page-title,.section-heading{letter-spacing:0}
+/* Labels and small state chips */
+.badge,.chip,.status-badge,.tag{border-radius:999px}
+/* Keep media cropped neatly inside cards without altering intrinsic dimensions */
+.ad-card img,.service-card img,.provider-card img,.product-card img,.listing-card img,.feature-card img{border-radius:inherit}
+/* Bottom navigation: clear active state, touch-sized controls */
+.bottom-nav a,.bottom-nav button,.mobile-nav a,.mobile-nav button,.app-bottom-nav a,.app-bottom-nav button{min-height:44px;transition:background .18s,color .18s}
+.bottom-nav a.active,.mobile-nav a.active,.app-bottom-nav a.active{color:var(--pp-green);font-weight:800}
+/* RTL-friendly, compact mobile defaults */
+@media(max-width:600px){
+ :root{--pp-radius:17px;--pp-radius-sm:12px;--pp-control-h:46px}
+ .card,.ad-card,.service-card,.provider-card,.product-card,.listing-card,.review-card,.stat-card,.feature-card,.subscription-card,.order-card,.request-card,.message-card,.conversation-card,.profile-card,.settings-card,.admin-card,.panel,.content-card{box-shadow:0 5px 17px rgba(24,58,75,.065)}
+ button,.btn,input[type=button],input[type=submit],input[type=reset]{touch-action:manipulation}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}

@@ -18,6 +18,7 @@
 </style><script src="platform.js"></script><link rel="stylesheet" href="app.css">
 <link rel="stylesheet" href="theme-v61.css">
 <link rel="stylesheet" href="ui-polish.css?v=90"><link rel="stylesheet" href="ui-polish-v91.css?v=91">
+<link rel="stylesheet" href="ui-system-v97.css?v=97">
 </head><body><header><div class="head"><div class="logo">فلسطين <span>بلاتفورم</span></div><nav><a href="index.html">الرئيسية</a><a href="ads.html">الإعلانات</a><a href="favorites.html">❤️ المفضلة</a><a href="notifications.html">🔔 الإشعارات</a><a href="account.html">حسابي</a></nav></div></header><main class="wrap"><div id="app">جاري تحميل الرسائل...</div></main><script>
 const db=window.ppClient;const $=id=>document.getElementById(id);let user=null,conversations=[],active=null,channel=null,directUser=null,requestedConversation=null;
 function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}function date(x){try{return new Date(x).toLocaleString('ar-PS',{dateStyle:'short',timeStyle:'short'})}catch(e){return ''}}
