@@ -1,0 +1,104 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>مكتب سفر | فلسطين بلاتفورم</title>
+<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="theme-v61.css">
+<link rel="stylesheet" href="ui-polish.css?v=90"><link rel="stylesheet" href="ui-polish-v91.css?v=91">
+<link rel="stylesheet" href="ui-system-v97.css?v=97">
+<link rel="stylesheet" href="travel.css?v=1">
+</head><body class="tv-page">
+<main class="tv-wrap">
+<a class="tv-back" href="travel.html">← السفر والحجوزات</a>
+<div id="msg" class="tv-msg" style="display:none"></div>
+<div id="office"></div>
+<section id="offersBox" hidden><h2 style="font-size:19px;margin:16px 0 10px">🎟️ العروض والرحلات</h2><div id="offers"></div></section>
+<section id="book" class="tv-card" hidden>
+  <h2 style="margin:0 0 4px;font-size:19px">🎫 طلب حجز</h2>
+  <p class="tv-note" style="margin:0 0 8px">أرسل طلبك وسيتواصل معك المكتب لتأكيد التفاصيل والدفع. لا يتم أي دفع داخل المنصة.</p>
+  <div id="bookBody"></div>
+</section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script>
+<script src="platform.js"></script>
+<script src="travel.js?v=1"></script>
+<script>
+(()=>{
+const db=window.ppClient,$=id=>document.getElementById(id),E=TV.esc;
+const id=TV.qs('id'),preOffer=TV.qs('offer');
+let office=null,offers=[],user=null;
+function showGone(t){$('office').innerHTML='<div class="tv-empty">'+E(t)+'<br><a href="travel.html">العودة إلى قائمة المكاتب</a></div>'}
+function officeHtml(o){
+  const sv=(o.services||[]).map(k=>'<span class="tv-badge">'+TV.kindLabel(k)+'</span>').join('');
+  const site=TV.url(o.website);
+  const map='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent([o.name,o.address,o.city].filter(Boolean).join(' '));
+  return '<article class="tv-card"><div class="tv-row sb"><h1 style="margin:0;font-size:22px">'+E(o.name)+'</h1><span class="tv-badge">📍 '+E(o.city)+'</span></div>'+
+   (o.address?'<div class="tv-meta" style="margin-top:4px">'+E(o.address)+'</div>':'')+
+   (sv?'<div class="tv-badges">'+sv+'</div>':'')+
+   (o.description?'<p style="line-height:1.9;margin:8px 0;white-space:pre-line">'+E(o.description)+'</p>':'')+
+   '<div class="tv-row" style="margin-top:8px"><a class="tv-btn light sm" href="'+TV.tel(o.phone)+'">📞 '+E(o.phone)+'</a>'+
+   '<a class="tv-btn soft sm" target="_blank" rel="noopener" href="'+TV.wa(o.whatsapp||o.phone)+'">💬 واتساب</a>'+
+   '<a class="tv-btn light sm" target="_blank" rel="noopener" href="'+map+'">🗺️ الموقع</a>'+
+   (site?'<a class="tv-btn light sm" target="_blank" rel="noopener" href="'+E(site)+'">🌐 الموقع الإلكتروني</a>':'')+'</div></article>';
+}
+function offerHtml(o){
+  const full=o.seats===0;
+  const dates=[o.depart_date?'🛫 '+TV.date(o.depart_date):'',o.return_date?'🛬 '+TV.date(o.return_date):''].filter(Boolean).join('  ');
+  return '<article class="tv-card"><div class="tv-row sb"><h3>'+E(o.title)+'</h3><span class="tv-badge">'+TV.kindLabel(o.kind)+'</span></div>'+
+   '<div class="tv-meta">'+(o.destination?'📍 '+E(o.destination):'')+(dates?(o.destination?' · ':'')+dates:'')+(o.seats>0?' · 💺 '+o.seats+' مقعد':'')+'</div>'+
+   (o.description?'<p style="line-height:1.8;margin:6px 0;white-space:pre-line">'+E(o.description)+'</p>':'')+
+   '<div class="tv-row sb" style="margin-top:6px"><span class="tv-price">'+E(TV.price(o.price,o.currency))+'</span>'+
+   (full?'<span class="tv-st" style="color:#991b1b;background:#fee2e2">اكتملت المقاعد</span>':'<button class="tv-btn green sm" type="button" data-pick="'+E(o.id)+'">احجز هذا العرض</button>')+'</div></article>';
+}
+function renderBook(){
+  const body=$('bookBody');$('book').hidden=false;
+  if(!user){body.innerHTML='<div class="tv-msg warn">سجّل دخولك أولًا لإرسال طلب الحجز.</div><a class="tv-btn green" href="login.html">🔐 تسجيل الدخول</a>';return}
+  if(user.id===office.user_id){body.innerHTML='<div class="tv-msg">هذا مكتبك. تتم إدارة الحجوزات من <a href="travel-manage.html">صفحة إدارة المكتب</a>.</div>';return}
+  body.innerHTML='<form id="f" novalidate>'+
+   '<label class="tv-label" for="offer">العرض</label><select id="offer" class="tv-sel"><option value="">استفسار عام / بدون عرض محدد</option>'+offers.filter(o=>o.seats!==0).map(o=>'<option value="'+E(o.id)+'">'+E(o.title)+' — '+E(TV.price(o.price,o.currency))+'</option>').join('')+'</select>'+
+   '<label class="tv-label" for="fn">الاسم الكامل</label><input id="fn" class="tv-in" maxlength="120" autocomplete="name" required>'+
+   '<div class="tv-grid2"><div><label class="tv-label" for="ph">رقم الهاتف / واتساب</label><input id="ph" class="tv-in" type="tel" inputmode="tel" maxlength="25" autocomplete="tel" required></div>'+
+   '<div><label class="tv-label" for="tr">عدد المسافرين</label><input id="tr" class="tv-in" type="number" min="1" max="50" value="1" required></div></div>'+
+   '<label class="tv-label" for="dt">تاريخ السفر المطلوب (اختياري)</label><input id="dt" class="tv-in" type="date" min="'+TV.today()+'">'+
+   '<label class="tv-label" for="nt">ملاحظات (اختياري)</label><textarea id="nt" class="tv-ta" maxlength="1000" placeholder="الوجهة، الأعمار، أي طلب خاص..."></textarea>'+
+   '<div id="fmsg" class="tv-msg" style="display:none"></div>'+
+   '<button class="tv-btn green" id="send" type="submit" style="width:100%;margin-top:8px">إرسال طلب الحجز</button></form>';
+  if(preOffer&&offers.some(o=>o.id===preOffer&&o.seats!==0))$('offer').value=preOffer;
+  window.ppProfile(user.id).then(p=>{if(p){if(p.full_name&&!$('fn').value)$('fn').value=p.full_name;if(p.phone&&!$('ph').value)$('ph').value=p.phone}}).catch(()=>{});
+  $('f').addEventListener('submit',submit);
+}
+async function submit(e){
+  e.preventDefault();
+  const fm=$('fmsg'),btn=$('send');
+  const full_name=$('fn').value.trim(),phone=$('ph').value.trim(),travelers=parseInt($('tr').value,10);
+  if(full_name.length<2)return TV.msg(fm,'اكتب اسمك الكامل.','err');
+  if(phone.replace(/\D/g,'').length<7)return TV.msg(fm,'اكتب رقم هاتف صحيح.','err');
+  if(!(travelers>=1&&travelers<=50))return TV.msg(fm,'عدد المسافرين يجب أن يكون بين 1 و50.','err');
+  btn.disabled=true;btn.textContent='جاري الإرسال...';TV.msg(fm,'');
+  const row={user_id:user.id,office_id:office.id,offer_id:$('offer').value||null,full_name,phone,travelers,travel_date:$('dt').value||null,notes:$('nt').value.trim()||null};
+  const {error}=await db.from('travel_bookings').insert(row);
+  if(error){TV.msg(fm,'❌ '+TV.errText(error),'err');btn.disabled=false;btn.textContent='إرسال طلب الحجز';return}
+  fm.className='tv-msg ok';fm.style.display='block';fm.innerHTML='✅ تم إرسال طلبك للمكتب. سيتواصل معك قريبًا. تابع حالته من <a href="travel-my-bookings.html">حجوزاتي</a>.';
+  btn.textContent='تم الإرسال ✓';$('nt').value='';
+  setTimeout(()=>{btn.disabled=false;btn.textContent='إرسال طلب حجز آخر'},4000);
+}
+async function init(){
+  if(!TV.isUuid(id))return showGone('رابط المكتب غير صحيح.');
+  TV.msg($('msg'),'جاري التحميل...');
+  user=await window.ppUser().catch(()=>null);
+  const r=await db.from('travel_offices').select('*').eq('id',id).maybeSingle();
+  TV.msg($('msg'),'');
+  if(r.error)return TV.msg($('msg'),TV.errText(r.error),'err');
+  if(!r.data)return showGone('هذا المكتب غير متاح أو لم يعد منشورًا.');
+  office=r.data;document.title=office.name+' | فلسطين بلاتفورم';
+  $('office').innerHTML=officeHtml(office);
+  if(office.status!=='active'){$('office').insertAdjacentHTML('afterbegin','<div class="tv-msg warn">هذا المكتب غير منشور حاليًا ('+E(TV.OST[office.status]?TV.OST[office.status][1]:office.status)+') — ما تراه هنا معاينة خاصة بك فقط (لصاحب المكتب أو الإدارة).</div>');return}
+  const o=await db.from('travel_offers').select('*').eq('office_id',id).eq('status','active').order('depart_date',{ascending:true,nullsFirst:false}).limit(100);
+  offers=(o.data||[]).filter(x=>!x.depart_date||x.depart_date>=TV.today());
+  if(offers.length){$('offersBox').hidden=false;$('offers').innerHTML=offers.map(offerHtml).join('')}
+  renderBook();
+  if(preOffer&&location.hash==='#book')setTimeout(()=>$('book').scrollIntoView({behavior:'smooth',block:'start'}),250);
+}
+$('offers').addEventListener('click',e=>{const b=e.target.closest('[data-pick]');if(!b)return;const s=$('offer');if(s)s.value=b.dataset.pick;$('book').scrollIntoView({behavior:'smooth',block:'start'})});
+init();
+})();
+</script>
+<script src="app-ui.js?v=90" defer></script>
+</body></html>

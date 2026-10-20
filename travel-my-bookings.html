@@ -1,0 +1,52 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>حجوزاتي | فلسطين بلاتفورم</title>
+<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="theme-v61.css">
+<link rel="stylesheet" href="ui-polish.css?v=90"><link rel="stylesheet" href="ui-polish-v91.css?v=91">
+<link rel="stylesheet" href="ui-system-v97.css?v=97">
+<link rel="stylesheet" href="travel.css?v=1">
+</head><body class="tv-page">
+<main class="tv-wrap">
+<a class="tv-back" href="travel.html">← السفر والحجوزات</a>
+<h1 style="font-size:22px;margin:4px 0 12px">🎫 حجوزاتي</h1>
+<div id="msg" class="tv-msg" style="display:none"></div>
+<div id="list"></div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script>
+<script src="platform.js"></script>
+<script src="travel.js?v=1"></script>
+<script>
+(()=>{
+const db=window.ppClient,$=id=>document.getElementById(id),E=TV.esc;
+let rows=[];
+const one=x=>Array.isArray(x)?x[0]:x;
+function card(b){
+  const o=one(b.travel_offices)||{},of=one(b.travel_offers)||{};
+  return '<article class="tv-card" data-id="'+E(b.id)+'"><div class="tv-row sb"><h3>'+E(o.name||'مكتب سفر')+'</h3>'+TV.badge(TV.BST,b.status)+'</div>'+
+   '<div class="tv-meta">'+(of.title?'🎟️ '+E(of.title):'استفسار عام')+' · 👥 '+b.travelers+' مسافر'+(b.travel_date?' · 🗓️ '+TV.date(b.travel_date):'')+'</div>'+
+   '<div class="tv-meta">🕒 أُرسل في '+new Date(b.created_at).toLocaleString('ar-EG-u-nu-latn',{dateStyle:'medium',timeStyle:'short'})+'</div>'+
+   (b.office_note?'<div class="tv-msg">💬 ملاحظة المكتب: '+E(b.office_note)+'</div>':'')+
+   '<div class="tv-row" style="margin-top:8px">'+(o.phone?'<a class="tv-btn light sm" href="'+TV.tel(o.phone)+'">📞 اتصال</a><a class="tv-btn soft sm" target="_blank" rel="noopener" href="'+TV.wa(o.whatsapp||o.phone)+'">💬 واتساب</a>':'')+
+   (b.office_id?'<a class="tv-btn light sm" href="travel-office.html?id='+encodeURIComponent(b.office_id)+'">صفحة المكتب</a>':'')+
+   ((b.status==='pending'||b.status==='confirmed')?'<button class="tv-btn red sm" data-cancel type="button">إلغاء الحجز</button>':'')+'</div></article>';
+}
+function render(){$('list').innerHTML=rows.length?rows.map(card).join(''):'<div class="tv-empty">لا توجد حجوزات بعد.<br><a class="tv-btn green" href="travel.html">✈️ تصفح مكاتب السفر</a></div>'}
+$('list').addEventListener('click',async e=>{
+  const btn=e.target.closest('[data-cancel]');if(!btn)return;
+  const id=btn.closest('[data-id]').dataset.id;
+  if(!confirm('هل تريد إلغاء طلب الحجز؟'))return;
+  btn.disabled=true;
+  const {error}=await db.from('travel_bookings').update({status:'cancelled'}).eq('id',id);
+  if(error){TV.msg($('msg'),'❌ '+TV.errText(error),'err');btn.disabled=false;return}
+  const b=rows.find(x=>x.id===id);if(b)b.status='cancelled';TV.msg($('msg'),'');render();
+});
+(async()=>{
+  const u=await TV.need();if(!u)return;
+  TV.msg($('msg'),'جاري التحميل...');
+  const {data,error}=await db.from('travel_bookings').select('*,travel_offices(name,phone,whatsapp,city),travel_offers(title)').eq('user_id',u.id).order('created_at',{ascending:false}).limit(200);
+  if(error)return TV.msg($('msg'),TV.errText(error),'err');
+  TV.msg($('msg'),'');rows=data||[];render();
+})();
+})();
+</script>
+<script src="app-ui.js?v=90" defer></script>
+</body></html>

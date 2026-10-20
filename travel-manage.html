@@ -1,0 +1,162 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>إدارة مكتب السفر | فلسطين بلاتفورم</title>
+<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="theme-v61.css">
+<link rel="stylesheet" href="ui-polish.css?v=90"><link rel="stylesheet" href="ui-polish-v91.css?v=91">
+<link rel="stylesheet" href="ui-system-v97.css?v=97">
+<link rel="stylesheet" href="travel.css?v=1">
+</head><body class="tv-page">
+<main class="tv-wrap">
+<a class="tv-back" href="travel.html">← السفر والحجوزات</a>
+<div id="head"></div>
+<div id="msg" class="tv-msg" style="display:none"></div>
+<div id="app" hidden>
+  <div class="tv-tabs">
+    <button class="tv-tab on" data-t="bookings" type="button">🎫 الحجوزات الواردة <span id="pendCount"></span></button>
+    <button class="tv-tab" data-t="offers" type="button">🎟️ عروضي</button>
+  </div>
+  <section id="tabBookings">
+    <div class="tv-chips" id="bfilter"></div>
+    <div id="bookings"></div>
+  </section>
+  <section id="tabOffers" hidden>
+    <div class="tv-card">
+      <h3 id="offerTitle" style="margin-bottom:4px">➕ إضافة عرض جديد</h3>
+      <form id="of" novalidate>
+        <label class="tv-label" for="o_title">عنوان العرض</label><input id="o_title" class="tv-in" maxlength="160" placeholder="مثال: رحلة عمرة 10 أيام" required>
+        <div class="tv-grid2">
+          <div><label class="tv-label" for="o_kind">النوع</label><select id="o_kind" class="tv-sel"></select></div>
+          <div><label class="tv-label" for="o_dest">الوجهة</label><input id="o_dest" class="tv-in" maxlength="120" placeholder="مثال: مكة المكرمة"></div>
+        </div>
+        <div class="tv-grid2">
+          <div><label class="tv-label" for="o_dep">تاريخ الذهاب</label><input id="o_dep" class="tv-in" type="date"></div>
+          <div><label class="tv-label" for="o_ret">تاريخ العودة</label><input id="o_ret" class="tv-in" type="date"></div>
+        </div>
+        <div class="tv-grid2">
+          <div><label class="tv-label" for="o_price">السعر (اتركه فارغًا إن كان عند الاستفسار)</label><input id="o_price" class="tv-in" type="number" min="0" step="any" inputmode="decimal"></div>
+          <div><label class="tv-label" for="o_cur">العملة</label><select id="o_cur" class="tv-sel"><option value="USD">دولار $</option><option value="ILS">شيكل ₪</option><option value="JOD">دينار د.أ</option><option value="EUR">يورو €</option></select></div>
+        </div>
+        <label class="tv-label" for="o_seats">عدد المقاعد المتاحة (اختياري — 0 = اكتمل العدد)</label><input id="o_seats" class="tv-in" type="number" min="0" step="1" inputmode="numeric">
+        <label class="tv-label" for="o_desc">التفاصيل</label><textarea id="o_desc" class="tv-ta" maxlength="2000" placeholder="ما يشمله السعر، الفندق، شروط الحجز..."></textarea>
+        <div id="omsg" class="tv-msg" style="display:none"></div>
+        <div class="tv-row"><button class="tv-btn green" id="osave" type="submit">نشر العرض</button><button class="tv-btn light" id="ocancel" type="button" hidden>إلغاء التعديل</button></div>
+      </form>
+    </div>
+    <div id="offers"></div>
+  </section>
+</div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script>
+<script src="platform.js"></script>
+<script src="travel.js?v=1"></script>
+<script>
+(()=>{
+const db=window.ppClient,$=id=>document.getElementById(id),E=TV.esc;
+let user=null,office=null,bookings=[],offers=[],bf='all',editing=null;
+$('o_kind').innerHTML=Object.entries(TV.KINDS).map(([k,v])=>'<option value="'+k+'">'+v[0]+' '+v[1]+'</option>').join('');
+$('bfilter').innerHTML=[['all','الكل'],['pending','⏳ جديدة'],['confirmed','✅ مؤكدة'],['completed','🏁 مكتملة'],['cancelled','❌ ملغاة']].map(([k,l],i)=>'<button class="tv-chip'+(i?'':' on')+'" data-f="'+k+'" type="button">'+l+'</button>').join('');
+const one=x=>Array.isArray(x)?x[0]:x;
+function bookingCard(b){
+  const of=one(b.travel_offers)||{};
+  const canAct=b.status==='pending'||b.status==='confirmed';
+  return '<article class="tv-card" data-id="'+E(b.id)+'"><div class="tv-row sb"><h3>'+E(b.full_name)+'</h3>'+TV.badge(TV.BST,b.status)+'</div>'+
+   '<div class="tv-meta">👥 '+b.travelers+' مسافر'+(b.travel_date?' · 🗓️ '+TV.date(b.travel_date):'')+(of.title?' · 🎟️ '+E(of.title):' · استفسار عام')+'</div>'+
+   '<div class="tv-meta">🕒 '+new Date(b.created_at).toLocaleString('ar-EG-u-nu-latn',{dateStyle:'medium',timeStyle:'short'})+'</div>'+
+   (b.notes?'<p style="margin:6px 0;line-height:1.8;white-space:pre-line">'+E(b.notes)+'</p>':'')+
+   '<div class="tv-row" style="margin:8px 0"><a class="tv-btn light sm" href="'+TV.tel(b.phone)+'">📞 '+E(b.phone)+'</a><a class="tv-btn soft sm" target="_blank" rel="noopener" href="'+TV.wa(b.phone)+'">💬 واتساب</a></div>'+
+   (canAct?'<input class="tv-in" data-note placeholder="ملاحظة للعميل (اختياري)" maxlength="500" value="'+E(b.office_note||'')+'" style="margin-bottom:8px">'+
+   '<div class="tv-row">'+(b.status==='pending'?'<button class="tv-btn green sm" data-act="confirmed" type="button">✅ تأكيد</button>':'<button class="tv-btn soft sm" data-act="completed" type="button">🏁 تم التنفيذ</button>')+'<button class="tv-btn red sm" data-act="cancelled" type="button">❌ إلغاء</button></div>':(b.office_note?'<div class="tv-meta">ملاحظتك: '+E(b.office_note)+'</div>':''))+
+   '</article>';
+}
+function renderBookings(){
+  const rows=bookings.filter(b=>bf==='all'||b.status===bf);
+  $('bookings').innerHTML=rows.length?rows.map(bookingCard).join(''):'<div class="tv-empty">لا توجد حجوزات في هذا القسم.</div>';
+  const p=bookings.filter(b=>b.status==='pending').length;$('pendCount').textContent=p?'('+p+')':'';
+}
+function offerCard(o){
+  const dates=[o.depart_date?'🛫 '+TV.date(o.depart_date):'',o.return_date?'🛬 '+TV.date(o.return_date):''].filter(Boolean).join('  ');
+  return '<article class="tv-card" data-id="'+E(o.id)+'"><div class="tv-row sb"><h3>'+E(o.title)+'</h3><span class="tv-badge">'+TV.kindLabel(o.kind)+'</span></div>'+
+   '<div class="tv-meta">'+(o.destination?'📍 '+E(o.destination)+' · ':'')+dates+(o.seats!==null&&o.seats!==undefined?' · 💺 '+o.seats:'')+'</div>'+
+   '<div class="tv-row sb" style="margin-top:6px"><span class="tv-price">'+E(TV.price(o.price,o.currency))+'</span>'+(o.status==='active'?'<span class="tv-st" style="color:#166534;background:#dcfce7">منشور</span>':'<span class="tv-st" style="color:#475569;background:#e2e8f0">مخفي</span>')+'</div>'+
+   '<div class="tv-row" style="margin-top:8px"><button class="tv-btn light sm" data-oact="edit" type="button">✏️ تعديل</button><button class="tv-btn soft sm" data-oact="toggle" type="button">'+(o.status==='active'?'🙈 إخفاء':'👁️ إظهار')+'</button><button class="tv-btn red sm" data-oact="del" type="button">🗑️ حذف</button></div></article>';
+}
+function renderOffers(){$('offers').innerHTML=offers.length?offers.map(offerCard).join(''):'<div class="tv-empty">لم تنشر أي عرض بعد. أضف عرضك الأول من النموذج أعلاه.</div>'}
+function resetOfferForm(){editing=null;$('of').reset();$('offerTitle').textContent='➕ إضافة عرض جديد';$('osave').textContent='نشر العرض';$('ocancel').hidden=true;TV.msg($('omsg'),'')}
+async function loadAll(){
+  const b=await db.from('travel_bookings').select('*,travel_offers(title)').eq('office_id',office.id).order('created_at',{ascending:false}).limit(300);
+  if(b.error)TV.msg($('msg'),TV.errText(b.error),'err');else bookings=b.data||[];
+  const o=await db.from('travel_offers').select('*').eq('office_id',office.id).order('created_at',{ascending:false}).limit(200);
+  if(!o.error)offers=o.data||[];
+  renderBookings();renderOffers();
+}
+async function init(){
+  user=await TV.need();if(!user)return;
+  const r=await db.from('travel_offices').select('*').eq('user_id',user.id).maybeSingle();
+  if(r.error)return TV.msg($('msg'),TV.errText(r.error),'err');
+  if(!r.data){$('head').innerHTML='<div class="tv-empty">لم تسجّل مكتبًا بعد.<br><a class="tv-btn green" href="travel-register.html">🏢 سجّل مكتبك</a></div>';return}
+  office=r.data;
+  $('head').innerHTML='<div class="tv-card"><div class="tv-row sb"><h1 style="margin:0;font-size:21px">⚙️ '+E(office.name)+'</h1>'+TV.badge(TV.OST,office.status)+'</div><div class="tv-row" style="margin-top:8px"><a class="tv-btn light sm" href="travel-register.html">✏️ بيانات المكتب</a>'+(office.status==='active'?'<a class="tv-btn soft sm" href="travel-office.html?id='+encodeURIComponent(office.id)+'">معاينة</a>':'')+'</div></div>';
+  if(office.status!=='active'&&office.status!=='hidden'){
+    TV.msg($('msg'),office.status==='pending'?'⏳ مكتبك قيد المراجعة. ستظهر لك الحجوزات والعروض بعد الموافقة عليه.':'❌ مكتبك غير مقبول حاليًا. عدّل بياناتك وأعد الإرسال من "بيانات المكتب".','warn');return}
+  $('app').hidden=false;
+  if(office.status==='hidden')TV.msg($('msg'),'🙈 مكتبك مخفي حاليًا، لا يراه الزوار ولا يستقبل حجوزات جديدة.','warn');
+  await loadAll();
+}
+document.querySelector('.tv-tabs').addEventListener('click',e=>{const b=e.target.closest('.tv-tab');if(!b)return;document.querySelectorAll('.tv-tab').forEach(x=>x.classList.toggle('on',x===b));$('tabBookings').hidden=b.dataset.t!=='bookings';$('tabOffers').hidden=b.dataset.t!=='offers'});
+$('bfilter').addEventListener('click',e=>{const b=e.target.closest('.tv-chip');if(!b)return;bf=b.dataset.f;document.querySelectorAll('#bfilter .tv-chip').forEach(x=>x.classList.toggle('on',x===b));renderBookings()});
+$('bookings').addEventListener('click',async e=>{
+  const btn=e.target.closest('[data-act]');if(!btn)return;
+  const card=btn.closest('[data-id]'),id=card.dataset.id,status=btn.dataset.act;
+  if(status==='cancelled'&&!confirm('هل تريد إلغاء هذا الحجز؟ سيصل العميل إشعار بذلك.'))return;
+  const note=(card.querySelector('[data-note]')?.value||'').trim()||null;
+  btn.disabled=true;
+  const {error}=await db.from('travel_bookings').update({status,office_note:note}).eq('id',id);
+  if(error){TV.msg($('msg'),'❌ '+TV.errText(error),'err');btn.disabled=false;return}
+  TV.msg($('msg'),'');const b=bookings.find(x=>x.id===id);if(b){b.status=status;b.office_note=note}renderBookings();
+});
+$('of').addEventListener('submit',async e=>{
+  e.preventDefault();const m=$('omsg');
+  const title=$('o_title').value.trim();if(title.length<2)return TV.msg(m,'اكتب عنوان العرض.','err');
+  const dep=$('o_dep').value||null,ret=$('o_ret').value||null;
+  if(dep&&ret&&ret<dep)return TV.msg(m,'تاريخ العودة قبل تاريخ الذهاب.','err');
+  const pr=$('o_price').value.trim(),st=$('o_seats').value.trim();
+  const price=pr===''?null:Number(pr),seats=st===''?null:parseInt(st,10);
+  if(price!==null&&!(price>=0))return TV.msg(m,'السعر غير صحيح.','err');
+  if(seats!==null&&!(seats>=0))return TV.msg(m,'عدد المقاعد غير صحيح.','err');
+  const row={title,kind:$('o_kind').value,destination:$('o_dest').value.trim()||null,depart_date:dep,return_date:ret,price,currency:$('o_cur').value,seats,description:$('o_desc').value.trim()||null};
+  const btn=$('osave');btn.disabled=true;
+  let error;
+  if(editing)({error}=await db.from('travel_offers').update(row).eq('id',editing));
+  else ({error}=await db.from('travel_offers').insert({...row,office_id:office.id,status:'active'}));
+  btn.disabled=false;
+  if(error)return TV.msg(m,'❌ '+TV.errText(error),'err');
+  const was=!!editing;resetOfferForm();TV.msg($('omsg'),was?'✅ تم حفظ التعديل.':'✅ تم نشر العرض.','ok');
+  const o=await db.from('travel_offers').select('*').eq('office_id',office.id).order('created_at',{ascending:false}).limit(200);
+  if(!o.error){offers=o.data||[];renderOffers()}
+});
+$('ocancel').onclick=resetOfferForm;
+$('offers').addEventListener('click',async e=>{
+  const btn=e.target.closest('[data-oact]');if(!btn)return;
+  const id=btn.closest('[data-id]').dataset.id,o=offers.find(x=>x.id===id);if(!o)return;
+  if(btn.dataset.oact==='edit'){
+    editing=id;$('o_title').value=o.title||'';$('o_kind').value=o.kind;$('o_dest').value=o.destination||'';$('o_dep').value=o.depart_date||'';$('o_ret').value=o.return_date||'';
+    $('o_price').value=o.price??'';$('o_cur').value=o.currency||'USD';$('o_seats').value=o.seats??'';$('o_desc').value=o.description||'';
+    $('offerTitle').textContent='✏️ تعديل العرض';$('osave').textContent='حفظ التعديل';$('ocancel').hidden=false;$('of').scrollIntoView({behavior:'smooth',block:'start'});return;
+  }
+  btn.disabled=true;
+  if(btn.dataset.oact==='toggle'){
+    const to=o.status==='active'?'hidden':'active';
+    const {error}=await db.from('travel_offers').update({status:to}).eq('id',id);
+    if(error){TV.msg($('msg'),'❌ '+TV.errText(error),'err');btn.disabled=false;return}
+    o.status=to;renderOffers();
+  }else if(btn.dataset.oact==='del'){
+    if(!confirm('حذف هذا العرض نهائيًا؟ ستبقى الحجوزات السابقة محفوظة.')){btn.disabled=false;return}
+    const {error}=await db.from('travel_offers').delete().eq('id',id);
+    if(error){TV.msg($('msg'),'❌ '+TV.errText(error),'err');btn.disabled=false;return}
+    offers=offers.filter(x=>x.id!==id);renderOffers();
+  }
+});
+init();
+})();
+</script>
+<script src="app-ui.js?v=90" defer></script>
+</body></html>
