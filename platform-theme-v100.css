@@ -1,0 +1,46 @@
+/* Palestine Platform V100 — visual-only responsive layer; loaded last on every HTML page */
+:root{--pp100-navy:#0b2f55;--pp100-blue:#1769aa;--pp100-green:#07845f;--pp100-red:#d92d43;--pp100-ink:#172b42;--pp100-muted:#708198;--pp100-line:#e1e9f2;--pp100-bg:#f4f8fc;--pp100-card:#fff;--pp100-shadow:0 8px 26px rgba(13,48,83,.075);--pp100-radius:18px;--pp100-radius-sm:12px}
+html{scroll-behavior:smooth}body{color:var(--pp100-ink);background:var(--pp100-bg)}
+button,.btn,input[type=button],input[type=submit],input[type=reset],a.btn{border-radius:12px;transition:transform .16s ease,box-shadow .16s ease,background-color .16s ease; font-weight:700}
+button:hover,.btn:hover,input[type=submit]:hover,a.btn:hover{box-shadow:0 7px 18px rgba(11,47,85,.14);transform:translateY(-1px)}
+input:not([type=checkbox]):not([type=radio]):not([type=submit]):not([type=button]),select,textarea{border:1px solid #d7e2ef;border-radius:12px;background:#fff;color:var(--pp100-ink);min-height:44px;max-width:100%;transition:border-color .18s,box-shadow .18s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#3988c9!important;box-shadow:0 0 0 3px rgba(57,136,201,.14)!important}
+.card,.panel,.box,.tile,.ad-card,.service-card,.place-card,.item-card,.stat-card,.request-card,.provider-card,.trip-card,.message-card,.modal-content,.dialog,.sheet{border-radius:var(--pp100-radius);box-shadow:var(--pp100-shadow)}
+hr{border:0;border-top:1px solid var(--pp100-line)}
+table{border-collapse:separate;border-spacing:0;overflow:hidden;border-radius:14px;background:white}th{background:#eef4fb;color:#183b60}td,th{padding:11px 13px;border-bottom:1px solid #e8eef5}
+/* Home hub */
+body.hub-page{background:radial-gradient(ellipse at 50% 0,#e4f2ff 0,transparent 34rem),linear-gradient(180deg,#f8fbff,#f1f6fb 58%,#fff);color:var(--pp100-ink)}
+.hub-page .header{background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid #e3ebf4;box-shadow:0 4px 20px rgba(11,47,85,.05)}
+.hub-page .logo{font-weight:900;letter-spacing:-.25px;color:var(--pp100-navy)}
+.hub-page .hero-q{border-radius:22px;overflow:hidden;box-shadow:0 14px 32px rgba(11,47,85,.13)}
+.hub-page .hub-search{gap:8px}.hub-page .hub-search input{border-radius:13px;min-height:48px}
+.hub-page .chips a{border:1px solid rgba(23,105,170,.13);border-radius:999px;background:rgba(255,255,255,.88);padding:9px 14px;box-shadow:0 3px 10px rgba(11,47,85,.035)}
+.hub-page .cta{border-radius:18px;box-shadow:0 10px 24px rgba(7,132,95,.16);border:1px solid rgba(7,132,95,.12)}
+.hub-page .tiles{gap:12px}.hub-page .tile{border:1px solid #e2eaf3;background:linear-gradient(160deg,#fff,#f8fbff);box-shadow:0 5px 16px rgba(11,47,85,.045);transition:transform .18s,box-shadow .18s}
+.hub-page .tile:hover{transform:translateY(-3px);box-shadow:0 12px 24px rgba(11,47,85,.10)}
+.hub-page h2{color:var(--pp100-navy);letter-spacing:-.2px}
+/* Common navigation, list and dashboard surfaces */
+nav a,.sidebar a,.side-nav a,.nav-link{border-radius:11px;transition:background .16s,color .16s}
+nav a:hover,.sidebar a:hover,.side-nav a:hover,.nav-link:hover{background:#eaf3fc}
+header,.topbar{border-color:#e3ebf4}
+.badge,.status,.tag{border-radius:999px}
+/* Taxi and trip forms: clearer inputs and action areas without touching behavior */
+#map,.map,#taxiMap,.leaflet-container{border-radius:16px;overflow:hidden}
+form .form-group,form .field,.form-row{margin-bottom:12px}
+label{font-weight:700;color:#304c69}
+/* Responsive refinements */
+img,video,iframe{max-width:100%}
+@media(max-width:760px){
+ body{font-size:15px} .container,.wrap,main{max-width:100%;}
+ button,.btn,input[type=submit],a.btn{min-height:44px}
+ .hub-page .hub{padding-left:13px;padding-right:13px}
+ .hub-page .hero-q{border-radius:17px}
+ .hub-page .tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .hub-page .tile{min-width:0;padding:12px 8px;border-radius:15px}
+ .hub-page .cta{padding:13px;border-radius:15px}
+ .hub-page .chips{gap:7px;overflow-x:auto;flex-wrap:nowrap;padding-bottom:5px}
+ .hub-page .chips a{white-space:nowrap;flex-shrink:0}
+ table{display:block;max-width:100%;overflow-x:auto}
+ .modal,.modal-content,.dialog,.sheet{max-width:calc(100vw - 20px)}
+}
+@media(max-width:390px){.hub-page .tiles{gap:7px}.hub-page .tile{padding:10px 6px}.hub-page h1{font-size:clamp(1.4rem,7vw,2rem)}}
