@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="ui-polish.css?v=90"><link rel="stylesheet" href="ui-polish-v91.css?v=91">
 <link rel="stylesheet" href="ui-system-v97.css?v=97">
 <link rel="stylesheet" href="platform-theme-v100.css?v=100">
+<link rel="stylesheet" href="platform-theme-v101.css?v=101">
 </head><body><div class="wrap top"><a href="account.html">← حسابي</a></div><section class="hero"><div class="wrap"><h1>💳 إدارة الاشتراكات</h1><p>تابع اشتراكك، التجديد، وطلبات الإلغاء من مكان واحد.</p></div></section><main class="wrap"><div id="notice"></div><section class="card" id="current"><h2>الاشتراك الحالي</h2><div id="currentBody">جاري التحميل...</div></section><h2>الباقات المتاحة</h2><section class="grid" id="plans"></section><section class="card"><h2>سجل الطلبات</h2><div id="history" class="history">جاري التحميل...</div></section></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script><script src="platform.js"></script><script>
 const db=ppClient,$=id=>document.getElementById(id),esc=ppEsc;let active=null,pendingCancel=false;function note(t,ok=false){$('notice').innerHTML='<div class="notice '+(ok?'ok':'err')+'">'+esc(t)+'</div>';setTimeout(()=>{$('notice').innerHTML=''},4500)}
