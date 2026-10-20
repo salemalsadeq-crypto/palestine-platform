@@ -1,5 +1,5 @@
 // فلسطين بلاتفورم — Service Worker v95: cache busting + current shared assets
-const V='pp-v95';
+const V='pp-v96';
 const CORE=['index.html','login.html','app.css','theme-v60.css','theme-v61.css','theme-v87.css','theme-v88.css','ui-polish.css','ui-polish-v91.css','home-v94.css','jerusalem-home-hero.jpg','platform.js','app-ui.js','manifest.json','icon-192.png'];
 self.addEventListener('install',e=>{
   self.skipWaiting();
