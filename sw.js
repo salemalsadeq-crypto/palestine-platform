@@ -1,6 +1,6 @@
 // فلسطين بلاتفورم — Service Worker v97: cache busting + current shared assets
-const V='pp-v97';
-const CORE=['index.html','login.html','ui-system-v97.css','app.css','theme-v60.css','theme-v61.css','theme-v87.css','theme-v88.css','ui-polish.css','ui-polish-v91.css','home-v94.css','jerusalem-home-hero.jpg','platform.js','app-ui.js','manifest.json','icon-192.png'];
+const V='pp-v102';
+const CORE=['index.html','login.html','ui-system-v102.css','platform-theme-v101.css','app.css','theme-v60.css','theme-v61.css','theme-v87.css','theme-v88.css','ui-polish.css','ui-polish-v91.css','home-v94.css','jerusalem-home-hero.jpg','platform.js','app-ui.js','manifest.json','icon-192.png'];
 self.addEventListener('install',e=>{
   self.skipWaiting();
   e.waitUntil(caches.open(V).then(c=>Promise.allSettled(CORE.map(u=>c.add(u)))));
