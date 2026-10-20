@@ -3,7 +3,8 @@
 
 <link rel="stylesheet" href="platform-theme-v101.css?v=101">
 <link rel="stylesheet" href="ui-system-v102.css?v=102">
-</head><body><header><div class="head"><div class="logo">📦 طلبات المبيعات</div></div></header><main style="max-width:1050px;margin:24px auto;padding:0 14px"><div id="app" class="pp-order-card">جاري تحميل طلباتك...</div></main><script>
+<link rel="stylesheet" href="platform-redesign-v104.css?v=104">
+</head><body class="pp-redesign"><header><div class="head"><div class="logo">📦 طلبات المبيعات</div></div></header><main style="max-width:1050px;margin:24px auto;padding:0 14px"><div id="app" class="pp-order-card">جاري تحميل طلباتك...</div></main><script>
 const db=window.ppClient,$=id=>document.getElementById(id),esc=window.ppEsc;
 const labels={pending:'قيد المراجعة',confirmed:'تم التأكيد',preparing:'قيد التجهيز',out_for_delivery:'في الطريق',delivered:'تم التسليم واستلام المبلغ',cancelled:'ملغي'};
 const choices={pending:[['confirmed','تأكيد الطلب'],['cancelled','إلغاء الطلب']],confirmed:[['preparing','بدء التجهيز'],['cancelled','إلغاء الطلب']],preparing:[['out_for_delivery','إرساله للتوصيل'],['delivered','تأكيد التسليم واستلام المبلغ'],['cancelled','إلغاء الطلب']],out_for_delivery:[['delivered','تأكيد التسليم واستلام المبلغ']]};
