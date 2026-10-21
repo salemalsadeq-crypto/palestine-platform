@@ -1,0 +1,34 @@
+/* Palestine Platform V107 — shared visual refinement; CSS only, no business logic changes */
+body.pp-redesign {
+  --pp107-green:#087f5b; --pp107-green-dark:#06654c; --pp107-ink:#183047;
+  --pp107-muted:#66788a; --pp107-line:#e1e9e5; --pp107-surface:#fff;
+  --pp107-radius:18px; --pp107-shadow:0 7px 24px rgba(16,48,38,.065);
+  text-rendering:optimizeLegibility;
+  -webkit-font-smoothing:antialiased;
+}
+body.pp-redesign :where(button,.btn,.button,[role="button"],input[type="submit"],input[type="button"]) {
+  touch-action:manipulation;
+  transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease;
+}
+body.pp-redesign :where(button,.btn,.button,[role="button"],input[type="submit"],input[type="button"]):focus-visible {
+  outline:3px solid rgba(8,127,91,.25); outline-offset:2px;
+}
+body.pp-redesign :where(.card,.panel,.box,.tile,.ad-card,.service-card,.place-card,.item-card,.stat-card,.request-card,.provider-card,.trip-card,.message-card,.content-card,.admin-card,.order-card,.profile-card,.subscription-card,.review-card,.result-card,.list-card,.form-card,.settings-card,.info-card,.product-card,.restaurant-card,.driver-card,.pp-surface) {
+  box-shadow:var(--pp107-shadow);
+}
+body.pp-redesign :where(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]),select,textarea) { min-width:0; }
+body.pp-redesign :where(img,video,iframe) { height:auto; }
+body.pp-redesign :where(.muted,.text-muted,.hint,.help-text) { color:var(--pp107-muted); }
+body.pp-redesign :where(.badge,.chip,.pill,.status) { max-width:100%; overflow-wrap:anywhere; }
+body.pp-redesign :where(.table-wrap,.table-responsive) { max-width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+@media (hover:hover) and (pointer:fine) {
+  body.pp-redesign :where(.card,.tile,.ad-card,.service-card,.place-card,.item-card,.product-card):hover { box-shadow:0 12px 30px rgba(16,48,38,.10); }
+}
+@media (max-width:640px) {
+  body.pp-redesign :where(.modal,.dialog,.sheet,.popup) { max-width:calc(100vw - 24px); }
+  body.pp-redesign :where(.card,.panel,.box,.form-card,.content-card) { min-width:0; }
+  body.pp-redesign :where(button,.btn,.button,[role="button"],input[type="submit"],input[type="button"]) { -webkit-tap-highlight-color:transparent; }
+}
+@media (prefers-reduced-motion:reduce) {
+  body.pp-redesign *,body.pp-redesign *::before,body.pp-redesign *::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }
+}
