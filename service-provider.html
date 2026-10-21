@@ -53,7 +53,7 @@ window.reqAction=async(act,id,btn)=>{
   await loadRequests();
 };
 async function loadRequests(){
-  const r=await db.from('service_requests').select('*').eq('provider_id',uid).in('status',['pending','accepted','in_progress','completed']).order('created_at',{ascending:false}).limit(50);
+  const r=await db.from('service_requests').select(PP_REQ_COLS).eq('provider_id',uid).in('status',['pending','accepted','in_progress','completed']).order('created_at',{ascending:false}).limit(50);
   if(r.error){$('list').textContent=r.error.message;return}
   const rows=r.data||[];
   $('reqCount').textContent=rows.filter(x=>['pending','accepted','in_progress'].includes(x.status)).length;
@@ -62,9 +62,10 @@ async function loadRequests(){
     return '<div class="req"><div class="reqtop"><b>'+esc(x.type==='taxi'?'🚕 طلب تاكسي':'📦 طلب خدمة')+'</b><span class="badge">'+esc(REQ_STATUS[x.status]||x.status)+'</span></div>'
       +'<div class="muted">'+(x.people_count?'👥 '+esc(x.people_count)+' راكب · ':'')+esc(new Date(x.created_at).toLocaleString('ar'))+'</div>'
       +'<div class="reqroute"><div>📍 '+(x.from_lat!=null?mapA(x.from_lat,x.from_lng,'موقع الانطلاق'):esc(x.from_location||''))+'</div><div>🏁 '+(x.to_lat!=null?mapA(x.to_lat,x.to_lng,'الوجهة'):esc(x.to_location||''))+'</div></div>'
-      +(live&&x.phone?'<div><a class="maplink" href="tel:'+esc(x.phone)+'">📞 اتصل بالراكب: '+esc(x.phone)+'</a></div>':'')
+      +(live?'<div><a class="maplink pp-phlink" href="#">📞 اتصل بالراكب: <span class="pp-ph" data-rid="'+esc(x.id)+'">…</span></a></div>':'')
       +'<div class="acts">'+reqButtons(x)+'</div></div>';
   }).join(''):'<div class="muted">لا توجد طلبات.</div>';
+  ppFillPhones($('list'));
 }
 async function init(){const u=await ppUser();if(!u){location.href='login.html?next='+encodeURIComponent(location.href);return}uid=u.id;await loadProvider();await loadSubscription();await loadRequests();startGPS()}init();
 </script><script src="app-ui.js?v=90" defer></script></body></html>

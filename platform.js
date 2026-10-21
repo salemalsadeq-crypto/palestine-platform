@@ -115,3 +115,8 @@ window.ppNotificationListener=async()=>{
 };
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>setTimeout(window.ppNotificationListener,800));
 else setTimeout(window.ppNotificationListener,800);
+
+/* V105: أعمدة طلبات الخدمة (بدون phone) + جلب الرقم عبر RPC مضبوطة الصلاحيات */
+window.PP_REQ_COLS='id,requester_id,provider_id,type,status,city,from_location,to_location,details,budget,from_lat,from_lng,to_lat,to_lng,people_count,scheduled_at,provider_note,created_at,updated_at';
+window.ppRequestPhone=async id=>{try{const r=await ppClient.rpc('get_service_request_phone',{p_request_id:id});return r.error?null:(r.data||null)}catch(e){return null}};
+window.ppFillPhones=async root=>{const els=[...(root||document).querySelectorAll('.pp-ph[data-rid]')];await Promise.all(els.map(async el=>{const ph=await ppRequestPhone(el.dataset.rid);el.textContent=ph||'—';const a=el.closest('a.pp-phlink');if(a){if(ph)a.href='tel:'+ph;else a.style.display='none'}}))};
