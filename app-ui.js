@@ -126,3 +126,6 @@
 
 /* V88: أيقونة الموقع (favicon) */
 ;(()=>{try{if(!document.querySelector('link[rel~=icon]')){const l=document.createElement('link');l.rel='icon';l.type='image/png';l.href='favicon-64.png';document.head.appendChild(l)}}catch(e){}})();
+
+/* V105: استبدال alert() بإشعار غير حاجب (toast) */
+;(()=>{try{const native=window.alert.bind(window);window.alert=function(m){const t=String(m==null?'':m);if(!window.ppToast){native(t);return}const bad=/(❌|⛔|تعذر|تعذّر|فشل|خطأ|غير مسموح|لا يمكن|لا تملك)/.test(t);const ok=/(✅|✓|تم )/.test(t);window.ppToast(t,bad?'error':ok?'success':'info',bad?4500:3200)}}catch(e){}})();
