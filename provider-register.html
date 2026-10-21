@@ -10,8 +10,7 @@ body{margin:0;background:#f5f8fc;color:#172033;font-family:Arial,Tahoma,sans-ser
 <link rel="stylesheet" href="platform-theme-v101.css?v=101">
 <link rel="stylesheet" href="ui-system-v102.css?v=102">
 <link rel="stylesheet" href="platform-redesign-v104.css?v=104">
-
-<link rel="stylesheet" href="platform-stability-v107.css?v=107">
+<link rel="stylesheet" href="ui-system-v108.css?v=108">
 </head><body class="pp-redesign">
 <div class="wrap top"><a href="services.html">← مركز الخدمات</a></div>
 <section class="hero"><div class="wrap"><h1>🚀 التسجيل كمقدم خدمة</h1><p>أنشئ ملفك المهني مرة واحدة، ثم استخدم لوحة مقدم الخدمة لإدارة حالتك وطلباتك.</p></div></section>
@@ -53,4 +52,4 @@ const transport=['taxi','transport'].includes($('service_type').value),cap=$('pa
 const payload={user_id:u.id,provider_kind:kind,service_type:$('service_type').value,city:$('city').value.trim(),display_name:company?($('company_name').value.trim()||null):($('display_name').value.trim()||null),company_name:company?($('company_name').value.trim()||null):null,contact_phone:$('contact_phone').value.trim(),specialization:$('specialization').value.trim()||null,coverage_area:$('coverage_area').value.trim()||null,description:$('description').value.trim()||null,vehicle_type:transport?($('vehicle_type').value.trim()||null):null,vehicle_number:transport?($('vehicle_number').value.trim()||null):null,passenger_capacity:transport&&cap!==''?Number(cap):null,base_price:transport&&$('base_price').value!==''?Number($('base_price').value):null,is_active:$('availability').value==='true'};
 $('save').disabled=true;$('save').textContent='جاري الحفظ...';const r=await ppClient.from('service_providers').upsert(payload,{onConflict:'user_id'});$('save').disabled=false;$('save').textContent='حفظ التسجيل';if(r.error){msg(r.error.message);return}msg('تم تسجيل مقدم الخدمة بنجاح ✓ يمكنك الآن فتح لوحة مقدم الخدمة.',true);const dash=$('service_type').value==='taxi'?'service-provider.html':'service-provider-general.html';setTimeout(()=>location.href=dash,700)}
 init();
-</script><script src="app-ui.js?v=90" defer></script></body></html>
+</script><script src="app-ui.js?v=108" defer></script></body></html>

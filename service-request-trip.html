@@ -7,8 +7,7 @@ body{margin:0;background:#f3f7fb;color:#172033;font-family:Arial,Tahoma,sans-ser
 <link rel="stylesheet" href="platform-theme-v101.css?v=101">
 <link rel="stylesheet" href="ui-system-v102.css?v=102">
 <link rel="stylesheet" href="platform-redesign-v104.css?v=104">
-
-<link rel="stylesheet" href="platform-stability-v107.css?v=107">
+<link rel="stylesheet" href="ui-system-v108.css?v=108">
 </head><body class="pp-redesign"><div class="wrap top"><a href="service-requests.html">← طلباتي الخدمية</a></div><section class="hero"><div class="wrap"><h1 id="heroTitle">📋 طلبي</h1><p>متابعة مباشرة لحالة طلبك.</p></div></section><main class="wrap">
 <section class="card"><div class="statusbox"><span class="dot" id="dot"></span><div><div class="big" id="statusTitle">جاري التحميل...</div><div class="muted" id="statusText">سنحدّث الحالة تلقائيًا.</div></div></div><div class="timeline"><div class="step" id="s1"></div><div class="step" id="s2"></div><div class="step" id="s3"></div><div class="step" id="s4"></div></div></section>
 <section class="card"><div class="grid"><div class="item"><small>مقدم الخدمة</small><b id="pName">لم يُقبل بعد</b></div><div class="item"><small>الهاتف</small><b id="pPhone">—</b></div><div class="item"><small>من</small><b id="from">—</b></div><div class="item"><small>إلى</small><b id="to">—</b></div><div class="item full" style="grid-column:1/-1"><small>التفاصيل</small><b id="details">—</b></div></div></section>
@@ -24,4 +23,4 @@ if(req.provider_id){const p=await ppClient.from('service_providers').select('dis
 $('cancel').style.display=['pending','accepted'].includes(req.status)?'block':'none'}
 $('cancel').onclick=async()=>{if(!await ppConfirm('هل تريدين إلغاء هذا الطلب؟',{danger:true,ok:'إلغاء الطلب',cancel:'تراجع'}))return;$('cancel').disabled=true;const r=await ppClient.rpc('cancel_my_service_request',{p_request_id:rid});const m=$('msg');if(r.error){m.className='msg err';m.textContent=r.error.message}else{m.className='msg ok';m.textContent='تم إلغاء الطلب ✓';load()}$('cancel').disabled=false};
 async function init(){const u=await ppUser();if(!u){location.href='login.html?next='+encodeURIComponent(location.href);return}await load();setInterval(load,6000)}init();
-</script><script src="app-ui.js?v=90" defer></script></body></html>
+</script><script src="app-ui.js?v=108" defer></script></body></html>

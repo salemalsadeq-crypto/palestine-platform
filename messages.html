@@ -23,8 +23,7 @@
 <link rel="stylesheet" href="platform-theme-v101.css?v=101">
 <link rel="stylesheet" href="ui-system-v102.css?v=102">
 <link rel="stylesheet" href="platform-redesign-v104.css?v=104">
-
-<link rel="stylesheet" href="platform-stability-v107.css?v=107">
+<link rel="stylesheet" href="ui-system-v108.css?v=108">
 </head><body class="pp-redesign"><header><div class="head"><div class="logo">فلسطين <span>بلاتفورم</span></div><nav><a href="index.html">الرئيسية</a><a href="ads.html">الإعلانات</a><a href="favorites.html">❤️ المفضلة</a><a href="notifications.html">🔔 الإشعارات</a><a href="account.html">حسابي</a></nav></div></header><main class="wrap"><div id="app">جاري تحميل الرسائل...</div></main><script>
 const db=window.ppClient;const $=id=>document.getElementById(id);let user=null,conversations=[],active=null,channel=null,directUser=null,requestedConversation=null;
 function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}function date(x){try{return new Date(x).toLocaleString('ar-PS',{dateStyle:'short',timeStyle:'short'})}catch(e){return ''}}
@@ -206,5 +205,5 @@ document.addEventListener('keydown',e=>{
 });
 async function subscribe(){channel=db.channel('messages-page-'+user.id).on('postgres_changes',{event:'*',schema:'public',table:'messages'},async payload=>{if(active&&payload.new?.conversation_id===active.id)await loadMessages();await loadConversations()}).on('postgres_changes',{event:'*',schema:'public',table:'conversations'},async()=>{await loadConversations()}).subscribe()}
 window.selectConversation=selectConversation;window.renderList=renderList;window.sendMessage=sendMessage;start();
-</script><script src="app-ui.js?v=90" defer></script>
+</script><script src="app-ui.js?v=108" defer></script>
 </body></html>

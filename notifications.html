@@ -18,8 +18,7 @@
 <link rel="stylesheet" href="platform-theme-v101.css?v=101">
 <link rel="stylesheet" href="ui-system-v102.css?v=102">
 <link rel="stylesheet" href="platform-redesign-v104.css?v=104">
-
-<link rel="stylesheet" href="platform-stability-v107.css?v=107">
+<link rel="stylesheet" href="ui-system-v108.css?v=108">
 </head>
 <body class="pp-redesign">
 <main class="wrap">
@@ -90,6 +89,6 @@ document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{activeFilter=b.da
 async function subscribeNotifications(){if(notificationChannel)await db.removeChannel(notificationChannel);notificationChannel=db.channel('notifications-page-'+currentUser.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications',filter:'user_id=eq.'+currentUser.id},payload=>{notifyIncoming(payload.new);load()}).subscribe()}
 (async()=>{await load();updateControls();await subscribeNotifications();setInterval(load,30000)})();
 </script>
-<script src="app-ui.js?v=90" defer></script>
+<script src="app-ui.js?v=108" defer></script>
 </body>
 </html>

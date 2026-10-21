@@ -48,8 +48,7 @@ textarea{min-height:130px;resize:vertical}
 <link rel="stylesheet" href="platform-theme-v101.css?v=101">
 <link rel="stylesheet" href="ui-system-v102.css?v=102">
 <link rel="stylesheet" href="platform-redesign-v104.css?v=104">
-
-<link rel="stylesheet" href="platform-stability-v107.css?v=107">
+<link rel="stylesheet" href="ui-system-v108.css?v=108">
 </head>
 <body class="pp-redesign">
 <header>
@@ -183,7 +182,7 @@ console.error(error);showMessage("❌ "+(error.message||"حدث خطأ أثنا�
 $('locateBtn').onclick=()=>{if(!navigator.geolocation){alert('المتصفح لا يدعم تحديد الموقع');return}navigator.geolocation.getCurrentPosition(pos=>{$('latitude').value=pos.coords.latitude.toFixed(7);$('longitude').value=pos.coords.longitude.toFixed(7);if(!$('locationName').value)$('locationName').value='موقعي الحالي'},()=>alert('تعذر تحديد الموقع. تأكد من السماح بالموقع.'))};
 (async function(){const loggedIn=await loadUser();if(!loggedIn)return;await loadAd()})();
 </script>
-<script src="app-ui.js?v=90" defer></script>
+<script src="app-ui.js?v=108" defer></script>
 </body>
 </html>
 

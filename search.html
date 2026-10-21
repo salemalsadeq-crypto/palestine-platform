@@ -6,8 +6,7 @@ body{background:#f5f8fc}.search-page{max-width:1100px;margin:auto;padding:18px 1
 <link rel="stylesheet" href="platform-theme-v101.css?v=101">
 <link rel="stylesheet" href="ui-system-v102.css?v=102">
 <link rel="stylesheet" href="platform-redesign-v104.css?v=104">
-
-<link rel="stylesheet" href="platform-stability-v107.css?v=107">
+<link rel="stylesheet" href="ui-system-v108.css?v=108">
 </head><body class="pp-redesign"><header class="header"><div class="wrap head"><a class="logo" href="index.html">فلسطين <span>بلاتفورم</span></a><div class="account"></div></div></header>
 <main class="search-page"><a class="back" href="index.html">← العودة للرئيسية</a><section class="search-top"><h1>🔎 البحث في فلسطين بلاتفورم</h1><p>ابحث مرة واحدة في الإعلانات والأماكن ومقدمي الخدمات.</p><form class="searchbox" id="form"><input id="q" autocomplete="off" placeholder="مثال: مطعم، سيارة، عقار، تاكسي، متجر..."><button>بحث</button></form><div class="chips" id="chips"></div><div id="recent" class="recent"></div></section><div class="summary"><h2>نتائج البحث</h2><span id="count">—</span></div><section id="results" class="results"><div class="loading">اكتب كلمة للبحث…</div></section></main>
 <script src="platform.js"></script><script>
@@ -29,4 +28,4 @@ if(current==='all'||current==='services'){const aliases={'تاكسي':'taxi','ت
 out.sort((a,b)=>a.sort-b.sort);$('results').innerHTML=out.length?out.map(x=>x.html).join(''):'<div class="empty">📭 لم نجد نتائج مطابقة. جرّب كلمة أخرى أو قسمًا مختلفًا.</div>';$('count').textContent=out.length+' نتيجة';
 }catch(e){$('results').innerHTML='<div class="error">❌ تعذر إكمال البحث. حاول مرة أخرى.</div>';$('count').textContent='';}}
 renderRecent();const initial=new URLSearchParams(location.search).get('q');if(initial){$('q').value=initial;run()}
-</script><script>ppSetupHeader?.();</script><script src="app-ui.js?v=90" defer></script></body></html>
+</script><script>ppSetupHeader?.();</script><script src="app-ui.js?v=108" defer></script></body></html>

@@ -14,8 +14,7 @@
 <link rel="stylesheet" href="platform-theme-v101.css?v=101">
 <link rel="stylesheet" href="ui-system-v102.css?v=102">
 <link rel="stylesheet" href="platform-redesign-v104.css?v=104">
-
-<link rel="stylesheet" href="platform-stability-v107.css?v=107">
+<link rel="stylesheet" href="ui-system-v108.css?v=108">
 </head>
 <body class="pp-redesign">
 
@@ -51,6 +50,6 @@ function filter(){let s=$("search").value.trim().toLowerCase(),c=$("city").value
 async function load(){let {data,error}=await db.from("ads").select("*").eq("category","متاجر").eq("status","active").order("created_at",{ascending:false});if(error){$("count").textContent="❌ خطأ";$("grid").innerHTML='<div class="msg error">حدث خطأ: '+esc(error.message)+'</div>';return}ads=data||[];filter()}
 $("searchBtn").onclick=filter;$("search").onkeydown=e=>{if(e.key==="Enter")filter()};["city","type","sort"].forEach(id=>$(id).onchange=filter);load();
 }
-</script><script src="app-ui.js?v=90" defer></script>
+</script><script src="app-ui.js?v=108" defer></script>
 </body></html>
 

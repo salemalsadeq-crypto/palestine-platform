@@ -9,8 +9,7 @@
 <link rel="stylesheet" href="platform-theme-v101.css?v=101">
 <link rel="stylesheet" href="ui-system-v102.css?v=102">
 <link rel="stylesheet" href="platform-redesign-v104.css?v=104">
-
-<link rel="stylesheet" href="platform-stability-v107.css?v=107">
+<link rel="stylesheet" href="ui-system-v108.css?v=108">
 </head><body class="pp-redesign">
 <header class="head"><div class="headin"><div class="logo">🗺️ فلسطين بلاتفورم — الخريطة الذكية</div></div></header>
 <main class="wrap"><div class="notice">الخريطة تعتمد على مصادر مفتوحة. لا نطلب منك أي API Key. إذا تعذر مصدر الأماكن، تبقى الخريطة الأساسية متاحة ويمكن إعادة المحاولة.</div>
@@ -36,4 +35,4 @@ async function search(){const q=$('q').value.trim();if(!q)return loadViewport();
 function updateLabels(){layerGroup.eachLayer(m=>{if(!m.getTooltip)return;const t=m.getTooltip();if(!t)return;t.setOpacity(showNames&&map.getZoom()>=12?1:0)})}
 $('searchBtn').onclick=search;$('q').onkeydown=e=>{if(e.key==='Enter')search()};$('refresh').onclick=loadViewport;$('radius').onchange=loadViewport;document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));b.classList.add('active');currentCat=b.dataset.cat;loadViewport()});$('nameToggle').onclick=()=>{showNames=!showNames;$('nameToggle').classList.toggle('active',showNames);updateLabels()};document.querySelectorAll('#quickMap button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#quickMap button').forEach(x=>x.classList.remove('active'));b.classList.add('active');const cat=b.dataset.qcat;currentCat=cat;document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x.dataset.cat===cat));loadViewport();hideSelected()});$('locate').onclick=()=>{if(!navigator.geolocation){alert('المتصفح لا يدعم تحديد الموقع');return}navigator.geolocation.getCurrentPosition(p=>{const lat=p.coords.latitude,lon=p.coords.longitude;if(userMarker)layerGroup.removeLayer(userMarker);userMarker=L.circleMarker([lat,lon],{radius:9,weight:3,color:'#fff',fillColor:'#198754',fillOpacity:1}).bindPopup('📍 موقعك الحالي');layerGroup.addLayer(userMarker);map.setView([lat,lon],15);loadViewport()},()=>alert('تعذر تحديد موقعك. اسمح للموقع من إعدادات المتصفح.'))};
 if(window.L){init()}else{document.getElementById('mapLoading').innerHTML='<div class="map-loading-card">❌ تعذر تحميل مكتبة الخريطة. أعد تحميل الصفحة.</div>'}
-</script><script src="app-ui.js?v=90" defer></script></body></html>
+</script><script src="app-ui.js?v=108" defer></script></body></html>
