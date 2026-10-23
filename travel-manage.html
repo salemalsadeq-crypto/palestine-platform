@@ -3,10 +3,10 @@
 <link rel="stylesheet" href="theme-v61.css">
 <link rel="stylesheet" href="ui-polish.css?v=90"><link rel="stylesheet" href="ui-polish-v91.css?v=91">
 <link rel="stylesheet" href="ui-system-v97.css?v=97">
-<link rel="stylesheet" href="travel.css?v=109">
+<link rel="stylesheet" href="travel.css?v=1">
 <link rel="stylesheet" href="platform-redesign-v104.css?v=104">
-<link rel="stylesheet" href="ui-system-v108.css?v=108">
-</head><body class="tv-page pp-redesign">
+<link rel="stylesheet" href="design-global-v110.css?v=110">
+</head><body class="tv-page pp-redesign pp-global-design">
 <main class="tv-wrap">
 <a class="tv-back" href="travel.html">← السفر والحجوزات</a>
 <div id="head"></div>
@@ -17,9 +17,6 @@
     <button class="tv-tab" data-t="offers" type="button">🎟️ عروضي</button>
   </div>
   <section id="tabBookings">
-    <div class="tv-booking-summary" id="bookingSummary" aria-live="polite"></div>
-    <label class="tv-search-label" for="bookingSearch">بحث في الحجوزات</label>
-    <input id="bookingSearch" class="tv-in tv-booking-search" type="search" placeholder="اسم العميل، الهاتف، العرض أو الوجهة…" autocomplete="off">
     <div class="tv-chips" id="bfilter"></div>
     <div id="bookings"></div>
   </section>
@@ -56,7 +53,7 @@
 <script>
 (()=>{
 const db=window.ppClient,$=id=>document.getElementById(id),E=TV.esc;
-let user=null,office=null,bookings=[],offers=[],bf='all',editing=null,bq='';
+let user=null,office=null,bookings=[],offers=[],bf='all',editing=null;
 $('o_kind').innerHTML=Object.entries(TV.KINDS).map(([k,v])=>'<option value="'+k+'">'+v[0]+' '+v[1]+'</option>').join('');
 $('bfilter').innerHTML=[['all','الكل'],['pending','⏳ جديدة'],['confirmed','✅ مؤكدة'],['completed','🏁 مكتملة'],['cancelled','❌ ملغاة']].map(([k,l],i)=>'<button class="tv-chip'+(i?'':' on')+'" data-f="'+k+'" type="button">'+l+'</button>').join('');
 const one=x=>Array.isArray(x)?x[0]:x;
@@ -73,23 +70,10 @@ function bookingCard(b){
    '</article>';
 }
 function renderBookings(){
-  const norm=v=>String(v??'').toLocaleLowerCase('ar').trim();
-  const rows=bookings.filter(b=>{
-    const matchesStatus=bf==='all'||b.status===bf;
-    const of=one(b.travel_offers)||{};
-    const hay=[b.full_name,b.phone,b.notes,b.office_note,of.title,of.destination].map(norm).join(' ');
-    return matchesStatus&&(!bq||hay.includes(bq));
-  });
-  $('bookings').innerHTML=rows.length?rows.map(bookingCard).join(''):'<div class="tv-empty">لا توجد حجوزات مطابقة. جرّب تغيير حالة الحجز أو كلمات البحث.</div>';
+  const rows=bookings.filter(b=>bf==='all'||b.status===bf);
+  $('bookings').innerHTML=rows.length?rows.map(bookingCard).join(''):'<div class="tv-empty">لا توجد حجوزات في هذا القسم.</div>';
   const p=bookings.filter(b=>b.status==='pending').length;$('pendCount').textContent=p?'('+p+')':'';
-  $('bookingSummary').innerHTML=[
-    ['الإجمالي',bookings.length,'all'],['جديدة',bookings.filter(b=>b.status==='pending').length,'pending'],
-    ['مؤكدة',bookings.filter(b=>b.status==='confirmed').length,'confirmed'],['مكتملة',bookings.filter(b=>b.status==='completed').length,'completed']
-  ].map(([label,count,key])=>'<button class="tv-stat" type="button" data-stat="'+key+'"><span>'+label+'</span><strong>'+count+'</strong></button>').join('');
 }
-$('bookingSearch').addEventListener('input',e=>{bq=e.target.value.trim().toLocaleLowerCase('ar');renderBookings()});
-$('bookingSummary').addEventListener('click',e=>{const b=e.target.closest('[data-stat]');if(!b)return;bf=b.dataset.stat;document.querySelectorAll('#bfilter .tv-chip').forEach(x=>x.classList.toggle('on',x.dataset.f===bf));renderBookings()});
-
 function offerCard(o){
   const dates=[o.depart_date?'🛫 '+TV.date(o.depart_date):'',o.return_date?'🛬 '+TV.date(o.return_date):''].filter(Boolean).join('  ');
   return '<article class="tv-card" data-id="'+E(o.id)+'"><div class="tv-row sb"><h3>'+E(o.title)+'</h3><span class="tv-badge">'+TV.kindLabel(o.kind)+'</span></div>'+
@@ -176,5 +160,5 @@ $('offers').addEventListener('click',async e=>{
 init();
 })();
 </script>
-<script src="app-ui.js?v=108" defer></script>
+<script src="app-ui.js?v=90" defer></script>
 </body></html>

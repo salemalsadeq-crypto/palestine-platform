@@ -7,8 +7,8 @@
 <link rel="stylesheet" href="platform-theme-v101.css?v=101">
 <link rel="stylesheet" href="ui-system-v102.css?v=102">
 <link rel="stylesheet" href="platform-redesign-v104.css?v=104">
-<link rel="stylesheet" href="ui-system-v108.css?v=108">
-</head><body class="pp-redesign"><div class="wrap top"><a href="services.html">← مركز الخدمات</a></div><section class="hero"><div class="wrap"><h1 id="heroTitle">🧑‍🔧 لوحة مقدم الخدمة</h1><p id="heroDesc">استقبل الطلبات الجديدة وتابع حالتها.</p></div></section><main class="wrap">
+<link rel="stylesheet" href="design-global-v110.css?v=110">
+</head><body class="pp-redesign pp-global-design"><div class="wrap top"><a href="services.html">← مركز الخدمات</a></div><section class="hero"><div class="wrap"><h1 id="heroTitle">🧑‍🔧 لوحة مقدم الخدمة</h1><p id="heroDesc">استقبل الطلبات الجديدة وتابع حالتها.</p></div></section><main class="wrap">
 <section class="card"><div class="online"><div><strong id="onlineText">غير متاح</strong><div class="muted">عند تفعيل الحالة سيظهر لك عملاء جدد.</div></div><label class="switch"><input id="available" type="checkbox"><span class="slider"></span></label></div><div id="msg"></div></section>
 <section class="card"><h3 class="section-title">🆕 طلبات جديدة متاحة</h3><div class="muted">أي طلب هنا لم يقبله أحد بعد — أول من يضغط "قبول" يحصل عليه.</div><div id="newList" style="margin-top:10px">جاري التحميل...</div></section>
 <section class="card"><h3 class="section-title">📋 طلباتي الحالية</h3><div id="mineList" style="margin-top:10px">جاري التحميل...</div></section></main>
@@ -33,4 +33,4 @@ window.acceptReq=acceptReq;window.advance=advance;
 $('available').onchange=toggleActive;
 async function init(){const u=await ppUser();if(!u){location.href='login.html?next='+encodeURIComponent(location.href);return}uid=u.id;await loadProfile();await loadRequests();setInterval(loadRequests,7000)}
 init();
-</script><script src="app-ui.js?v=108" defer></script></body></html>
+</script><script src="app-ui.js?v=90" defer></script></body></html>
