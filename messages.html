@@ -23,8 +23,8 @@
 <link rel="stylesheet" href="platform-theme-v101.css?v=101">
 <link rel="stylesheet" href="ui-system-v102.css?v=102">
 <link rel="stylesheet" href="platform-redesign-v104.css?v=104">
-<link rel="stylesheet" href="design-global-v110.css?v=110">
-</head><body class="pp-redesign pp-global-design"><header><div class="head"><div class="logo">فلسطين <span>بلاتفورم</span></div><nav><a href="index.html">الرئيسية</a><a href="ads.html">الإعلانات</a><a href="favorites.html">❤️ المفضلة</a><a href="notifications.html">🔔 الإشعارات</a><a href="account.html">حسابي</a></nav></div></header><main class="wrap"><div id="app">جاري تحميل الرسائل...</div></main><script>
+<link rel="stylesheet" href="design-global-v111.css?v=111">
+</head><body class="pp-redesign"><header><div class="head"><div class="logo">فلسطين <span>بلاتفورم</span></div><nav><a href="index.html">الرئيسية</a><a href="ads.html">الإعلانات</a><a href="favorites.html">❤️ المفضلة</a><a href="notifications.html">🔔 الإشعارات</a><a href="account.html">حسابي</a></nav></div></header><main class="wrap"><div id="app">جاري تحميل الرسائل...</div></main><script>
 const db=window.ppClient;const $=id=>document.getElementById(id);let user=null,conversations=[],active=null,channel=null,directUser=null,requestedConversation=null;
 function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}function date(x){try{return new Date(x).toLocaleString('ar-PS',{dateStyle:'short',timeStyle:'short'})}catch(e){return ''}}
 async function start(){const u=await db.auth.getUser();user=u.data.user;if(!user){$('app').innerHTML='<div class="box login"><h2>🔐 الرسائل</h2><p>يجب تسجيل الدخول لعرض الرسائل.</p><a href="login.html">تسجيل الدخول</a></div>';return}const params=new URLSearchParams(location.search);directUser=params.get('user');requestedConversation=params.get('conversation');await loadConversations();if(requestedConversation){await openRequestedConversation(requestedConversation)}else if(directUser&&directUser!==user.id){await openDirectConversation(directUser)}await subscribe();}
