@@ -1,6 +1,0 @@
-<resources>
-    <style name="Theme.PalestinePlatform" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/primary</item>
-        <item name="android:navigationBarColor">@color/surface</item>
-    </style>
-</resources>
