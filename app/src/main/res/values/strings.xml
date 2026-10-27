@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">فلسطين بلاتفورم</string>
+    <string name="nav_home">الرئيسية</string>
+    <string name="nav_ads">الإعلانات</string>
+    <string name="nav_taxi">تاكسي</string>
+    <string name="nav_places">الخريطة</string>
+    <string name="nav_reels">ريلز</string>
+    <string name="nav_services">الخدمات</string>
+    <string name="nav_orders">طلباتي</string>
+    <string name="nav_travel">السفر</string>
+    <string name="nav_profile">حسابي</string>
+    <string name="hero_title">فلسطين تجمعنا</string>
+    <string name="hero_subtitle">كل فلسطين في مكان واحد · إعلانات وخدمات وأماكن قريبة</string>
+    <string name="taxi_order_now">اطلب تاكسي الآن</string>
+    <string name="taxi_drivers_available">سائقون متاحون قريبون منك</string>
+</resources>
