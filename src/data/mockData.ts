@@ -1,4 +1,4 @@
-import { AdItem, PlaceItem, ServiceProviderItem, TravelPackageItem, ReelItem, OrderItem } from '../types';
+import { AdItem, PlaceItem, ServiceProviderItem, TravelPackageItem, ReelItem, OrderItem, ProviderReview, RewardItem, UserPointsState } from '../types';
 
 export const INITIAL_ADS: AdItem[] = [
   {
@@ -183,6 +183,99 @@ export const INITIAL_PLACES: PlaceItem[] = [
   }
 ];
 
+export const INITIAL_PROVIDER_REVIEWS: ProviderReview[] = [
+  {
+    id: 'rev-1',
+    providerId: 'sp-1',
+    customerName: 'سمير النتشة',
+    customerCity: 'القدس',
+    rating: 5,
+    comment: 'سائق محترم وأخلاق عالية، المركبة نظيفة جداً ومكيفة ووصلنا على الموعد بدقة.',
+    serviceType: 'taxi',
+    createdAt: 'منذ يومين'
+  },
+  {
+    id: 'rev-2',
+    providerId: 'sp-1',
+    customerName: 'مريم الصالحي',
+    customerCity: 'القدس',
+    rating: 5,
+    comment: 'خدمة راقية وسريعة وسعر عادل جداً. أنصح بالتعامل معه دائماً في مشاوير القدس.',
+    serviceType: 'taxi',
+    createdAt: 'منذ 4 أيام'
+  },
+  {
+    id: 'rev-3',
+    providerId: 'sp-1',
+    customerName: 'أحمد الجعبري',
+    customerCity: 'رام الله',
+    rating: 4,
+    comment: 'سائق أمين وملتزم، رحلة مريحة وآمنة.',
+    serviceType: 'taxi',
+    createdAt: 'منذ أسبوع'
+  },
+  {
+    id: 'rev-4',
+    providerId: 'sp-2',
+    customerName: 'ريم حسونة',
+    customerCity: 'رام الله',
+    rating: 5,
+    comment: 'توصيل سريع جداً وصل الطرد بدون أي خدش وبتعامل قمة في الذوق والأمانة.',
+    serviceType: 'delivery',
+    createdAt: 'أمس'
+  },
+  {
+    id: 'rev-5',
+    providerId: 'sp-2',
+    customerName: 'علاء قاسم',
+    customerCity: 'بيرزيت',
+    rating: 5,
+    comment: 'كابتن محترف، تم شحن البضاعة في وقت قياسي وتتبع مستمر للطلب.',
+    serviceType: 'delivery',
+    createdAt: 'منذ 3 أيام'
+  },
+  {
+    id: 'rev-6',
+    providerId: 'sp-3',
+    customerName: 'أنس التميمي',
+    customerCity: 'نابلس',
+    rating: 5,
+    comment: 'شغل هندسي متقن، صلح المكيف بسرعة واكتشف التسريب اللي غيره ما عرف يلاقيه.',
+    serviceType: 'home',
+    createdAt: 'منذ يوم'
+  },
+  {
+    id: 'rev-7',
+    providerId: 'sp-3',
+    customerName: 'هبة المصري',
+    customerCity: 'نابلس',
+    rating: 5,
+    comment: 'دقة بالمواعيد ونظافة في الشغل وأسعار واضحة بدون مبالغة.',
+    serviceType: 'home',
+    createdAt: 'منذ 5 أيام'
+  },
+  {
+    id: 'rev-8',
+    providerId: 'sp-4',
+    customerName: 'خالد السراج',
+    customerCity: 'الخليل',
+    rating: 5,
+    comment: 'أكل خليلي أصيل على أصوله، قدرة لحم ومسخن شهي والكمية راهية والطلب سخن نار.',
+    serviceType: 'food',
+    createdAt: 'منذ يومين'
+  },
+  {
+    id: 'rev-9',
+    providerId: 'sp-4',
+    customerName: 'فاطمة الكركي',
+    customerCity: 'الخليل',
+    rating: 4,
+    comment: 'طعم ممتاز وخدمة وتغليف مرتب، تجربة سنكررها بكل تأكيد.',
+    serviceType: 'food',
+    createdAt: 'منذ أسبوع'
+  }
+];
+
 export const INITIAL_PROVIDERS: ServiceProviderItem[] = [
   {
     id: 'sp-1',
@@ -193,7 +286,9 @@ export const INITIAL_PROVIDERS: ServiceProviderItem[] = [
     vehicleType: 'سكودا أوكتافيا 2023',
     basePrice: 20,
     rating: 4.95,
+    reviewsCount: 3,
     isAvailable: true,
+    isVerified: true,
     latitude: 31.7767,
     longitude: 35.2345
   },
@@ -206,7 +301,9 @@ export const INITIAL_PROVIDERS: ServiceProviderItem[] = [
     vehicleType: 'فان مقفل فورد ترانزيت',
     basePrice: 15,
     rating: 4.88,
+    reviewsCount: 2,
     isAvailable: true,
+    isVerified: true,
     latitude: 31.9029,
     longitude: 35.2062
   },
@@ -218,7 +315,9 @@ export const INITIAL_PROVIDERS: ServiceProviderItem[] = [
     contactPhone: '0597112244',
     basePrice: 50,
     rating: 4.92,
+    reviewsCount: 2,
     isAvailable: true,
+    isVerified: true,
     latitude: 32.2227,
     longitude: 35.2618
   },
@@ -230,7 +329,9 @@ export const INITIAL_PROVIDERS: ServiceProviderItem[] = [
     contactPhone: '0568991122',
     basePrice: 30,
     rating: 4.85,
+    reviewsCount: 2,
     isAvailable: true,
+    isVerified: true,
     latitude: 31.5293,
     longitude: 35.0938
   }
@@ -322,3 +423,147 @@ export const INITIAL_ORDERS: OrderItem[] = [
     createdAt: 'اليوم 11:30 ص'
   }
 ];
+
+export const INITIAL_REWARDS: RewardItem[] = [
+  {
+    id: 'rew-1',
+    title: 'خصم 30 شيكل على مشاوير التاكسي',
+    pointsCost: 200,
+    category: 'taxi',
+    description: 'قسيمة خصم فورية بقيمة 30 ₪ صالحة مع كافة كباتن التاكسي المعتمدين في جميع المحافظات.',
+    partnerName: 'كباتن فلسطين الموحد',
+    city: 'كافة المحافظات',
+    discountValueText: '30 ₪ خصم',
+    codePrefix: 'PAL-TAXI',
+    badge: 'الأكثر طلباً 🔥',
+    imageUrl: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=600'
+  },
+  {
+    id: 'rew-2',
+    title: 'توصيل مجاني لطلبك القادم',
+    pointsCost: 150,
+    category: 'delivery',
+    description: 'إعفاء كامل من رسوم التوصيل والشحن لأي سلعة تطلبها من سوق الإعلانات والمتاجر.',
+    partnerName: 'أجنحة التوصيل السريع',
+    city: 'الضفة والقدس',
+    discountValueText: 'شحن مجاني 100%',
+    codePrefix: 'PAL-SHIP',
+    badge: 'توفير فوري ⚡',
+    imageUrl: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600'
+  },
+  {
+    id: 'rew-3',
+    title: 'سدر كنافة نابلسية خشنة/ناعمة لشخصين',
+    pointsCost: 280,
+    category: 'food',
+    description: 'ضيافة فلسطينية أصيلة من حلويات الأقصى ودمشق نابلس بالسمن البلدي والجبنة البلدية الفاخرة.',
+    partnerName: 'حلويات دمشق والأقصى',
+    city: 'نابلس / رام الله',
+    discountValueText: 'وجبة كنافة مجانية',
+    codePrefix: 'PAL-KNFE',
+    badge: 'ضيافة بلدنا 🍯',
+    imageUrl: 'https://images.unsplash.com/photo-1587314168485-3236d6710814?w=600'
+  },
+  {
+    id: 'rew-4',
+    title: 'قسيمة شراء 50 شيكل إلكترونيات وملحقات',
+    pointsCost: 350,
+    category: 'shopping',
+    description: 'خصم 50 ₪ على أي سماعات، شواحن، إكسسوارات أو هواتف ذكية من متاجر الإلكترونيات المعتمدة.',
+    partnerName: 'معرض الأمل للتكنولوجيا',
+    city: 'رام الله / الخليل',
+    discountValueText: '50 ₪ كاش باك',
+    codePrefix: 'PAL-TECH',
+    badge: 'قسيمة نقدية 📱',
+    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600'
+  },
+  {
+    id: 'rew-5',
+    title: 'سلة زيت زيتون وصابون غار نابلسي بلدي',
+    pointsCost: 450,
+    category: 'shopping',
+    description: 'هدية تراثية مكونة من قنينة زيت زيتون بكر كبيس جنين وصابون نابلسي بلدي أصلي بزيت الزيتون.',
+    partnerName: 'تعاونية خيرات فلسطين',
+    city: 'جنين / نابلس',
+    discountValueText: 'هدية تراثية كاملة',
+    codePrefix: 'PAL-HERIT',
+    badge: 'تراث الأرض 🌿',
+    imageUrl: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=600'
+  },
+  {
+    id: 'rew-6',
+    title: 'تبرع باسمك بقيمة 25 شيكل لصندوق الطالب المحتاج',
+    pointsCost: 180,
+    category: 'charity',
+    description: 'حوّل نقاطك لعمل خير مباشر يساند طالب جامعي فلسطيني متفوق في دراسته، مع إرسال إشعار تبرع باسمك.',
+    partnerName: 'صندوق التكافل الطلابي الفلسطيني',
+    city: 'جامعات فلسطين',
+    discountValueText: 'تبرع 25 ₪ صدقة جارية',
+    codePrefix: 'PAL-CHAR',
+    badge: 'تكافل وطني 🤝',
+    imageUrl: 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb9?w=600'
+  }
+];
+
+export const INITIAL_USER_POINTS: UserPointsState = {
+  currentPoints: 380,
+  totalEarned: 530,
+  level: 'فضي',
+  transactions: [
+    {
+      id: 'tx-1',
+      type: 'earn',
+      amount: 100,
+      reason: 'هدية ترحيبية للانضمام لمنصة فلسطين 🇵🇸',
+      createdAt: 'منذ أسبوع'
+    },
+    {
+      id: 'tx-2',
+      type: 'earn',
+      amount: 50,
+      reason: 'إتمام طلب شراء آيفون 15 برو ماكس',
+      createdAt: 'منذ 3 أيام'
+    },
+    {
+      id: 'tx-3',
+      type: 'earn',
+      amount: 40,
+      reason: 'إتمام رحلة تاكسي من المنارة إلى بيرزيت',
+      createdAt: 'منذ يومين'
+    },
+    {
+      id: 'tx-4',
+      type: 'earn',
+      amount: 25,
+      reason: 'إضافة تقييم ومراجعة لكابتن تاكسي القدس',
+      createdAt: 'أمس'
+    },
+    {
+      id: 'tx-5',
+      type: 'earn',
+      amount: 15,
+      reason: 'التفاعل ومشاركة إعلان شقة الطيرة',
+      createdAt: 'اليوم'
+    },
+    {
+      id: 'tx-6',
+      type: 'redeem',
+      amount: 150,
+      reason: 'استبدال قسيمة توصيل مجاني',
+      createdAt: 'منذ يومين'
+    }
+  ],
+  redeemedRewards: [
+    {
+      id: 'red-101',
+      rewardId: 'rew-2',
+      rewardTitle: 'توصيل مجاني لطلبك القادم',
+      voucherCode: 'PAL-SHIP-9942',
+      pointsSpent: 150,
+      discountValueText: 'شحن مجاني 100%',
+      partnerName: 'أجنحة التوصيل السريع',
+      redeemedAt: 'منذ يومين',
+      status: 'active'
+    }
+  ]
+};

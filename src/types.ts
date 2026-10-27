@@ -28,6 +28,17 @@ export interface PlaceItem {
   imageUrl?: string;
 }
 
+export interface ProviderReview {
+  id: string;
+  providerId: string;
+  customerName: string;
+  customerCity?: string;
+  rating: number; // 1 to 5
+  comment: string;
+  serviceType?: string;
+  createdAt: string;
+}
+
 export interface ServiceProviderItem {
   id: string;
   displayName: string;
@@ -37,7 +48,10 @@ export interface ServiceProviderItem {
   vehicleType?: string;
   basePrice: number;
   rating: number;
+  reviewsCount?: number;
+  reviews?: ProviderReview[];
   isAvailable: boolean;
+  isVerified?: boolean;
   latitude?: number;
   longitude?: number;
 }
@@ -94,4 +108,46 @@ export interface ReelItem {
   viewsCount: number;
   videoUrl?: string;
   thumbnailUrl: string;
+}
+
+export interface PointTransaction {
+  id: string;
+  type: 'earn' | 'redeem';
+  amount: number;
+  reason: string;
+  createdAt: string;
+}
+
+export interface RewardItem {
+  id: string;
+  title: string;
+  pointsCost: number;
+  category: 'taxi' | 'delivery' | 'food' | 'shopping' | 'charity';
+  description: string;
+  partnerName: string;
+  city?: string;
+  discountValueText: string;
+  codePrefix: string;
+  badge?: string;
+  imageUrl?: string;
+}
+
+export interface RedeemedReward {
+  id: string;
+  rewardId: string;
+  rewardTitle: string;
+  voucherCode: string;
+  pointsSpent: number;
+  discountValueText: string;
+  partnerName: string;
+  redeemedAt: string;
+  status: 'active' | 'used';
+}
+
+export interface UserPointsState {
+  currentPoints: number;
+  totalEarned: number;
+  level: 'برونزي' | 'فضي' | 'ذهبي' | 'بلاتيني';
+  transactions: PointTransaction[];
+  redeemedRewards: RedeemedReward[];
 }

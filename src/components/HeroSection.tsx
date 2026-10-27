@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
-import { Search, Car, ChevronLeft, MapPin, Sparkles, ShieldCheck } from 'lucide-react';
+import { Search, Car, ChevronLeft, MapPin, Sparkles, ShieldCheck, QrCode } from 'lucide-react';
 
 interface HeroSectionProps {
   onSearch: (query: string) => void;
   onOpenTaxi: () => void;
   liveTaxiCount: number;
+  onOpenQrScanner?: () => void;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   onSearch,
   onOpenTaxi,
-  liveTaxiCount
+  liveTaxiCount,
+  onOpenQrScanner
 }) => {
   const [searchInput, setSearchInput] = useState('');
 
@@ -85,6 +87,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
           {/* Interactive Chips */}
           <div className="flex items-center gap-2 pt-1 overflow-x-auto pb-1 no-scrollbar text-xs">
+            {onOpenQrScanner && (
+              <button
+                type="button"
+                onClick={onOpenQrScanner}
+                className="bg-amber-400 hover:bg-yellow-300 text-navy-950 px-3.5 py-1.5 rounded-full whitespace-nowrap transition-all duration-200 active:scale-95 border border-amber-300 font-black shadow-md flex items-center gap-1.5 flex-shrink-0"
+              >
+                <QrCode className="w-3.5 h-3.5 stroke-[2.5]" />
+                <span>مسح كود QR</span>
+              </button>
+            )}
             {quickChips.map((chip) => (
               <button
                 key={chip.query}

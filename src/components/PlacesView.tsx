@@ -418,11 +418,11 @@ export const PlacesView: React.FC<PlacesViewProps> = ({ places }) => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-black text-navy-900 flex items-center gap-2">
+          <h2 className="text-xl font-black text-navy-900 dark:text-white flex items-center gap-2">
             <span>دليل الأماكن والخريطة الجغرافية</span>
             <MapIcon className="w-5 h-5 text-palestine-green" />
           </h2>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             استكشف المطاعم، المقاهي، المعالم، والمحلات التراثية في فلسطين
           </p>
         </div>
@@ -448,7 +448,7 @@ export const PlacesView: React.FC<PlacesViewProps> = ({ places }) => {
             setActivePlaceId(null);
           }}
           placeholder="ابحث بالاسم أو المدينة (مثال: زرياب، القدس، رام الله، نابلس...)"
-          className="w-full bg-white text-slate-900 placeholder-slate-400 text-sm rounded-xl py-3 pr-11 pl-10 border border-slate-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-navy-800 transition"
+          className="w-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm rounded-2xl py-3 pr-11 pl-10 border border-slate-200/90 dark:border-slate-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-navy-800 dark:focus:ring-emerald-500 transition"
         />
         <Search className="absolute right-3.5 w-5 h-5 text-slate-400 pointer-events-none" />
         {searchQuery ? (
@@ -457,23 +457,23 @@ export const PlacesView: React.FC<PlacesViewProps> = ({ places }) => {
               setSearchQuery('');
               setActivePlaceId(null);
             }}
-            className="absolute left-3 p-1 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"
+            className="absolute left-3 p-1 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
             title="مسح البحث"
           >
             <X className="w-4 h-4" />
           </button>
         ) : (
-          <span className="absolute left-3 text-[11px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md pointer-events-none">
+          <span className="absolute left-3 text-[11px] font-bold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md pointer-events-none">
             {filteredPlaces.length} نتيجة
           </span>
         )}
       </div>
 
       {/* Interactive Geographical Leaflet Map */}
-      <div className="relative rounded-2xl overflow-hidden shadow-lg border border-slate-300 bg-slate-100 transition-all duration-300">
+      <div className="relative rounded-3xl overflow-hidden shadow-lg border border-slate-300 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 transition-all duration-300">
         {/* Map Header Toolbar overlay */}
         <div className="absolute top-3 right-3 left-3 z-[15] pointer-events-none flex items-center justify-between">
-          <div className="pointer-events-auto bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-md border border-slate-200/80 text-xs font-bold text-navy-900 flex items-center gap-2">
+          <div className="pointer-events-auto bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-md border border-slate-200/80 dark:border-slate-800 text-xs font-bold text-navy-900 dark:text-white flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-palestine-green animate-pulse" />
             <span>خريطة فلسطين الحية ({filteredPlaces.length} موقع)</span>
           </div>
@@ -483,7 +483,7 @@ export const PlacesView: React.FC<PlacesViewProps> = ({ places }) => {
               onClick={() =>
                 setMapTileStyle((prev) => (prev === 'standard' ? 'humanitarian' : 'standard'))
               }
-              className="bg-white/90 hover:bg-white text-slate-700 p-2 rounded-xl shadow-md border border-slate-200 transition"
+              className="bg-white/90 dark:bg-slate-900/90 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 p-2 rounded-xl shadow-md border border-slate-200 dark:border-slate-800 transition"
               title="تغيير نمط الخريطة"
             >
               <Layers className="w-4 h-4" />
@@ -491,7 +491,7 @@ export const PlacesView: React.FC<PlacesViewProps> = ({ places }) => {
 
             <button
               onClick={handleResetView}
-              className="bg-white/90 hover:bg-white text-slate-700 p-2 rounded-xl shadow-md border border-slate-200 transition"
+              className="bg-white/90 dark:bg-slate-900/90 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 p-2 rounded-xl shadow-md border border-slate-200 dark:border-slate-800 transition"
               title="إعادة ضبط نطاق الخريطة"
             >
               <RotateCcw className="w-4 h-4" />
@@ -499,7 +499,7 @@ export const PlacesView: React.FC<PlacesViewProps> = ({ places }) => {
 
             <button
               onClick={() => setIsMapExpanded((prev) => !prev)}
-              className="bg-white/90 hover:bg-white text-slate-700 p-2 rounded-xl shadow-md border border-slate-200 transition"
+              className="bg-white/90 dark:bg-slate-900/90 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 p-2 rounded-xl shadow-md border border-slate-200 dark:border-slate-800 transition"
               title={isMapExpanded ? 'تصغير الخريطة' : 'تكبير الخريطة'}
             >
               {isMapExpanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
@@ -583,11 +583,11 @@ export const PlacesView: React.FC<PlacesViewProps> = ({ places }) => {
       {/* Places Cards List */}
       <div className="space-y-3 pt-2">
         <div className="flex items-center justify-between">
-          <h3 className="font-extrabold text-sm text-navy-900 flex items-center gap-1.5">
-            <List className="w-4 h-4 text-slate-500" />
+          <h3 className="font-extrabold text-sm text-navy-900 dark:text-white flex items-center gap-1.5">
+            <List className="w-4 h-4 text-slate-500 dark:text-slate-400" />
             <span>قائمة الأماكن المعروضة ({filteredPlaces.length})</span>
           </h3>
-          <span className="text-xs text-slate-400">انقر على المكان لتحديده على الخريطة</span>
+          <span className="text-xs text-slate-400 dark:text-slate-500">انقر على المكان لتحديده على الخريطة</span>
         </div>
 
         {filteredPlaces.map((place) => {
@@ -601,29 +601,29 @@ export const PlacesView: React.FC<PlacesViewProps> = ({ places }) => {
               onClick={() => focusPlaceOnMap(place)}
               className={`cursor-pointer rounded-2xl border transition-all duration-200 p-4 space-y-3 ${
                 isSelected
-                  ? 'bg-blue-50/70 border-navy-800 shadow-md ring-2 ring-navy-800/20'
-                  : 'bg-white border-slate-200/90 shadow-sm hover:shadow-md hover:border-slate-300'
+                  ? 'bg-blue-50/70 dark:bg-slate-850 border-navy-800 dark:border-emerald-500 shadow-md ring-2 ring-navy-800/20 dark:ring-emerald-500/30'
+                  : 'bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700'
               }`}
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-slate-100 text-2xl flex items-center justify-center flex-shrink-0 shadow-inner">
+                  <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 text-2xl flex items-center justify-center flex-shrink-0 shadow-inner">
                     {emoji}
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h4 className="font-extrabold text-base text-navy-900">{place.name}</h4>
-                      <span className="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold">
+                      <h4 className="font-extrabold text-base text-navy-900 dark:text-white">{place.name}</h4>
+                      <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded font-bold">
                         {place.category}
                       </span>
                     </div>
-                    <div className="flex items-center gap-1 text-xs text-slate-500 mt-1">
-                      <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                    <div className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 mt-1">
+                      <MapPin className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                       <span>
                         {place.city} - {place.address}
                       </span>
                       {dist && (
-                        <span className="text-palestine-green font-bold mr-1.5">
+                        <span className="text-palestine-green dark:text-emerald-400 font-bold mr-1.5">
                           (تبعد {dist})
                         </span>
                       )}
@@ -631,19 +631,19 @@ export const PlacesView: React.FC<PlacesViewProps> = ({ places }) => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 text-amber-600 font-black text-xs bg-amber-50 px-2 py-1 rounded-lg border border-amber-200">
+                <div className="flex items-center gap-1 text-amber-600 dark:text-amber-400 font-black text-xs bg-amber-50 dark:bg-amber-950/40 px-2 py-1 rounded-lg border border-amber-200 dark:border-amber-800/40">
                   <Star className="w-3.5 h-3.5 fill-current" />
                   <span>{place.rating}</span>
                 </div>
               </div>
 
-              <p className="text-xs text-slate-600 leading-relaxed">{place.description}</p>
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{place.description}</p>
 
-              <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+              <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
                 <a
                   href={`tel:${place.phone}`}
                   onClick={(e) => e.stopPropagation()}
-                  className="flex items-center gap-1.5 text-xs font-bold text-navy-800 hover:text-navy-900"
+                  className="flex items-center gap-1.5 text-xs font-bold text-navy-800 dark:text-amber-400 hover:text-navy-900 dark:hover:text-amber-300"
                 >
                   <Phone className="w-3.5 h-3.5" />
                   <span>{place.phone}</span>
@@ -658,8 +658,8 @@ export const PlacesView: React.FC<PlacesViewProps> = ({ places }) => {
                     }}
                     className={`flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-lg transition ${
                       isSelected
-                        ? 'bg-navy-800 text-white'
-                        : 'bg-navy-800/10 text-navy-800 hover:bg-navy-800/20'
+                        ? 'bg-navy-800 dark:bg-emerald-600 text-white'
+                        : 'bg-navy-800/10 dark:bg-slate-800 text-navy-800 dark:text-slate-200 hover:bg-navy-800/20 dark:hover:bg-slate-750'
                     }`}
                   >
                     <Navigation className="w-3.5 h-3.5" />
@@ -672,10 +672,10 @@ export const PlacesView: React.FC<PlacesViewProps> = ({ places }) => {
         })}
 
         {filteredPlaces.length === 0 && (
-          <div className="bg-white rounded-2xl p-8 text-center text-slate-500 space-y-2 border border-slate-200">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 text-center text-slate-500 dark:text-slate-400 space-y-2 border border-slate-200 dark:border-slate-800">
             <div className="text-4xl">🗺️</div>
-            <p className="font-bold text-sm">لا توجد أماكن مطابقة لهذا التصنيف في المدينة المحددة</p>
-            <p className="text-xs text-slate-400">يرجى اختيار مدينة أخرى أو عرض "الكل".</p>
+            <p className="font-bold text-sm text-slate-800 dark:text-slate-200">لا توجد أماكن مطابقة لهذا التصنيف في المدينة المحددة</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500">يرجى اختيار مدينة أخرى أو عرض "الكل".</p>
           </div>
         )}
       </div>
