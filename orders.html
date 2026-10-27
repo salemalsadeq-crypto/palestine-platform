@@ -1,0 +1,36 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>طلباتي | فلسطين بلاتفورم</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script><script src="platform.js"></script><link rel="stylesheet" href="app.css">
+
+
+
+
+<link rel="stylesheet" href="platform-theme-v101.css?v=101">
+<link rel="stylesheet" href="ui-system-v102.css?v=102">
+<link rel="stylesheet" href="platform-redesign-v104.css?v=104">
+<link rel="stylesheet" href="design-global-v111.css?v=111">
+</head><body class="pp-redesign"><header><div class="head"><div class="logo">🛍️ طلباتي ومشترياتي</div></div></header><main style="max-width:900px;margin:24px auto;padding:0 14px"><div id="app" class="pp-order-card">جاري تحميل الطلبات...</div></main><script>
+const db=window.ppClient,$=id=>document.getElementById(id),esc=window.ppEsc;
+const labels={pending:'قيد المراجعة',confirmed:'تم تأكيد الطلب',preparing:'جاري التجهيز',out_for_delivery:'في الطريق',delivered:'تم التسليم',cancelled:'ملغي'};
+const payLabels={pending:'بانتظار الدفع',awaiting_gateway:'بانتظار بوابة الدفع',paid:'مدفوع',failed:'فشل الدفع',refunded:'مسترد',cancelled:'ملغي'};
+const steps=['pending','confirmed','preparing','out_for_delivery','delivered'];
+function timeline(status){if(status==='cancelled')return '<div class="v68-cancel-line">✕ تم إلغاء الطلب</div>';const idx=steps.indexOf(status);return '<div class="v68-track">'+steps.map((x,i)=>'<div class="v68-track-step '+(i<=idx?'on':'')+'"><span></span><small>'+labels[x]+'</small></div>').join('')+'</div>'}
+function orderCard(o){const seller=o.seller_id?'<a class="v68-link" href="profile.html?id='+encodeURIComponent(o.seller_id)+'">👤 ملف البائع</a>':'';const cancel=['pending','confirmed'].includes(o.order_status)?'<button class="btn soft pp-cancel" data-id="'+o.id+'">إلغاء الطلب</button>':'';const dp=disputes[o.id];const dsp=(o.order_status==='delivered'&&!dp)?'<button class="btn soft pp-dispute" data-id="'+o.id+'">⚠️ اعتراض</button>':'';const dnote=dp?'<div class="v72-result">'+(dp.status==='open'?'⏳ اعتراضك قيد المراجعة':dp.status==='resolved'?'✅ تم حل الاعتراض':'❌ رُفض الاعتراض')+(dp.resolution_note?' — '+esc(dp.resolution_note):'')+'</div>':'';return '<article class="pp-order-card v68-order"><div class="v68-order-head"><div><b>🛒 '+esc(o.ads?.title||'طلب')+'</b><div class="v68-time">'+new Date(o.created_at).toLocaleString('ar-PS')+'</div></div><span class="pp-status '+(o.payment_status==='paid'?'paid':o.payment_status==='failed'?'failed':'pending')+'">💳 '+esc(payLabels[o.payment_status]||o.payment_status)+'</span></div><div class="meta v68-meta">الكمية: '+o.quantity+' · سعر الوحدة: '+Number(o.unit_price).toLocaleString('ar-PS')+' ₪ · التوصيل: '+Number(o.delivery_fee).toLocaleString('ar-PS')+' ₪<br><b>الإجمالي: '+Number(o.total_amount).toLocaleString('ar-PS')+' ₪</b><br>الاستلام: '+(o.delivery_method==='delivery'?'توصيل':'استلام من البائع')+(o.city?' · '+esc(o.city):'')+(o.address?'<br>📍 '+esc(o.address):'')+'</div>'+timeline(o.order_status)+'<div class="v68-actions"><span class="pp-status '+(o.order_status==='delivered'?'paid':o.order_status==='out_for_delivery'?'ship':'pending')+'">📦 '+esc(labels[o.order_status]||o.order_status)+'</span><div class="v68-buttons">'+seller+cancel+dsp+'</div></div>'+dnote+'</article>'}
+let allOrders=[];let disputes={};let activeFilter='all';let queryText='';
+function renderOrders(){
+  const rows=allOrders.filter(o=>{
+    const q=queryText.trim().toLowerCase();
+    const matchFilter=activeFilter==='all'||o.order_status===activeFilter;
+    const text=((o.ads?.title||'')+' '+(o.city||'')+' '+(o.address||'')).toLowerCase();
+    return matchFilter&&(!q||text.includes(q));
+  });
+  if(!allOrders.length){$('app').innerHTML='<div style="text-align:center;padding:30px">🛍️ لا توجد طلبات بعد.<br><a href="ads.html" class="btn primary" style="display:inline-block;margin-top:12px">تصفح الإعلانات</a></div>';return}
+  const filters=[['all','الكل'],['pending','قيد المراجعة'],['confirmed','مؤكد'],['preparing','قيد التجهيز'],['out_for_delivery','في الطريق'],['delivered','تم التسليم'],['cancelled','ملغي']];
+  $('app').innerHTML='<div class="v68-page-head"><div><h1 style="margin:0">طلباتي</h1><p>تتحدث الحالة تلقائيًا أثناء تجهيز وتسليم طلبك.</p></div><span class="v68-live">● متابعة مباشرة</span></div><div class="v72-order-tools"><input id="orderSearch" placeholder="🔎 ابحث باسم المنتج أو المدينة..." value="'+esc(queryText)+'"><div class="v72-filters">'+filters.map(x=>'<button class="v72-filter '+(activeFilter===x[0]?'active':'')+'" data-filter="'+x[0]+'">'+x[1]+'</button>').join('')+'</div><div class="v72-result">عرض '+rows.length+' من '+allOrders.length+' طلب</div></div><div id="orderRows">'+(rows.length?rows.map(orderCard).join(''):'<div class="v72-empty">لا توجد طلبات بهذا التصنيف.</div>')+'</div>';
+  $('orderSearch').oninput=e=>{queryText=e.target.value;renderOrders();const el=$('orderSearch');el.focus();el.setSelectionRange(el.value.length,el.value.length)};
+  document.querySelectorAll('.v72-filter').forEach(b=>b.onclick=()=>{activeFilter=b.dataset.filter;renderOrders()});
+  document.querySelectorAll('.pp-cancel').forEach(b=>b.onclick=()=>cancelOrder(b.dataset.id));document.querySelectorAll('.pp-dispute').forEach(b=>b.onclick=()=>openDispute(b.dataset.id));
+}
+async function load(){const u=await ppUser();if(!u){location.href='login.html?next='+encodeURIComponent(location.href);return}const r=await db.from('orders').select('id,ad_id,buyer_id,seller_id,quantity,unit_price,delivery_fee,total_amount,delivery_method,payment_method,payment_provider,payment_status,order_status,customer_name,customer_phone,city,address,notes,created_at,ads(title)').eq('buyer_id',u.id).order('created_at',{ascending:false}).limit(100);if(r.error){$('app').innerHTML='<div class="pp-pay-note">❌ '+esc(r.error.message)+'</div>';return}allOrders=r.data||[];const dr=await db.from('order_disputes').select('order_id,status,resolution_note').eq('buyer_id',u.id);disputes={};(dr.data||[]).forEach(x=>disputes[x.order_id]=x);renderOrders()}
+async function cancelOrder(id){if(!await ppConfirm('هل تريد إلغاء الطلب؟',{danger:true,ok:'إلغاء الطلب',cancel:'تراجع'}))return;const r=await db.rpc('cancel_my_order',{p_order_id:id});if(r.error){alert(r.error.message);return}load()}
+async function openDispute(id){const why=await ppPrompt('ما سبب اعتراضك؟',{multiline:true,placeholder:'اكتب التفاصيل (5 أحرف على الأقل)',ok:'إرسال الاعتراض'});if(why===null)return;if(why.trim().length<5){alert('اكتب سببًا واضحًا من 5 أحرف على الأقل');return}const r=await db.rpc('open_order_dispute',{p_order_id:id,p_reason:why.trim()});if(r.error){alert(r.error.message);return}alert('تم إرسال اعتراضك، ستراجعه الإدارة.');load()}
+load();setInterval(()=>{if(!document.hidden)load()},20000);
+</script><script src="app-ui.js?v=90" defer></script></body></html>

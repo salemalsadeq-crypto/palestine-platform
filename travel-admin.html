@@ -1,0 +1,59 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>إدارة مكاتب السفر | فلسطين بلاتفورم</title>
+<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="theme-v61.css">
+<link rel="stylesheet" href="ui-polish.css?v=90"><link rel="stylesheet" href="ui-polish-v91.css?v=91">
+<link rel="stylesheet" href="ui-system-v97.css?v=97">
+<link rel="stylesheet" href="travel.css?v=1">
+<link rel="stylesheet" href="platform-redesign-v104.css?v=104">
+<link rel="stylesheet" href="design-global-v111.css?v=111">
+</head><body class="tv-page pp-redesign">
+<main class="tv-wrap">
+<a class="tv-back" href="admin.html">← لوحة الإدارة</a>
+<h1 style="font-size:22px;margin:4px 0 12px">🏢 مراجعة مكاتب السفر</h1>
+<div class="tv-chips" id="filter"></div>
+<div id="msg" class="tv-msg" style="display:none"></div>
+<div id="list"></div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script>
+<script src="platform.js"></script>
+<script src="travel.js?v=1"></script>
+<script>
+(()=>{
+const db=window.ppClient,$=id=>document.getElementById(id),E=TV.esc;
+let rows=[],f='pending';
+$('filter').innerHTML=[['pending','⏳ بانتظار المراجعة'],['active','✅ منشورة'],['rejected','❌ مرفوضة'],['hidden','🙈 مخفية'],['all','الكل']].map(([k,l])=>'<button class="tv-chip'+(k===f?' on':'')+'" data-f="'+k+'" type="button">'+l+'</button>').join('');
+function card(o){
+  const sv=(o.services||[]).map(k=>'<span class="tv-badge">'+TV.kindLabel(k)+'</span>').join('');
+  return '<article class="tv-card" data-id="'+E(o.id)+'"><div class="tv-row sb"><h3>'+E(o.name)+'</h3>'+TV.badge(TV.OST,o.status)+'</div>'+
+   '<div class="tv-meta">📍 '+E(o.city)+(o.address?' · '+E(o.address):'')+'</div>'+
+   '<div class="tv-meta">📞 '+E(o.phone)+(o.whatsapp?' · 💬 '+E(o.whatsapp):'')+(TV.url(o.website)?' · 🌐 '+E(TV.url(o.website)):'')+'</div>'+
+   (sv?'<div class="tv-badges">'+sv+'</div>':'')+(o.description?'<p style="margin:6px 0;line-height:1.8;white-space:pre-line">'+E(o.description)+'</p>':'')+
+   (o.admin_note?'<div class="tv-msg">ملاحظة الإدارة: '+E(o.admin_note)+'</div>':'')+
+   '<div class="tv-row" style="margin-top:8px">'+(o.status!=='active'?'<button class="tv-btn green sm" data-s="active" type="button">✅ قبول ونشر</button>':'')+
+   (o.status!=='rejected'?'<button class="tv-btn red sm" data-s="rejected" type="button">❌ رفض</button>':'')+
+   (o.status==='active'?'<a class="tv-btn light sm" href="travel-office.html?id='+encodeURIComponent(o.id)+'">عرض</a>':'')+'</div></article>';
+}
+function render(){const r=rows.filter(o=>f==='all'||o.status===f);$('list').innerHTML=r.length?r.map(card).join(''):'<div class="tv-empty">لا توجد مكاتب في هذا القسم.</div>'}
+$('filter').addEventListener('click',e=>{const b=e.target.closest('.tv-chip');if(!b)return;f=b.dataset.f;document.querySelectorAll('.tv-chip').forEach(x=>x.classList.toggle('on',x===b));render()});
+$('list').addEventListener('click',async e=>{
+  const btn=e.target.closest('[data-s]');if(!btn)return;
+  const id=btn.closest('[data-id]').dataset.id,status=btn.dataset.s;let note=null;
+  if(status==='rejected'){note=prompt('سبب الرفض (سيظهر لصاحب المكتب):','');if(note===null)return;note=note.trim()||null}
+  btn.disabled=true;
+  const patch={status,admin_note:status==='active'?null:note};
+  const {error}=await db.from('travel_offices').update(patch).eq('id',id);
+  if(error){TV.msg($('msg'),'❌ '+TV.errText(error),'err');btn.disabled=false;return}
+  const o=rows.find(x=>x.id===id);if(o)Object.assign(o,patch);TV.msg($('msg'),'');render();
+});
+(async()=>{
+  const u=await window.ppUser();if(!u){location.href='login.html';return}
+  const ok=(await window.ppCan('manage_users'))||(await window.ppCan('manage_services'));
+  if(!ok){document.body.innerHTML='<main style="font-family:Arial;text-align:center;padding:60px"><h2>⛔ لا تملك الصلاحية</h2><a href="index.html">العودة للرئيسية</a></main>';return}
+  const {data,error}=await db.from('travel_offices').select('*').order('created_at',{ascending:false}).limit(500);
+  if(error)return TV.msg($('msg'),TV.errText(error),'err');
+  rows=data||[];render();
+})();
+})();
+</script>
+<script src="app-ui.js?v=90" defer></script>
+</body></html>

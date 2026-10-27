@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>الثقة والسلامة | فلسطين بلاتفورم</title>
+<link rel="stylesheet" href="app.css"><link rel="stylesheet" href="admin-v88.css?v=88">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script><script src="platform.js"></script><script src="app-ui.js?v=90" defer></script>
+
+
+<link rel="stylesheet" href="platform-theme-v101.css?v=101">
+<link rel="stylesheet" href="ui-system-v102.css?v=102">
+<link rel="stylesheet" href="platform-redesign-v104.css?v=104">
+<link rel="stylesheet" href="design-global-v111.css?v=111">
+</head>
+<body class="pp-redesign">
+<div class="adm-top"><div class="in"><div><b>🛡️ مركز الثقة والسلامة</b><small>البلاغات، المراجعة، وسجل العمليات</small></div><div class="lk"><a href="admin.html">لوحة المدير</a><a href="index.html">الرئيسية</a></div></div></div>
+<div class="adm-wrap"><div id="notice"></div>
+<div class="adm-panel"><div class="adm-tabs"><button class="active" data-tab="reports">🚩 البلاغات</button><button data-tab="audit">📋 سجل التدقيق</button><button data-tab="users">👤 الموثقون</button></div><div id="content">جاري التحميل...</div></div></div>
+<script>
+const db=ppClient,$=id=>document.getElementById(id),esc=ppEsc;let tab='reports';
+const td=(l,v)=>'<td data-l="'+l+'">'+v+'</td>';
+const tbl=(h,rows)=>rows.length?'<div class="adm-table"><table><thead><tr>'+h.map(x=>'<th>'+x+'</th>').join('')+'</tr></thead><tbody>'+rows.join('')+'</tbody></table></div>':'<div class="adm-empty">لا توجد بيانات.</div>';
+const dt=d=>d?new Date(d).toLocaleString('ar-PS'):'—';
+function note(t,ok=false){$('notice').innerHTML='<div class="notice '+(ok?'ok':'err')+'">'+esc(t)+'</div>';setTimeout(()=>$('notice').innerHTML='',3000)}
+async function render(){$('content').textContent='جاري التحميل...';await({reports,audit,users}[tab])()}
+async function reports(){
+  const r=await db.from('ad_reports').select('id,ad_id,reason,details,status,created_at').eq('status','pending').order('created_at',{ascending:false}).limit(100);
+  if(r.error){note(r.error.message);return}
+  $('content').innerHTML=tbl(['الإعلان','السبب','التفاصيل','التاريخ','إجراء'],(r.data||[]).map(x=>'<tr>'+td('الإعلان','<a href="ad-details.html?id='+encodeURIComponent(x.ad_id)+'">🔗 فتح الإعلان</a>')+td('السبب','<span class="adm-badge b-pending">'+esc(x.reason)+'</span>')+td('التفاصيل',esc(x.details||'—'))+td('التاريخ',dt(x.created_at))+td('إجراء','<textarea id="n-'+esc(x.id)+'" placeholder="ملاحظة الإدارة (اختياري)"></textarea><div class="adm-act"><button class="adm-btn g" data-id="'+esc(x.id)+'" data-s="reviewed">✅ مراجعة</button><button class="adm-btn r" data-id="'+esc(x.id)+'" data-s="dismissed">رفض البلاغ</button></div>')+'</tr>'));
+}
+async function audit(){
+  const r=await db.from('audit_logs').select('id,action,entity_type,entity_id,metadata,created_at').order('created_at',{ascending:false}).limit(150);
+  if(r.error){note(r.error.message);return}
+  $('content').innerHTML=tbl(['العملية','النوع','المعرّف','التفاصيل','التاريخ'],(r.data||[]).map(x=>'<tr>'+td('العملية','<b>'+esc(x.action)+'</b>')+td('النوع',esc(x.entity_type))+td('المعرّف','<span class="adm-code">'+esc(x.entity_id||'—')+'</span>')+td('التفاصيل','<span class="adm-code">'+esc(JSON.stringify(x.metadata||{}))+'</span>')+td('التاريخ',dt(x.created_at))+'</tr>'));
+}
+async function users(){
+  const r=await db.from('profiles').select('id,full_name,city,trust_score,verified_at').eq('is_verified',true).order('verified_at',{ascending:false}).limit(100);
+  if(r.error){note(r.error.message);return}
+  $('content').innerHTML=tbl(['المستخدم','المدينة','درجة الثقة','تاريخ التوثيق'],(r.data||[]).map(x=>'<tr>'+td('المستخدم','<b>✅ '+esc(x.full_name||'مستخدم')+'</b>')+td('المدينة',esc(x.city||'—'))+td('درجة الثقة',esc(String(x.trust_score??0)))+td('تاريخ التوثيق',dt(x.verified_at))+'</tr>'));
+}
+document.addEventListener('click',async e=>{
+  const t=e.target.closest('[data-tab]');if(t){document.querySelectorAll('[data-tab]').forEach(x=>x.classList.remove('active'));t.classList.add('active');tab=t.dataset.tab;render();return}
+  const b=e.target.closest('[data-s]');if(!b)return;
+  await ppBusy(b,async()=>{const r=await db.rpc('moderate_ad_report',{p_report_id:b.dataset.id,p_status:b.dataset.s,p_admin_note:document.getElementById('n-'+b.dataset.id)?.value||null});if(r.error){note(r.error.message);return}note('تم تحديث البلاغ',true);reports()});
+});
+(async()=>{if(await ppRequire('manage_reports'))render()})();
+</script></body></html>

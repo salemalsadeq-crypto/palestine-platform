@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#123b68"><title>فلسطين بلاتفورم</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script>
+<link rel="stylesheet" href="app.css"><link rel="stylesheet" href="theme-v61.css"><link rel="stylesheet" href="ui-polish.css?v=96"><link rel="stylesheet" href="theme-v88.css?v=90">
+<script type="speculationrules">{"prefetch":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}</script>
+<script src="platform.js"></script><script src="app-ui.js?v=96" defer></script><link rel="stylesheet" href="ui-polish-v91.css?v=96"><link rel="stylesheet" href="home-v94.css?v=96">
+<link rel="stylesheet" href="ui-system-v97.css?v=97">
+<link rel="stylesheet" href="platform-redesign-v104.css?v=104">
+<link rel="stylesheet" href="design-global-v111.css?v=111">
+</head>
+<body class="hub-page pp-redesign">
+<header class="header"><div class="wrap head"><a class="logo" href="index.html">فلسطين <span>بلاتفورم</span></a><div class="account"></div></div></header>
+<main class="hub">
+<section class="hero-q"><h1>فلسطين تجمعنا</h1><p class="hero-sub">كل فلسطين في مكان واحد · إعلانات وخدمات وأماكن قريبة</p>
+<form class="hub-search" id="searchForm"><input id="searchInput" autocomplete="off" placeholder="ابحث عن مطعم، سيارة، عقار، خدمة..."><button class="btn btn-primary">بحث</button></form>
+<div class="chips"><a href="search.html?q=مطعم">🍔 مطاعم</a><a href="search.html?q=سيارة">🚗 سيارات</a><a href="search.html?q=عقار">🏠 عقارات</a><a href="search.html?q=متجر">🛍️ متاجر</a></div></section>
+<a class="cta" href="taxi.html"><span class="ic">🚕</span><span><b>اطلب تاكسي الآن</b><small id="liveTaxi">سائقون متاحون قريبون منك</small></span><span class="go">←</span></a>
+<section><h2>الأقسام</h2><div class="tiles">
+<a class="tile" href="ads.html"><span class="ic">🛒</span><b>الإعلانات</b><small id="liveAds">بيع وشراء</small></a>
+<a class="tile" href="services.html"><span class="ic">⚡</span><b>الخدمات</b><small id="liveServices">توصيل وخدمات</small></a>
+<a class="tile" href="nearby.html"><span class="ic">🗺️</span><b>الخريطة</b><small id="livePlaces">حولك الآن</small></a>
+<a class="tile" href="reels.html"><span class="ic">🎬</span><b>الريلز</b><small>فيديوهات قصيرة</small></a>
+<a class="tile" href="restaurants.html"><span class="ic">🍔</span><b>المطاعم</b><small>عروض وفيديوهات</small></a>
+<a class="tile" href="orders.html"><span class="ic">📦</span><b>طلباتي</b><small>مشترياتك ومبيعاتك</small></a>
+<a class="tile" href="travel.html" style="grid-column:1/-1"><span class="ic">✈️</span><b>السفر والحجوزات</b><small>مكاتب السفر والسياحة وعروض الرحلات</small></a>
+</div></section>
+<section><div class="near-head"><h2>قريب منك</h2><button class="btn btn-soft" id="nearLocate">📍 تحديد موقعي</button></div>
+<div id="nearStatus">اضغط لعرض أقرب الإعلانات والخدمات إليك.</div><div id="nearResults"></div></section>
+<a class="btn btn-soft btn-block" id="homeNotify" href="notifications.html">🔔 الإشعارات</a>
+</main>
+<script>
+(()=>{
+const S=window.ppClient,$=id=>document.getElementById(id),esc=window.ppEsc||(x=>String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])));
+$('searchForm').onsubmit=e=>{e.preventDefault();const q=$('searchInput').value.trim();location.href='search.html'+(q?'?q='+encodeURIComponent(q):'')};
+const cnt=(t,f)=>{let q=S.from(t).select('id',{count:'exact',head:true});return f?f(q):q};
+async function stats(){
+  if(document.hidden)return;
+  try{
+    const [a,p,sv,tx,u]=await Promise.all([cnt('ads',q=>q.eq('status','active')),cnt('places',q=>q.eq('status','published')),cnt('service_providers',q=>q.eq('is_active',true).eq('is_available',true)),cnt('service_providers',q=>q.eq('is_active',true).eq('is_available',true).eq('service_type','taxi')),S.auth.getUser()]);
+    if(a.count!=null)$('liveAds').textContent=a.count+' إعلان نشط';
+    if(p.count!=null)$('livePlaces').textContent=p.count+' مكان على الخريطة';
+    if(sv.count!=null)$('liveServices').textContent=sv.count+' متاح الآن';
+    if(tx.count!=null)$('liveTaxi').textContent=tx.count?tx.count+' سائق متاح الآن':'لا يوجد سائقون متاحون حاليًا';
+    if(u.data.user){const n=await cnt('notifications',q=>q.eq('user_id',u.data.user.id).eq('is_read',false));if(!n.error&&n.count)$('homeNotify').textContent='🔔 الإشعارات ('+n.count+')'}
+  }catch(e){console.warn('stats',e)}
+}
+stats();setInterval(stats,60000);
+const km=(a,b,c,d)=>{const R=6371,r=Math.PI/180,x=(c-a)*r,y=(d-b)*r,h=Math.sin(x/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin(y/2)**2;return R*2*Math.atan2(Math.sqrt(h),Math.sqrt(1-h))};
+async function near(lat,lng){
+  $('nearStatus').textContent='جاري العثور على الأقرب إليك...';$('nearResults').innerHTML='<div class="sk"></div><div class="sk"></div>';
+  try{
+    const [ar,sr]=await Promise.all([
+      S.from('ads').select('id,title,city,latitude,longitude,category').eq('status','active').not('latitude','is',null).not('longitude','is',null).limit(80),
+      S.from('service_providers').select('user_id,service_type,display_name,vehicle_type,city,latitude,longitude').eq('is_active',true).not('latitude','is',null).not('longitude','is',null).limit(80)]);
+    if(ar.error)throw ar.error;const all=[];
+    (ar.data||[]).forEach(x=>{const d=km(lat,lng,+x.latitude,+x.longitude);if(d<=25)all.push({k:'ad',n:x.title||'إعلان',d,c:x.city,id:x.id,cat:x.category})});
+    (sr.data||[]).forEach(x=>{const d=km(lat,lng,+x.latitude,+x.longitude);if(d<=25)all.push({k:'sv',n:x.display_name||(x.service_type==='taxi'?'🚕 تاكسي متاح':x.service_type==='delivery'?'📦 توصيل متاح':'🛠️ خدمة متاحة'),d,c:x.city,t:x.service_type||'taxi',v:x.vehicle_type})});
+    const top=all.sort((a,b)=>a.d-b.d).slice(0,6);
+    $('nearStatus').textContent=top.length?'وجدنا '+top.length+' نتائج قريبة منك.':'لا توجد نتائج مسجلة قريبة منك بعد.';
+    $('nearResults').innerHTML=top.map(x=>x.k==='ad'
+      ?'<div class="nc"><b>📢 '+esc(x.n)+'</b><small>📏 '+x.d.toFixed(1)+' كم'+(x.cat?' · '+esc(x.cat):'')+'</small><a href="ad-details.html?id='+encodeURIComponent(x.id)+'">عرض الإعلان ←</a></div>'
+      :'<div class="nc"><b>'+esc(x.n)+'</b><small>📏 '+x.d.toFixed(1)+' كم · '+esc(x.c||'قريب منك')+(x.v?' · '+esc(x.v):'')+'</small><a href="service-provider-browse.html?type='+encodeURIComponent(x.t)+'">عرض مقدمي الخدمة ←</a></div>').join('');
+  }catch(e){console.error(e);$('nearStatus').textContent='⚠️ تعذر تحميل النتائج القريبة.';$('nearResults').innerHTML='<a class="btn btn-soft btn-block" href="nearby.html">فتح الخريطة الكاملة ←</a>'}
+}
+const b=$('nearLocate');
+b.onclick=()=>{
+  if(!navigator.geolocation){$('nearStatus').textContent='المتصفح لا يدعم تحديد الموقع.';return}
+  b.disabled=true;b.textContent='⏳ جارٍ التحديد...';
+  navigator.geolocation.getCurrentPosition(p=>{b.disabled=false;b.textContent='📍 تحديث موقعي';near(p.coords.latitude,p.coords.longitude)},()=>{b.disabled=false;b.textContent='📍 تحديد موقعي';$('nearStatus').textContent='لم نتمكن من الوصول إلى موقعك. اسمح بالموقع من إعدادات المتصفح.'},{enableHighAccuracy:true,timeout:12000});
+};
+})();
+</script></body></html>

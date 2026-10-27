@@ -1,0 +1,66 @@
+/* فلسطين بلاتفورم V102 — نظام تصميم موحّد لكل الواجهات | CSS only */
+:root{
+ --pp102-green:#087f5b;--pp102-green-dark:#06654c;--pp102-green-soft:#e7f6ef;
+ --pp102-red:#bd2838;--pp102-navy:#12314d;--pp102-ink:#172b3d;--pp102-muted:#687b8b;
+ --pp102-bg:#f4f8f7;--pp102-card:#fff;--pp102-line:#dfe9e6;
+ --pp102-radius:18px;--pp102-shadow:0 8px 24px rgba(19,49,77,.075);
+ --pp102-shadow-hover:0 13px 30px rgba(19,49,77,.12);
+}
+html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
+body{background:var(--pp102-bg);color:var(--pp102-ink);font-family:'Tajawal','Cairo',Tahoma,Arial,sans-serif;line-height:1.65}
+*,*:before,*:after{box-sizing:border-box}
+img,video,iframe{max-width:100%}
+button,a,input,select,textarea{font:inherit}
+a{color:var(--pp102-green)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #087f5b40;outline-offset:2px}
+/* Typography and page rhythm */
+h1,h2,h3,h4{color:var(--pp102-navy);line-height:1.35;font-weight:900;overflow-wrap:anywhere}
+h1{font-size:clamp(24px,4.5vw,34px)}h2{font-size:clamp(20px,3.8vw,27px)}h3{font-size:clamp(17px,3.2vw,22px)}
+main{min-width:0}section{min-width:0}
+/* All common buttons: consistent height, shape, and accessible touch size */
+button,.btn,a.btn,input[type=button],input[type=submit],input[type=reset],.button,[role=button]{border-radius:13px;font-weight:800;min-height:42px;transition:background-color .16s ease,border-color .16s ease,box-shadow .16s ease,transform .16s ease}
+button:not(:disabled),.btn,a.btn,input[type=button],input[type=submit],[role=button]{cursor:pointer}
+button:active:not(:disabled),.btn:active,a.btn:active,input[type=button]:active,input[type=submit]:active{transform:translateY(1px)}
+button:disabled,input:disabled,select:disabled{opacity:.62;cursor:not-allowed}
+.btn-primary,button.primary,.primary-btn,input[type=submit]{background:var(--pp102-green);border-color:var(--pp102-green);color:#fff}
+.btn-primary:hover,button.primary:hover,.primary-btn:hover,input[type=submit]:hover{background:var(--pp102-green-dark)}
+.btn-soft,.btn-secondary,.secondary-btn{background:#fff;border:1px solid var(--pp102-line);color:var(--pp102-navy)}
+/* Form controls: no horizontal overflow, consistent spacing and focus */
+input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]),select,textarea{max-width:100%;min-width:0;border:1px solid #d7e3df;border-radius:12px;background:#fff;color:var(--pp102-ink);padding:10px 12px;min-height:44px}
+textarea{min-height:100px;resize:vertical}input::placeholder,textarea::placeholder{color:#81909b;opacity:1}
+input:focus,select:focus,textarea:focus{border-color:var(--pp102-green)!important;box-shadow:0 0 0 3px #087f5b18!important;outline:none}
+label{color:var(--pp102-navy);font-weight:750}
+/* Shared cards and containers; avoid touching image/media content */
+.card,.panel,.box,.tile,.ad-card,.service-card,.place-card,.item-card,.stat-card,.request-card,.provider-card,.trip-card,.message-card,.content-card,.admin-card,.order-card,.profile-card,.subscription-card,.review-card,.result-card,.list-card,.form-card,.settings-card,.info-card,.product-card,.restaurant-card,.driver-card,.provider,.ad,.tool,.feature,.cat,.pp-surface{
+ border-radius:var(--pp102-radius);border-color:var(--pp102-line);box-shadow:var(--pp102-shadow)
+}
+.card,.panel,.box,.content-card,.form-card,.settings-card,.info-card,.profile-card,.subscription-card,.admin-card,.order-card,.request-card,.provider-card,.trip-card,.message-card,.review-card,.result-card,.list-card{background:var(--pp102-card)}
+/* Tables and status labels */
+table{max-width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border-radius:13px;background:#fff}th{background:#edf6f1;color:var(--pp102-navy);font-weight:900}th,td{padding:10px 12px;border-bottom:1px solid var(--pp102-line);text-align:right}tr:last-child td{border-bottom:0}
+.badge,.status,.tag,.chip,.pill{border-radius:999px}
+/* Header and navigation */
+header:not(.modal header){color:var(--pp102-navy)}
+.bottom-nav,.app-bottom-nav,nav.bottom-nav{background:rgba(255,255,255,.97)!important;border:1px solid var(--pp102-line)!important;box-shadow:0 -6px 24px rgba(19,49,77,.10)!important;backdrop-filter:blur(14px)}
+.bottom-nav a,.app-bottom-nav a{font-weight:800}
+/* Dialogs and notices */
+.modal,.modal-content,.dialog,.sheet,.popup,.dropdown-menu{border-radius:18px;border-color:var(--pp102-line)}
+.alert,.toast,.notice{border-radius:13px}
+/* Account/profile pages: keep actions organized and avoid oversized panels */
+.profile-card,.account-card,.account-panel{padding:clamp(14px,3vw,22px)}
+.profile-card img,.account-card img{object-fit:cover}
+/* Home uses its existing Jerusalem hero image and page layout; this layer only harmonizes controls */
+body.hub-page{background:linear-gradient(180deg,#f7fbf9,#eef6f3 58%,#f9fbfa);color:var(--pp102-ink)}
+body.hub-page .hero-q{background-image:linear-gradient(180deg,rgba(8,36,47,.05),rgba(6,37,47,.76)),url('jerusalem-home-hero.jpg');background-position:center 53%;background-size:cover;background-repeat:no-repeat}
+body.hub-page .hero-q:before{pointer-events:none}
+body.hub-page .cta{background:linear-gradient(110deg,#0a8a64,#06684f);background-image:linear-gradient(110deg,#0a8a64,#06684f)!important}
+/* Stop legacy pseudo-elements from inserting stray text or duplicate backgrounds into CTA */
+body.hub-page .cta:before,body.hub-page .cta:after{background-image:none!important;content:none!important;display:none!important}
+/* Responsive sizing for phones */
+@media(max-width:640px){
+ body{font-size:15px}
+ main:not(.hub){width:auto;max-width:100%;}
+ .card,.panel,.box,.content-card,.form-card,.settings-card,.info-card,.profile-card,.subscription-card,.admin-card,.order-card,.request-card,.provider-card,.trip-card,.message-card,.review-card,.result-card,.list-card{border-radius:16px}
+ button,.btn,a.btn,input[type=button],input[type=submit]{min-height:44px}
+ table{display:block;overflow-x:auto;white-space:nowrap}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}

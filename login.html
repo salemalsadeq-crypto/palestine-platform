@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#087f5b"><title>تسجيل الدخول | فلسطين بلاتفورم</title>
+<link rel="stylesheet" href="app.css">
+<style>
+/* V92: keep login fields exactly the same width on every viewport */
+body.lg,body.lg *{box-sizing:border-box}
+body.lg #loginForm{display:block;width:100%;min-width:0;margin:0}
+body.lg .lg-in{display:block;width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+body.lg .lg-pw{display:block;width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+body.lg .lg-pw .lg-in{width:100%;max-width:100%;box-sizing:border-box}
+body.lg{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px;background:linear-gradient(160deg,#123b68,#2878bc);font-family:Tajawal,Tahoma,Arial,sans-serif}
+body.lg .lg-card{width:100%;max-width:420px;background:#fff;border-radius:24px;padding:28px 22px;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+body.lg .lg-logo{text-align:center;font-size:26px;font-weight:800;color:#123b68}body.lg .lg-logo span{color:#b51f2a}
+body.lg .lg-sub{text-align:center;color:#6b7c93;margin:6px 0 22px;font-size:14.5px}
+body.lg label{display:block;margin:14px 0 6px;font-weight:800;font-size:14px;color:#27445f}
+body.lg .lg-in{width:100%;height:50px;padding:0 14px;border:1px solid #d9e3ee;border-radius:14px;background:#f8fafc;font:inherit;font-size:16px;outline:none}
+body.lg .lg-in:focus{border-color:#1e63a2;box-shadow:0 0 0 3px rgba(30,99,162,.15);background:#fff}
+body.lg .lg-pw{position:relative}body.lg .lg-pw .lg-in{padding-inline-end:52px}
+body.lg .lg-eye{position:absolute;inset-inline-end:6px;top:5px;width:40px;height:40px;border:0;background:transparent;font-size:18px;cursor:pointer;padding:0}
+body.lg .lg-go{width:100%;min-height:52px;margin-top:22px;border:0;border-radius:14px;background:linear-gradient(135deg,#123b68,#1e63a2);color:#fff;font:inherit;font-weight:800;font-size:17px;cursor:pointer;box-shadow:0 8px 20px rgba(18,59,104,.25)}
+body.lg .lg-go:disabled{opacity:.65}body.lg .lg-go:active{transform:scale(.98)}
+body.lg .lg-msg{min-height:22px;margin-top:14px;text-align:center;font-weight:700;font-size:14px}
+body.lg .lg-links{margin-top:10px;display:grid;gap:10px;text-align:center}body.lg .lg-links a{color:#1e63a2;font-weight:800;text-decoration:none;font-size:14.5px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script><script src="platform.js"></script><script src="app-ui.js?v=92" defer></script>
+
+
+<link rel="stylesheet" href="platform-theme-v101.css?v=101">
+<link rel="stylesheet" href="ui-system-v102.css?v=102">
+<link rel="stylesheet" href="platform-redesign-v104.css?v=104">
+<link rel="stylesheet" href="design-global-v111.css?v=111">
+</head>
+<body class="lg pp-redesign"><div class="lg-card">
+<div class="lg-logo">🇵🇸 فلسطين <span>بلاتفورم</span></div><div class="lg-sub">مرحبًا بعودتك، سجّل دخولك للمتابعة</div>
+<form id="loginForm" novalidate>
+<label for="email">البريد الإلكتروني</label><input class="lg-in" type="email" id="email" placeholder="example@email.com" autocomplete="email" inputmode="email" required>
+<label for="password">كلمة المرور</label><div class="lg-pw"><input class="lg-in" type="password" id="password" placeholder="كلمة المرور" autocomplete="current-password" required><button type="button" class="lg-eye" id="eye" aria-label="إظهار كلمة المرور">👁️</button></div>
+<button type="submit" class="lg-go" id="loginButton">تسجيل الدخول</button></form>
+<div id="message" class="lg-msg" role="status"></div>
+<div class="lg-links"><a id="reg" href="register.html">ليس لديك حساب؟ أنشئ حسابًا</a><a href="index.html">العودة إلى الرئيسية</a></div></div>
+<script>
+const supabaseClient=window.ppClient;
+const form=document.getElementById('loginForm'),button=document.getElementById('loginButton'),message=document.getElementById('message'),pw=document.getElementById('password');
+// وجهة العودة بعد الدخول: صفحات الموقع فقط (حماية من التحويل إلى مواقع خارجية)
+const nx=new URLSearchParams(location.search).get('next')||'';
+const dest=/^[a-z0-9][a-z0-9_-]*\.html(\?[^#\s]*)?(#\S*)?$/i.test(nx)?nx:'index.html';
+document.getElementById('reg').href='register.html'+(dest!=='index.html'?'?next='+encodeURIComponent(dest):'');
+document.getElementById('eye').onclick=()=>{const h=pw.type==='password';pw.type=h?'text':'password';document.getElementById('eye').textContent=h?'🙈':'👁️'};
+(async()=>{const {data}=await supabaseClient.auth.getSession();if(data?.session)location.replace(dest)})();
+form.addEventListener('submit',async e=>{e.preventDefault();message.textContent='';button.disabled=true;button.textContent='جاري تسجيل الدخول...';
+  try{const email=document.getElementById('email').value.trim(),password=pw.value;
+    if(!email||!password)throw Error('أدخل البريد الإلكتروني وكلمة المرور.');
+    const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});if(error)throw error;
+    if(!data.session)throw Error('تم التحقق لكن لم يتم إنشاء جلسة. أعد المحاولة.');
+    message.style.color='#087957';message.textContent='✅ تم تسجيل الدخول بنجاح';await new Promise(r=>setTimeout(r,250));location.replace(dest)
+  }catch(err){message.style.color='#b51f2a';const m=(err.message||'').toLowerCase();
+    message.textContent=m.includes('invalid login')?'❌ البريد الإلكتروني أو كلمة المرور غير صحيحة':m.includes('email not confirmed')?'❌ يجب تأكيد البريد الإلكتروني أولاً':'❌ '+(err.message||'حدث خطأ');
+    button.disabled=false;button.textContent='تسجيل الدخول'}
+});
+</script></body></html>
