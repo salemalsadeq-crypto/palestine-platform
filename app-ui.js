@@ -97,11 +97,20 @@
   addEventListener('appinstalled',()=>{const x=document.querySelector('.pp-install');if(x)x.remove()});
   const sheet=html=>{const o=document.createElement('div');o.className='pp-sheet-ov';o.innerHTML='<div class="pp-sheet" role="dialog" aria-modal="true">'+html+'</div>';document.body.appendChild(o);requestAnimationFrame(()=>o.classList.add('on'));return o};
   const shut=o=>{o.classList.remove('on');setTimeout(()=>o.remove(),220)};
-  window.ppConfirm=(msg,{ok='تأكيد',cancel='إلغاء',danger=false}={})=>new Promise(res=>{
-    const o=sheet('<p class="pp-sheet-msg">'+E(msg)+'</p><div class="pp-sheet-act"><button class="pp-sb '+(danger?'danger':'primary')+'" data-v="1">'+E(ok)+'</button><button class="pp-sb" data-v="0">'+E(cancel)+'</button></div>');
-    const done=v=>{shut(o);removeEventListener('keydown',kd);res(v)};
-    const kd=e=>{if(e.key==='Escape')done(false)};addEventListener('keydown',kd);
-    o.onclick=e=>{const b=e.target.closest('[data-v]');if(b)done(b.dataset.v==='1');else if(e.target===o)done(false)}});
+  let ppConfirmOpen=false;
+  window.ppConfirm=(msg,{ok='تأكيد',cancel='إلغاء',danger=false}={})=>{
+    // Ignore repeated taps while a confirmation is already visible. Returning false
+    // prevents multiple waiting handlers from executing the same destructive action.
+    if(ppConfirmOpen || document.querySelector('.pp-sheet-ov')) return Promise.resolve(false);
+    ppConfirmOpen=true;
+    return new Promise(res=>{
+      const o=sheet('<p class="pp-sheet-msg">'+E(msg)+'</p><div class="pp-sheet-act"><button class="pp-sb '+(danger?'danger':'primary')+'" data-v="1">'+E(ok)+'</button><button class="pp-sb" data-v="0">'+E(cancel)+'</button></div>');
+      let settled=false;
+      const done=v=>{if(settled)return;settled=true;ppConfirmOpen=false;shut(o);removeEventListener('keydown',kd);res(v)};
+      const kd=e=>{if(e.key==='Escape')done(false)};addEventListener('keydown',kd);
+      o.onclick=e=>{const b=e.target.closest('[data-v]');if(b)done(b.dataset.v==='1');else if(e.target===o)done(false)};
+    });
+  };
   window.ppPrompt=(msg,{placeholder='',value='',ok='إرسال',cancel='إلغاء',multiline=false,type='text'}={})=>new Promise(res=>{
     const f=multiline?'<textarea class="pp-sheet-in" rows="3" placeholder="'+E(placeholder)+'">'+E(value)+'</textarea>':'<input class="pp-sheet-in" type="'+E(type)+'" inputmode="'+(type==='number'?'decimal':'text')+'" placeholder="'+E(placeholder)+'" value="'+E(value)+'">';
     const o=sheet('<p class="pp-sheet-msg">'+E(msg)+'</p>'+f+'<div class="pp-sheet-act"><button class="pp-sb primary" data-v="1">'+E(ok)+'</button><button class="pp-sb" data-v="0">'+E(cancel)+'</button></div>');
