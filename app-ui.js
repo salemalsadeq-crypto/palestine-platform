@@ -98,13 +98,13 @@
   const sheet=html=>{const o=document.createElement('div');o.className='pp-sheet-ov';o.innerHTML='<div class="pp-sheet" role="dialog" aria-modal="true">'+html+'</div>';document.body.appendChild(o);requestAnimationFrame(()=>o.classList.add('on'));return o};
   const shut=o=>{o.classList.remove('on');setTimeout(()=>o.remove(),220)};
   let ppConfirmOpen=false;
-  window.ppConfirm=(msg,{ok='تأكيد',cancel='إلغاء',danger=false}={})=>{
+  window.ppConfirm=(msg,{ok='تأكيد',cancel='إلغاء',danger=false,icon=''}={})=>{
     // Ignore repeated taps while a confirmation is already visible. Returning false
     // prevents multiple waiting handlers from executing the same destructive action.
     if(ppConfirmOpen || document.querySelector('.pp-sheet-ov')) return Promise.resolve(false);
     ppConfirmOpen=true;
     return new Promise(res=>{
-      const o=sheet('<p class="pp-sheet-msg">'+E(msg)+'</p><div class="pp-sheet-act"><button class="pp-sb '+(danger?'danger':'primary')+'" data-v="1">'+E(ok)+'</button><button class="pp-sb" data-v="0">'+E(cancel)+'</button></div>');
+      const o=sheet('<div class="pp-sheet-ic '+(danger?'danger':'')+'">'+E(icon||(danger?'⚠️':'❓'))+'</div><p class="pp-sheet-msg">'+E(msg)+'</p><div class="pp-sheet-act"><button class="pp-sb '+(danger?'danger':'primary')+'" data-v="1">'+E(ok)+'</button><button class="pp-sb" data-v="0">'+E(cancel)+'</button></div>');
       let settled=false;
       const done=v=>{if(settled)return;settled=true;ppConfirmOpen=false;shut(o);removeEventListener('keydown',kd);res(v)};
       const kd=e=>{if(e.key==='Escape')done(false)};addEventListener('keydown',kd);

@@ -124,11 +124,11 @@ html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 .pp-drawer .pp-menu-icon{width:30px;font-size:19px}
 
 /* ===== V88 — نوافذ سفلية، حالة الانشغال، لافتة التثبيت ===== */
-.pp-sheet-ov{position:fixed;inset:0;z-index:2147483600;background:rgba(15,28,45,.45);display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .2s}
+.pp-sheet-ov{position:fixed;inset:0;z-index:2147483600;background:rgba(15,28,45,.55);display:flex;align-items:center;justify-content:center;padding:18px;box-sizing:border-box;opacity:0;transition:opacity .2s;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
 .pp-sheet-ov.on{opacity:1}
-.pp-sheet{width:100%;max-width:520px;max-height:calc(100dvh - 18px - env(safe-area-inset-top));overflow-y:auto;overscroll-behavior:contain;background:#fff;border-radius:22px 22px 0 0;padding:20px 18px calc(18px + env(safe-area-inset-bottom));box-sizing:border-box;transform:translateY(100%);transition:transform .22s cubic-bezier(.2,.8,.2,1);box-shadow:0 -10px 40px rgba(0,0,0,.2)}
-.pp-sheet-ov.on .pp-sheet{transform:none}
-.pp-sheet::before{content:"";display:block;width:42px;height:4px;border-radius:4px;background:#d5dde6;margin:-8px auto 14px}
+.pp-sheet{width:100%;max-width:380px;max-height:calc(100dvh - 36px);overflow-y:auto;overscroll-behavior:contain;background:#fff;border-radius:24px;padding:26px 20px 20px;box-sizing:border-box;text-align:center;transform:scale(.88) translateY(12px);opacity:0;transition:transform .22s cubic-bezier(.2,.8,.2,1),opacity .2s;box-shadow:0 24px 60px rgba(0,0,0,.30)}
+.pp-sheet-ov.on .pp-sheet{transform:none;opacity:1}
+.pp-sheet-ic{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;margin:0 auto 14px;font-size:30px;background:#eaf3fb}.pp-sheet-ic.danger{background:#fff0f1}.pp-sheet-ic.ok{background:#eaf8f2}
 .pp-sheet-msg{margin:0 0 14px;font-size:16px;font-weight:800;color:#172033;line-height:1.7}
 .pp-sheet-in{display:block;width:100%;border:1px solid #d9e3ee;border-radius:14px;padding:12px 14px;font:inherit;font-size:16px;margin-bottom:14px;background:#f8fafc;resize:none}
 .pp-sheet-act{display:grid;grid-template-columns:1fr 1fr;gap:10px}
