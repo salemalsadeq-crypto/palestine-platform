@@ -1,0 +1,12 @@
+/* V114: consistent navigation and icon polish; additive styles only */
+.pp-v114-nav{position:sticky;top:0;z-index:9999;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px clamp(12px,3vw,24px);background:rgba(255,255,255,.96);border-bottom:1px solid #e0e9e2;box-shadow:0 5px 18px rgba(20,55,38,.07);backdrop-filter:blur(12px);font-family:Tahoma,Arial,sans-serif}
+.pp-v114-brand{display:flex;align-items:center;gap:9px;color:#185b40;text-decoration:none;font-weight:900;font-size:14px}
+.pp-v114-mark{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(145deg,#176b45,#239566);color:white;box-shadow:0 4px 10px #176b452b}
+.pp-v114-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pp-v114-link{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;padding:8px 13px;border:1px solid #dce8df;border-radius:12px;background:#fff;color:#225b43;text-decoration:none;font-size:13px;font-weight:800;transition:transform .15s,background .15s,box-shadow .15s}
+.pp-v114-link:hover{background:#f0f8f2;box-shadow:0 4px 12px #174d3020;transform:translateY(-1px)}
+.pp-v114-link-primary{background:#176b45;color:white;border-color:#176b45}.pp-v114-link-primary:hover{background:#125638;color:#fff}
+.pp-v114-link svg{width:17px;height:17px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+/* Make existing icon tiles consistent without changing their text or actions */
+.pp-redesign .bell,.pp-redesign .adm-top .icon,.pp-redesign .od-top .icon{border-radius:14px}
+@media(max-width:480px){.pp-v114-nav{padding:8px 10px}.pp-v114-brand span:last-child{display:none}.pp-v114-link{min-height:36px;padding:7px 10px;font-size:12px}}
