@@ -109,7 +109,7 @@ $('bfilter').addEventListener('click',e=>{const b=e.target.closest('.tv-chip');i
 $('bookings').addEventListener('click',async e=>{
   const btn=e.target.closest('[data-act]');if(!btn)return;
   const card=btn.closest('[data-id]'),id=card.dataset.id,status=btn.dataset.act;
-  if(status==='cancelled'&&!confirm('هل تريد إلغاء هذا الحجز؟ سيصل العميل إشعار بذلك.'))return;
+  if(status==='cancelled'&&!await ppConfirm('هل تريد إلغاء هذا الحجز؟ سيصل العميل إشعار بذلك.',{danger:true,ok:'إلغاء الحجز',cancel:'تراجع'}))return;
   const note=(card.querySelector('[data-note]')?.value||'').trim()||null;
   btn.disabled=true;
   const {error}=await db.from('travel_bookings').update({status,office_note:note}).eq('id',id);
@@ -152,7 +152,7 @@ $('offers').addEventListener('click',async e=>{
     if(error){TV.msg($('msg'),'❌ '+TV.errText(error),'err');btn.disabled=false;return}
     o.status=to;renderOffers();
   }else if(btn.dataset.oact==='del'){
-    if(!confirm('حذف هذا العرض نهائيًا؟ ستبقى الحجوزات السابقة محفوظة.')){btn.disabled=false;return}
+    if(!await ppConfirm('حذف هذا العرض نهائيًا؟ ستبقى الحجوزات السابقة محفوظة.',{danger:true,ok:'حذف العرض',cancel:'تراجع'})){btn.disabled=false;return}
     const {error}=await db.from('travel_offers').delete().eq('id',id);
     if(error){TV.msg($('msg'),'❌ '+TV.errText(error),'err');btn.disabled=false;return}
     offers=offers.filter(x=>x.id!==id);renderOffers();
