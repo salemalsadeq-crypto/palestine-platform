@@ -1,5 +1,5 @@
 // فلسطين بلاتفورم — Service Worker v108: current shared assets
-const V='pp-v117-taxi-ux';
+const V='pp-v118-global-ux';
 const CORE=['index.html','login.html','ui-system-v108.css','ui-system-v102.css','platform-theme-v101.css','app.css','theme-v61.css','theme-v88.css','ui-polish.css','ui-polish-v91.css','home-v94.css','jerusalem-home-hero.jpg','travel.css','travel.js','travel.html','travel-register.html','travel-manage.html','travel-my-bookings.html','platform.js','app-ui.js','manifest.json','icon-192.png']
 self.addEventListener('install',e=>{
   self.skipWaiting();

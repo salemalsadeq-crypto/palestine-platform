@@ -160,3 +160,37 @@ a[href="add-ad.html"],a[href*="add-ad.html"]{font-weight:800}
 .map-loading-card{direction:rtl}
 .map-loading{position:absolute;inset:12px;z-index:500;display:flex;align-items:center;justify-content:center;pointer-events:none}
 .map-loading .map-loading-card{background:#fff;color:var(--pp-primary);border:1px solid var(--pp-line);border-radius:16px;padding:12px 16px;box-shadow:0 10px 30px rgba(27,94,58,.12);font-weight:800}
+
+/* v118 — تحسين عام للمساحات والتفاعل عبر صفحات المنصة */
+:where(main,.container,.wrap,.page,.content,.page-content,.section,.panel,.form-card,.profile-card,.account-card){min-width:0;box-sizing:border-box}
+:where(.card,.ad,.tool,.cat,.feature,.pp-surface,.panel,.form-card,.profile-card,.account-card,.service-card,.request-card,.booking-card){border-radius:16px}
+:where(.card,.ad,.tool,.feature,.service-card,.request-card,.booking-card){overflow-wrap:anywhere}
+:where(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]),select,textarea){max-width:100%;min-height:44px;box-sizing:border-box;border-radius:12px}
+textarea{min-height:100px;resize:vertical}
+:where(button,.btn,[role=button],input[type=submit],input[type=button]){min-height:40px;border-radius:11px;touch-action:manipulation}
+:where(button,.btn,[role=button],input[type=submit],input[type=button]):focus-visible{outline-offset:3px}
+:where(form,.form,.form-grid,.fields,.filters,.toolbar){min-width:0}
+:where(form,.form,.form-grid,.fields){gap:12px}
+:where(.actions,.action-buttons,.button-row,.form-actions){display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+:where(.actions,.action-buttons,.button-row,.form-actions)>button,:where(.actions,.action-buttons,.button-row,.form-actions)>.btn{max-width:100%}
+:where(.section-title,.page-title,.panel-title){line-height:1.45;overflow-wrap:anywhere}
+:where(.empty,.empty-state,.no-data){padding:22px 16px;border:1px dashed var(--pp-line);border-radius:16px;background:rgba(255,255,255,.72);text-align:center;color:var(--pp-muted)}
+/* خرائط أقل ارتفاعًا على الشاشات الصغيرة مع بقاء إمكانية تكبيرها */
+@media(max-width:700px){
+  body{font-size:15px}
+  :where(main,.container,.wrap,.page,.content,.page-content){max-width:100%;}
+  :where(.container,.wrap,.page,.content,.page-content){padding-left:12px;padding-right:12px}
+  :where(.card,.ad,.tool,.feature,.panel,.form-card,.profile-card,.account-card,.service-card,.request-card,.booking-card){margin-bottom:12px}
+  :where(.grid,.cards,.ad-grid,.services-grid,.tools-grid){gap:10px}
+  :where(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]),select,textarea){font-size:16px}
+  #map{height:42vh;min-height:260px;max-height:420px;border-radius:15px}
+  .map-wrap,.map-container{min-height:260px;border-radius:15px}
+  .map-loading{inset:8px}
+  :where(.actions,.action-buttons,.button-row,.form-actions){gap:7px}
+  :where(.actions,.action-buttons,.button-row,.form-actions)>.btn,:where(.actions,.action-buttons,.button-row,.form-actions)>button{flex:1 1 auto}
+  :where(.modal,.dialog,.popup,.confirm-dialog,[role=dialog]){max-width:calc(100vw - 24px)}
+}
+@media(max-width:380px){
+  :where(.container,.wrap,.page,.content,.page-content){padding-left:9px;padding-right:9px}
+  :where(.card,.ad,.tool,.feature,.panel,.form-card,.profile-card,.account-card,.service-card,.request-card,.booking-card){border-radius:13px}
+}
