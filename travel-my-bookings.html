@@ -36,7 +36,7 @@ function render(){$('list').innerHTML=rows.length?rows.map(card).join(''):'<div 
 $('list').addEventListener('click',async e=>{
   const btn=e.target.closest('[data-cancel]');if(!btn)return;
   const id=btn.closest('[data-id]').dataset.id;
-  if(!await ppConfirm('هل تريد إلغاء طلب الحجز؟',{danger:true,ok:'إلغاء الحجز',cancel:'تراجع'}))return;
+  if(btn.disabled)return;if(!await ppConfirm('هل تريد إلغاء طلب الحجز؟',{danger:true,ok:'إلغاء الحجز',cancel:'تراجع'}))return;
   btn.disabled=true;
   const {error}=await db.from('travel_bookings').update({status:'cancelled'}).eq('id',id);
   if(error){TV.msg($('msg'),'❌ '+TV.errText(error),'err');btn.disabled=false;return}

@@ -109,7 +109,7 @@ $('bfilter').addEventListener('click',e=>{const b=e.target.closest('.tv-chip');i
 $('bookings').addEventListener('click',async e=>{
   const btn=e.target.closest('[data-act]');if(!btn)return;
   const card=btn.closest('[data-id]'),id=card.dataset.id,status=btn.dataset.act;
-  if(status==='cancelled'&&!await ppConfirm('هل تريد إلغاء هذا الحجز؟ سيصل العميل إشعار بذلك.',{danger:true,ok:'إلغاء الحجز',cancel:'تراجع'}))return;
+  if(btn.disabled)return;if(status==='cancelled'&&!await ppConfirm('هل تريد إلغاء هذا الحجز؟ سيصل العميل إشعار بذلك.',{danger:true,ok:'إلغاء الحجز',cancel:'تراجع'}))return;
   const note=(card.querySelector('[data-note]')?.value||'').trim()||null;
   btn.disabled=true;
   const {error}=await db.from('travel_bookings').update({status,office_note:note}).eq('id',id);
