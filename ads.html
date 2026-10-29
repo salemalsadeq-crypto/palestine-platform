@@ -16,6 +16,21 @@
 <link rel="stylesheet" href="platform-redesign-v104.css?v=104">
 <link rel="stylesheet" href="design-global-v111.css?v=111">
 <link rel="stylesheet" href="design-v113.css?v=113">
+
+<style id="pp-compact-ad-cards-v120">
+/* V120: compact, consistent ad cards */
+.grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;align-items:stretch}
+.grid>.card{min-width:0;border-radius:13px;box-shadow:0 3px 12px rgba(16,36,65,.08)}
+.grid>.card .pic{height:clamp(118px,18vw,190px)!important;overflow:hidden}
+.grid>.card .pic img,.grid>.card img{max-width:100%;object-fit:cover}
+.grid>.card .title{font-size:14px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.8em}
+.grid>.card .price{font-size:15px;margin:6px 0}
+.grid>.card .desc{font-size:12px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.grid>.card .meta{font-size:11px;gap:5px;flex-wrap:wrap}
+@media(max-width:760px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}.grid>.card{border-radius:11px}.grid>.card .pic{height:clamp(105px,35vw,155px)!important}.grid>.card .title{font-size:13px}.grid>.card .price{font-size:14px}.grid>.card .details{padding:8px!important;font-size:12px}}
+@media(max-width:350px){.grid{gap:7px!important}.grid>.card .pic{height:100px!important}}
+</style>
+
 </head><body class="pp-redesign"><header><div class="head"><div class="logo">فلسطين <span>بلاتفورم</span></div><nav><a href="index.html">الرئيسية</a><a href="reels.html">🎬 الريلز</a><a href="favorites.html">❤️ المفضلة</a><a href="my-ads.html">إعلاناتي</a><a href="account.html">حسابي</a></nav></div></header><main class="wrap">
 <section class="category-hub">
   <div class="hub-head"><div><h1>📢 أقسام الإعلانات</h1><p>اختر القسم الذي تريد تصفحه. لن تختفي الأقسام عند الدخول إلى الإعلانات.</p></div><a class="hub-add" href="add-ad.html">➕ أضف إعلان</a></div>

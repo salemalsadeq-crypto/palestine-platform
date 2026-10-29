@@ -271,6 +271,19 @@ padding:8px 12px;
 <link rel="stylesheet" href="platform-redesign-v104.css?v=104">
 <link rel="stylesheet" href="design-global-v111.css?v=111">
 <link rel="stylesheet" href="design-v113.css?v=113">
+
+<style id="pp-compact-my-ads-v120">
+/* V120: my ads are shown in compact side-by-side cards */
+.ads-list{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;align-items:stretch}
+.ads-list>*{min-width:0;max-width:100%;border-radius:13px;overflow:hidden}
+.ads-list img{max-width:100%;object-fit:cover}
+.ads-list .price{font-size:15px;margin:6px 0}
+.ads-list h2,.ads-list h3,.ads-list .title{font-size:14px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ads-list button,.ads-list a{max-width:100%;white-space:normal}
+@media(max-width:760px){.ads-list{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}.ads-list>*{border-radius:11px}.ads-list img{max-height:155px}.ads-list .price{font-size:14px}.ads-list h2,.ads-list h3,.ads-list .title{font-size:13px}}
+@media(max-width:350px){.ads-list{gap:7px!important}}
+</style>
+
 </head>
 
 <body class="pp-redesign">
